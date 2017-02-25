@@ -18,4 +18,4 @@ def blink(times, delay):
  
  
 if __name__ == '__main__':
-    blink(200, 0.2)
+    blink(2000000, 0.4)
