@@ -10,3 +10,7 @@ Refer http://www.cnblogs.com/rainduck/archive/2012/09/22/2694568.html
   cd RPi.GPIO-0.x.xx
   
   sudo python setup.py install
+
+  sudo easy_install -U RPIO
+
+  sudo rpio -I
