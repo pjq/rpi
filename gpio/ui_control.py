@@ -6,6 +6,8 @@ import wx
 
 # begin wxGlade: extracode
 import RPi.GPIO as GPIO
+GPIO.cleanup()
+GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11,GPIO.OUT)
 GPIO.setup(12,GPIO.OUT)
 GPIO.setup(13,GPIO.OUT)
@@ -231,3 +233,4 @@ if __name__ == "__main__":
     app.SetTopWindow(frame_1)
     frame_1.Show()
     app.MainLoop()
+    GPIO.cleanup()
