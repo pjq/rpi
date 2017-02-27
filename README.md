@@ -24,3 +24,5 @@ Dump the binary data with od
 sudo od /dev/ttyAMA0
 
 sudo od -Ax -tcx1 /dev/ttyAMA0
+
+sudo xxd /dev/ttyAMA0
