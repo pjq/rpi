@@ -22,3 +22,5 @@ Dump the binary data with od
 #ttyUSB0:4d42 1400 2500 2f00
 
 sudo od /dev/ttyAMA0
+
+sudo od -Ax -tcx1 /dev/ttyAMA0
