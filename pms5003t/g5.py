@@ -124,7 +124,7 @@ class g3sensor():
 	#	print "pm25_cf: "+str(pm25_cf)
 	#	print "pm10_cf: "+str(pm10_cf)
 	#	print "pm1: "+str(pm1)
-		print "pm2.5: "+str(pm25)+ " pm2.5(cf): " +str(pm25_cf) +" pm1.0: "+str(pm1) +" pm10: "+str(pm10)   + " temp(c): "+str(temp) + " humi(%): " + str(hum) + " version: " + str(version) + " error: " + str(error)
+		print time.asctime(time.localtime(time.time()))+ " pm2.5: "+str(pm25)+ " pm2.5(cf): " +str(pm25_cf) +" pm1.0: "+str(pm1) +" pm10: "+str(pm10)   + " temp(c): "+str(temp) + " humi(%): " + str(hum) + " version: " + str(version) + " error: " + str(error)
 	#	print "pm10: "+str(pm10)
         data = [pm1_cf, pm10_cf, pm25_cf, pm1, pm10, pm25]
     	self.serial.close()

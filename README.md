@@ -1,3 +1,31 @@
+###Build your IoT on the Raspberry Pi
+
+I have bought the Raspberry Pi in the year 2012, almost when the board came to the world.
+I have used it as media center by installing XMBC/OpenElec, NAS, and also work as one robot to post message to sina weibo and Twitter.
+But somehow I almost retired it, because it's bit slow and I have the new TV box build on Android, and it can meet my requirements. 
+And I have bought the Xiaomi Router, it works good, and cover my NAS requirements.
+
+But the time is changing, the Google has just release the Android Things for development Internet of Things with more convenient tools, SDK, IDE.
+And of couse the Raspberry Pi 3 has release in 2016, and from the spec, it is fast and have good performance to work as the daily development for fun.
+
+So I buy the new one, and now I have many hardwares for play with
+* Raspberry Pi 1
+* Raspberry Pi 3B
+* Some LEDs
+* PMS5003T sensor about the air quality, like pm2.5, temp, humidity, etc.
+* MG90S, micro servo
+* PL2303, USB to TTL
+* Breadboard
+* Lines
+
+
+I will start to learning followings
+* Learning GPIO, learn the basic usage about how to control them
+* Micro Servo, learn how to control it
+* Step motor
+* USB and serial port communication, USB to TTL
+* Sensors, read data from some sensors, like temperatioin, humidity, and also them air quality, like pm2.5
+
 #### GPIO Python
 
 Refer http://www.cnblogs.com/rainduck/archive/2012/09/22/2694568.html
@@ -63,5 +91,13 @@ Run the python script, and it will print the details
 ```
 And the result will be like
 ```
-  pm2.5: 23 pm2.5(cf): 23 pm1.0: 17 pm10: 23 temp(c): 22.9 humi(%): 23.5 version: 145 error: 0
+Mon Feb 27 14:51:02 2017 pm2.5: 36 pm2.5(cf): 40 pm1.0: 26 pm10: 43 temp(c): 22.8 humi(%): 18.0 version: 145 error: 0
+Mon Feb 27 14:51:04 2017 pm2.5: 36 pm2.5(cf): 41 pm1.0: 26 pm10: 44 temp(c): 22.7 humi(%): 17.9 version: 145 error: 0
+Mon Feb 27 14:51:09 2017 pm2.5: 36 pm2.5(cf): 41 pm1.0: 26 pm10: 44 temp(c): 22.8 humi(%): 18.0 version: 145 error: 0
+Mon Feb 27 14:51:15 2017 pm2.5: 36 pm2.5(cf): 41 pm1.0: 26 pm10: 43 temp(c): 22.7 humi(%): 17.9 version: 145 error: 0
+Mon Feb 27 14:51:20 2017 pm2.5: 37 pm2.5(cf): 42 pm1.0: 26 pm10: 45 temp(c): 22.7 humi(%): 18.1 version: 145 error: 0
+Mon Feb 27 14:51:26 2017 pm2.5: 38 pm2.5(cf): 44 pm1.0: 27 pm10: 46 temp(c): 22.7 humi(%): 18.0 version: 145 error: 0
 ```
+
+#### Android Things
+Android Things on Raspberry Pi 3
