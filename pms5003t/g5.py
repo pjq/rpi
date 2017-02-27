@@ -3,7 +3,7 @@ import serial
 import time
 import sys
 from struct import *
-debug=1
+debug=0
 # work for pms3003
 # data structure: https://github.com/avaldebe/AQmon/blob/master/Documents/PMS3003_LOGOELE.pdf
 # fix me: the format is different between /dev/ttyUSBX(USB to Serial) and /dev/ttyAMA0(GPIO RX)
@@ -56,21 +56,75 @@ class g3sensor():
 	    print "data correct"
 	
     def read_data(self):
-        data = self.serial.read(22)
+        data = self.serial.read(30)
         data_hex=data.encode('hex')
         if debug: self.vertify_data(data_hex)
-        pm1_cf=int(data_hex[4]+data_hex[5]+data_hex[6]+data_hex[7],16)
-        pm25_cf=int(data_hex[8]+data_hex[9]+data_hex[10]+data_hex[11],16)
-        pm10_cf=int(data_hex[12]+data_hex[13]+data_hex[14]+data_hex[15],16)
-        pm1=int(data_hex[16]+data_hex[17]+data_hex[18]+data_hex[19],16)
-        pm25=int(data_hex[20]+data_hex[21]+data_hex[22]+data_hex[23],16)
-        pm10=int(data_hex[24]+data_hex[25]+data_hex[26]+data_hex[27],16)
+        #pm1_cf=int(data_hex[4]+data_hex[5]+data_hex[6]+data_hex[7],16)
+        #pm25_cf=int(data_hex[8]+data_hex[9]+data_hex[10]+data_hex[11],16)
+        #pm10_cf=int(data_hex[12]+data_hex[13]+data_hex[14]+data_hex[15],16)
+        #pm1=int(data_hex[16]+data_hex[17]+data_hex[18]+data_hex[19],16)
+        #pm25=int(data_hex[20]+data_hex[21]+data_hex[22]+data_hex[23],16)
+        #pm10=int(data_hex[24]+data_hex[25]+data_hex[26]+data_hex[27],16)
+        cycle = 4
+        i = 1
+        n = cycle*i 
+        pm1_cf=int(data_hex[n]+data_hex[n+1]+data_hex[n+2]+data_hex[n+3],16)
+
+        i=2
+        n = cycle*i
+        pm25_cf=int(data_hex[n]+data_hex[n+1]+data_hex[n+2]+data_hex[n+3],16)
+
+        i=3
+        n = cycle*i
+        pm10_cf=int(data_hex[n]+data_hex[n+1]+data_hex[n+2]+data_hex[n+3],16)
+
+        i=4
+        n = cycle*i
+        pm1=int(data_hex[n]+data_hex[n+1]+data_hex[n+2]+data_hex[n+3],16)
+
+        i=5
+        n = cycle*i
+        pm25=int(data_hex[n]+data_hex[n+1]+data_hex[n+2]+data_hex[n+3],16)
+
+        i=6
+        n = cycle*i
+        pm10=int(data_hex[n]+data_hex[n+1]+data_hex[n+2]+data_hex[n+3],16)
+
+        i=7
+        n = cycle*i
+        pm0103=int(data_hex[n]+data_hex[n+1]+data_hex[n+2]+data_hex[n+3],16)
+
+        i=8
+        n = cycle*i
+        pm0104=int(data_hex[n]+data_hex[n+1]+data_hex[n+2]+data_hex[n+3],16)
+
+        i=9
+        n = cycle*i
+        pm0110=int(data_hex[n]+data_hex[n+1]+data_hex[n+2]+data_hex[n+3],16)
+
+        i=10
+        n = cycle*i
+        pm0125=int(data_hex[n]+data_hex[n+1]+data_hex[n+2]+data_hex[n+3],16)
+
+        i=11
+        n = cycle*i
+        temp=int(data_hex[n]+data_hex[n+1]+data_hex[n+2]+data_hex[n+3],16)/10.0
+
+        i=12
+        n = cycle*i
+        hum=int(data_hex[n]+data_hex[n+1]+data_hex[n+2]+data_hex[n+3],16)/10.0
+
+        i=13
+        n = cycle*i
+        version=int(data_hex[n]+data_hex[n+1],16)
+        error=int(data_hex[n+2]+data_hex[n+3],16)
+        
         if 1:
 	#	print "pm1_cf: "+str(pm1_cf)
 	#	print "pm25_cf: "+str(pm25_cf)
 	#	print "pm10_cf: "+str(pm10_cf)
 	#	print "pm1: "+str(pm1)
-		print "pm25: "+str(pm25)
+		print "pm2.5: "+str(pm25) + " temp(c): "+str(temp) + " humi(%): " + str(hum) + " version: " + str(version) + " error: " + str(error)
 	#	print "pm10: "+str(pm10)
         data = [pm1_cf, pm10_cf, pm25_cf, pm1, pm10, pm25]
     	self.serial.close()

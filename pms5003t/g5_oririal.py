@@ -3,7 +3,7 @@ import serial
 import time
 import sys
 from struct import *
-debug=0
+debug=1
 # work for pms3003
 # data structure: https://github.com/avaldebe/AQmon/blob/master/Documents/PMS3003_LOGOELE.pdf
 # fix me: the format is different between /dev/ttyUSBX(USB to Serial) and /dev/ttyAMA0(GPIO RX)
@@ -56,7 +56,7 @@ class g3sensor():
 	    print "data correct"
 	
     def read_data(self):
-        data = self.serial.read(30)
+        data = self.serial.read(22)
         data_hex=data.encode('hex')
         if debug: self.vertify_data(data_hex)
         pm1_cf=int(data_hex[4]+data_hex[5]+data_hex[6]+data_hex[7],16)
@@ -65,22 +65,12 @@ class g3sensor():
         pm1=int(data_hex[16]+data_hex[17]+data_hex[18]+data_hex[19],16)
         pm25=int(data_hex[20]+data_hex[21]+data_hex[22]+data_hex[23],16)
         pm10=int(data_hex[24]+data_hex[25]+data_hex[26]+data_hex[27],16)
-        n = 27 
-        pm0103=int(data_hex[n+1]+data_hex[n+2]+data_hex[n+3]+data_hex[n+4],16)
-        n = n + 4
-        pm0105=int(data_hex[n+1]+data_hex[n+2]+data_hex[n+3]+data_hex[n+4],16)
-        n = n + 4
-        pm0110=int(data_hex[n+1]+data_hex[n+2]+data_hex[n+3]+data_hex[n+4],16)
-        n = n + 4
-        pm0125=int(data_hex[n+1]+data_hex[n+2]+data_hex[n+3]+data_hex[n+4],16)
-        n = n + 4
-        temp=int(data_hex[n+1]+data_hex[n+2]+data_hex[n+3]+data_hex[n+4],16)/10
         if 1:
 	#	print "pm1_cf: "+str(pm1_cf)
 	#	print "pm25_cf: "+str(pm25_cf)
 	#	print "pm10_cf: "+str(pm10_cf)
 	#	print "pm1: "+str(pm1)
-		print "pm25: "+str(pm25) + " temp: "+str(temp)
+		print "pm25: "+str(pm25)
 	#	print "pm10: "+str(pm10)
         data = [pm1_cf, pm10_cf, pm25_cf, pm1, pm10, pm25]
     	self.serial.close()
