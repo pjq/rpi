@@ -23,13 +23,14 @@ public class RpiWeatherApiController implements RpiWeatherApi {
 
     public ResponseEntity<RpiWeatherItem> addWeatherItem(@ApiParam(value = "WeatherItem to add to the store" ,required=true ) @RequestBody RpiWeatherItem WeatherItem) {
         // do some magic!
-        RpiWeatherItem addWeatherItem = new RpiWeatherItem();
-        addWeatherItem.setId(WeatherItem.getId());
-        addWeatherItem.setPm25(WeatherItem.getPm25());
-        addWeatherItem.setTemperature(WeatherItem.getTemperature());
-        addWeatherItem.setHumidity(WeatherItem.getHumidity());
+//        RpiWeatherItem addWeatherItem = new RpiWeatherItem();
+//        addWeatherItem.setId(WeatherItem.getId());
+//        addWeatherItem.setPm25(WeatherItem.getPm25());
+//        addWeatherItem.setTemperature(WeatherItem.getTemperature());
+//        addWeatherItem.setHumidity(WeatherItem.getHumidity());
 
-        rpiWeatherRepository.saveAndFlush(addWeatherItem);
+        WeatherItem.setTimestamp(System.currentTimeMillis());
+        rpiWeatherRepository.saveAndFlush(WeatherItem);
 
         return new ResponseEntity<RpiWeatherItem>(HttpStatus.OK);
     }

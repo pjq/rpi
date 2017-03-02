@@ -18,7 +18,7 @@ public class SwaggerDocumentationConfig {
     ApiInfo apiInfo() {
         return new ApiInfoBuilder()
             .title("Swagger Raspberry Pi APIs")
-            .description("Raspberry Pi APIs, include the Weathre Apis.")
+            .description("Raspberry Pi APIs, include the Weather Apis.")
             .license("MIT")
             .licenseUrl("http://opensource.org/licenses/MIT")
             .termsOfServiceUrl("http://swagger.io")
