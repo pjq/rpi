@@ -1,8 +1,8 @@
-package io.swagger.api;
+package me.pjq.api;
 
 import io.swagger.annotations.ApiParam;
-import io.swagger.model.RpiWeatherItem;
-import io.swagger.repository.RpiWeatherRepository;
+import me.pjq.model.RpiWeatherItem;
+import me.pjq.repository.RpiWeatherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package io.swagger.model;
+package me.pjq.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;

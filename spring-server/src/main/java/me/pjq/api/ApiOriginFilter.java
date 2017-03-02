@@ -1,4 +1,4 @@
-package io.swagger.api;
+package me.pjq.api;
 
 import java.io.IOException;
 

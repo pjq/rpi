@@ -1,7 +1,7 @@
-package io.swagger.api;
+package me.pjq.api;
 
 import io.swagger.annotations.*;
-import io.swagger.model.RpiWeatherItem;
+import me.pjq.model.RpiWeatherItem;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,6 +1,6 @@
-package io.swagger.repository;
+package me.pjq.repository;
 
-import io.swagger.model.RpiWeatherItem;
+import me.pjq.model.RpiWeatherItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

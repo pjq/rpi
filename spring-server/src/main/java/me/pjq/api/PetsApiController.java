@@ -1,11 +1,11 @@
-package io.swagger.api;
+package me.pjq.api;
 
-import io.swagger.model.NewPet;
-import io.swagger.model.Pet;
+import me.pjq.model.NewPet;
+import me.pjq.model.Pet;
 
 import io.swagger.annotations.*;
 
-import io.swagger.repository.PetsRepository;
+import me.pjq.repository.PetsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
