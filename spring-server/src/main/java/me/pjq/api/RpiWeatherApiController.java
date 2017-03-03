@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Comparator;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-02-23T07:57:56.431Z")
@@ -47,6 +48,15 @@ public class RpiWeatherApiController implements RpiWeatherApi {
     public ResponseEntity<List<RpiWeatherItem>> findWeatherItems(@ApiParam(value = "pm25 to filter by") @RequestParam(value = "pm25", required = false) String pm25,
                                               @ApiParam(value = "maximum number of results to return") @RequestParam(value = "limit", required = false) Integer limit) {
         // do some magic!
-        return new ResponseEntity<List<RpiWeatherItem>>(rpiWeatherRepository.findAll(), HttpStatus.OK);
+        Comparator<RpiWeatherItem> comparator = new Comparator<RpiWeatherItem>() {
+            @Override
+            public int compare(RpiWeatherItem o1, RpiWeatherItem o2) {
+                return -(int) (o1.getTimestamp() - o2.getTimestamp());
+            }
+        };
+        List<RpiWeatherItem> rpiWeatherItems = rpiWeatherRepository.findAll();
+        rpiWeatherItems.sort(comparator);
+
+        return new ResponseEntity<List<RpiWeatherItem>>(rpiWeatherItems, HttpStatus.OK);
     }
 }
