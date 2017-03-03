@@ -6,7 +6,7 @@ import send
 from struct import *
 
 posturl = "http://10.129.36.206:8080/api/rpi/weather"
-home="office"
+location="office"
 #data = { "id": 2, "pm25": 28, "pm25_cf": 27, "pm10": 25, "pm10_cf": 25, "temperature": 23.2, "humidity": 0.2, "raw_data": "string", "location": "home", "alt": 0, "lat": 0 }
 debug=0
 # work for pms3003
@@ -124,17 +124,17 @@ class g3sensor():
         version=int(data_hex[n]+data_hex[n+1],16)
         error=int(data_hex[n+2]+data_hex[n+3],16)
         
-        if 1:
+        if 0:
 	#	print "pm1_cf: "+str(pm1_cf)
 	#	print "pm25_cf: "+str(pm25_cf)
 	#	print "pm10_cf: "+str(pm10_cf)
 	#	print "pm1: "+str(pm1)
-		print time.asctime(time.localtime(time.time()))+ " pm2.5: "+str(pm25)+ " pm2.5(cf): " +str(pm25_cf) +" pm1.0: "+str(pm1) +" pm10: "+str(pm10)   + " temp(c): "+str(temp) + " humi(%): " + str(hum) + " version: " + str(version) + " error: " + str(error)
+                print time.asctime(time.localtime(time.time()))+ " pm2.5: "+str(pm25)+ " pm2.5(cf): " +str(pm25_cf) +" pm1.0: "+str(pm1) +" pm10: "+str(pm10)   + " temp(c): "+str(temp) + " humi(%): " + str(hum) + " version: " + str(version) + " error: " + str(error)
 	#	print "pm10: "+str(pm10)
-        data = [pm1_cf, pm10_cf, pm25_cf, pm1, pm10, pm25]
-	data = { "pm25": pm25, "pm25_cf": pm25_cf, "pm10": pm10, "pm10_cf": pm10_cf, "temperature": temp, "humidity": humi, "raw_data": "string", "location": location, "alt": 0, "lat": 0 }
-        send.post(posturl, data)
+        date=""+time.asctime(time.localtime(time.time()))
+	data={ "pm25": pm25, "pm25_cf": pm25_cf, "pm10": pm10, "pm10_cf": pm10_cf, "temperature": temp, "humidity": hum, "raw_data": "", "location": location, "alt": 0, "lat": 0, "date":date}
     	self.serial.close()
+
         return data
 
     def read(self, argv):
@@ -144,17 +144,27 @@ class g3sensor():
             self.data = self.read_data()
             if debug: print self.data
             return self.data
+def sendData():
+    air=g3sensor()
+    pmdata=air.read("/dev/ttyAMA0")
+    print pmdata
+    send.post(posturl, pmdata)
 
-if __name__ == '__main__': 
+def sendDatas():
     air=g3sensor()
     while True:
-        pmdata=0
-        try:
-           while True:
-             pmdata=air.read("/dev/ttyAMA0")
-        except: 
-            next
-        if pmdata != 0:
-            print pmdata
-            break
+	pmdata=0
+	try:
+	   while True:
+	     pmdata=air.read("/dev/ttyAMA0")
+	     send.post(posturl, pmdata)
+	     if debug: print pmdata
+	except: 
+	    next
+	if pmdata != 0:
+	    #print pmdata
+	    break
 
+
+if __name__ == '__main__': 
+    sendDatas()
