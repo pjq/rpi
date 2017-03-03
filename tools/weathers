@@ -1,0 +1,1 @@
+[{"id":1,"timestamp":1488511306124,"pm25":28.0,"pm25_cf":27.0,"pm10":25.0,"pm10_cf":25.0,"temperature":23.2,"humidity":0.2,"raw_data":"string","location":"home","alt":0.0,"lat":0.0},{"id":2,"timestamp":1488512441414,"pm25":28.0,"pm25_cf":27.0,"pm10":25.0,"pm10_cf":25.0,"temperature":23.2,"humidity":0.2,"raw_data":"string","location":"office","alt":0.0,"lat":0.0}]

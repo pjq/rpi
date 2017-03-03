@@ -2,7 +2,12 @@
 import serial
 import time
 import sys
+import send
 from struct import *
+
+posturl = "http://10.129.36.206:8080/api/rpi/weather"
+home="office"
+#data = { "id": 2, "pm25": 28, "pm25_cf": 27, "pm10": 25, "pm10_cf": 25, "temperature": 23.2, "humidity": 0.2, "raw_data": "string", "location": "home", "alt": 0, "lat": 0 }
 debug=0
 # work for pms3003
 # data structure: https://github.com/avaldebe/AQmon/blob/master/Documents/PMS3003_LOGOELE.pdf
@@ -127,6 +132,8 @@ class g3sensor():
 		print time.asctime(time.localtime(time.time()))+ " pm2.5: "+str(pm25)+ " pm2.5(cf): " +str(pm25_cf) +" pm1.0: "+str(pm1) +" pm10: "+str(pm10)   + " temp(c): "+str(temp) + " humi(%): " + str(hum) + " version: " + str(version) + " error: " + str(error)
 	#	print "pm10: "+str(pm10)
         data = [pm1_cf, pm10_cf, pm25_cf, pm1, pm10, pm25]
+	data = { "pm25": pm25, "pm25_cf": pm25_cf, "pm10": pm10, "pm10_cf": pm10_cf, "temperature": temp, "humidity": humi, "raw_data": "string", "location": location, "alt": 0, "lat": 0 }
+        send.post(posturl, data)
     	self.serial.close()
         return data
 
