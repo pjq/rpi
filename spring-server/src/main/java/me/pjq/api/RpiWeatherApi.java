@@ -39,5 +39,5 @@ public interface RpiWeatherApi {
     @RequestMapping(value = "/rpi/weathers",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<RpiWeatherItem>> findWeatherItems(@ApiParam(value = "pm25 to filter by") @RequestParam(value = "pm25", required = false) String pm25, @ApiParam(value = "maximum number of results to return") @RequestParam(value = "limit", required = false) Integer limit);
+    ResponseEntity<List<RpiWeatherItem>> findWeatherItems(@ApiParam(value = "pm25 to filter by") @RequestParam(value = "pm25", required = false) String pm25, @ApiParam(value = "maximum number of results to return") @RequestParam(value = "size", required = false) Integer size);
 }

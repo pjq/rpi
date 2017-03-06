@@ -47,7 +47,7 @@ public class RpiWeatherApiController implements RpiWeatherApi {
     }
 
     public ResponseEntity<List<RpiWeatherItem>> findWeatherItems(@ApiParam(value = "pm25 to filter by") @RequestParam(value = "pm25", required = false) String pm25,
-                                                                 @ApiParam(value = "maximum number of results to return") @RequestParam(value = "limit", required = false) Integer limit) {
+                                                                 @ApiParam(value = "maximum number of results to return") @RequestParam(value = "size", required = false) Integer size) {
         // do some magic!
         Comparator<RpiWeatherItem> comparator = new Comparator<RpiWeatherItem>() {
             @Override
@@ -60,7 +60,7 @@ public class RpiWeatherApiController implements RpiWeatherApi {
 
         int maxmium = MAXMIUM;
         try {
-            maxmium = null == limit ? MAXMIUM : Integer.valueOf(limit);
+            maxmium = null == size ? MAXMIUM : Integer.valueOf(size);
 
         } catch (Exception e) {
            e.printStackTrace();
