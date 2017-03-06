@@ -18,11 +18,12 @@ import java.util.List;
 
 @Controller
 public class RpiWeatherApiController implements RpiWeatherApi {
+    private static final int MAXMIUM = 100;
 
     @Autowired
     private RpiWeatherRepository rpiWeatherRepository;
 
-    public ResponseEntity<RpiWeatherItem> addWeatherItem(@ApiParam(value = "WeatherItem to add to the store" ,required=true ) @RequestBody RpiWeatherItem WeatherItem) {
+    public ResponseEntity<RpiWeatherItem> addWeatherItem(@ApiParam(value = "WeatherItem to add to the store", required = true) @RequestBody RpiWeatherItem WeatherItem) {
         // do some magic!
 //        RpiWeatherItem addWeatherItem = new RpiWeatherItem();
 //        addWeatherItem.setId(WeatherItem.getId());
@@ -36,7 +37,7 @@ public class RpiWeatherApiController implements RpiWeatherApi {
         return new ResponseEntity<RpiWeatherItem>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> deleteWeatherItem(@ApiParam(value = "ID of WeatherItem to delete",required=true ) @PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteWeatherItem(@ApiParam(value = "ID of WeatherItem to delete", required = true) @PathVariable("id") Long id) {
         // do some magic!
         RpiWeatherItem WeatherItem = new RpiWeatherItem();
         WeatherItem.setId(id);
@@ -46,7 +47,7 @@ public class RpiWeatherApiController implements RpiWeatherApi {
     }
 
     public ResponseEntity<List<RpiWeatherItem>> findWeatherItems(@ApiParam(value = "pm25 to filter by") @RequestParam(value = "pm25", required = false) String pm25,
-                                              @ApiParam(value = "maximum number of results to return") @RequestParam(value = "limit", required = false) Integer limit) {
+                                                                 @ApiParam(value = "maximum number of results to return") @RequestParam(value = "limit", required = false) Integer limit) {
         // do some magic!
         Comparator<RpiWeatherItem> comparator = new Comparator<RpiWeatherItem>() {
             @Override
@@ -57,6 +58,15 @@ public class RpiWeatherApiController implements RpiWeatherApi {
         List<RpiWeatherItem> rpiWeatherItems = rpiWeatherRepository.findAll();
         rpiWeatherItems.sort(comparator);
 
-        return new ResponseEntity<List<RpiWeatherItem>>(rpiWeatherItems, HttpStatus.OK);
+        int maxmium = MAXMIUM;
+        try {
+            maxmium = null == limit ? MAXMIUM : Integer.valueOf(limit);
+
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+        List<RpiWeatherItem> subList = rpiWeatherItems.subList(0, rpiWeatherItems.size() < maxmium ? rpiWeatherItems.size() : maxmium);
+
+        return new ResponseEntity<List<RpiWeatherItem>>(subList, HttpStatus.OK);
     }
 }
