@@ -1,7 +1,9 @@
 #!/bin/bash
-for i in {1..1000000..1}
+echo "start monitor pm2.5..."
+for i in {1..100000}
 do
     echo "loop times "${i}
+    sleep 1
     ./g5.py
 done
 
