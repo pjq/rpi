@@ -15,6 +15,17 @@ def post(url, data):
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())  
     response = opener.open(req, data)  
     return response.read()  
+
+def post_ubidots(url, data):  
+    req = urllib2.Request(url)  
+    req.add_header('Content-Type', 'application/json')
+    req.add_header('X-Auth-Token', 'R2Flv8caVaT0cE6cVZivS9Rs3zTiHf')
+
+    data = json.dumps(data)
+    #enable cookie  
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())  
+    response = opener.open(req, data)  
+    return response.read()  
   
 def main():  
     posturl = "http://10.129.36.206:8080/api/rpi/weather"
