@@ -18,6 +18,10 @@ So I buy the new one, and now I have many hardwares for play with
 * Breadboard
 * Lines
 
+#### Realtime Weather Station
+I have already built one simple realtime weather station, to provider the PM2.5/Temperature/Himidity, please check
+* http://rpi.pjq.me/
+
 
 I will start to learning followings
 * Learning GPIO, learn the basic usage about how to control them
