@@ -3,12 +3,19 @@ import serial
 import time
 import sys
 import send
+import commands
 from struct import *
 
 posturl = "http://10.129.41.134:8080/api/rpi/weather"
 posturl = "http://10.129.42.132:8080/api/rpi/weather"
 posturl = "http://10.59.176.71:8080/api/rpi/weather"
-location="office"
+posturl = "http://192.168.31.177:8080/api/rpi/weather"
+location="home"
+#pi1
+tty_device="/dev/ttyAMA0"
+#pi3
+#tty_device="/dev/serial0"
+
 #data = { "id": 2, "pm25": 28, "pm25_cf": 27, "pm10": 25, "pm10_cf": 25, "temperature": 23.2, "humidity": 0.2, "raw_data": "string", "location": "home", "alt": 0, "lat": 0 }
 debug=0
 
@@ -18,6 +25,13 @@ debug=0
 # fix me: the format is different between /dev/ttyUSBX(USB to Serial) and /dev/ttyAMA0(GPIO RX)
 #          ttyAMA0:0042 004d 0014 0022 0033
 #          ttyUSB0:4d42 1400 2500 2f00
+revision=commands.getoutput('cat /proc/cpuinfo |grep Revision|cut -d ":" -f2')
+if  "a22082" in revision:
+    tty_device="/dev/serial0"
+else:
+    tty_device="/dev/ttyAMA0"
+
+if debug: print tty_device
 
 class g3sensor():
     def __init__(self):
@@ -150,7 +164,7 @@ class g3sensor():
             return self.data
 def sendData():
     air=g3sensor()
-    pmdata=air.read("/dev/ttyAMA0")
+    pmdata=air.read(tty_device)
     print pmdata
     send.post(posturl, pmdata)
 
@@ -160,6 +174,7 @@ def sendUbidots(pmdata):
 	#{"value":1234}
 	ubidots_host="http://things.ubidots.com/api/v1.6/variables/ID/values"
 	pm25_url=ubidots_host.replace("ID","58c76d947625424c6def6f0b")
+	pm25_index_url=ubidots_host.replace("ID","58d0ebf37625427ae806e14b")
 	temp_url=ubidots_host.replace("ID","58c76d8c7625424c6a1a816e")
 	humidity_url=ubidots_host.replace("ID","58c76d9c7625424c6ced252b")
 
@@ -178,6 +193,13 @@ def sendUbidots(pmdata):
         value={"value" :val}
         send.post_ubidots(pm25_url, value)
 
+	#pm25 index
+        val=pmdata['pm25_cf']
+        if val>1000:
+            return
+        value={"value" :val}
+        send.post_ubidots(pm25_index_url, value)
+
         #humidity
         val=pmdata['humidity']
         if val>100:
@@ -194,7 +216,7 @@ def sendDatas():
 	pmdata=0
 	try:
 	   while True:
-	     pmdata=air.read("/dev/ttyAMA0")
+	     pmdata=air.read(tty_device)
              sendUbidots(pmdata)
 	     send.post(posturl, pmdata)
 	     if debug: print pmdata

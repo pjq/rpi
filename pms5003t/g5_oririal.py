@@ -91,7 +91,8 @@ if __name__ == '__main__':
         pmdata=0
         try:
            while True:
-             pmdata=air.read("/dev/ttyAMA0")
+             #pmdata=air.read("/dev/ttyAMA0")
+             pmdata=air.read("/dev/serial0")
         except: 
             next
         if pmdata != 0:
