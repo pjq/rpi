@@ -24,7 +24,7 @@ def post_ubidots(url, data):
     data = json.dumps(data)
     #enable cookie  
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())  
-    response = opener.open(req, data)  
+    response = opener.open(req, data, timeout=10)  
     return response.read()  
   
 def main():  
