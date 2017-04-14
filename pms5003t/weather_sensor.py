@@ -10,6 +10,8 @@ posturl = "http://10.129.41.134:8080/api/rpi/weather"
 posturl = "http://10.129.42.132:8080/api/rpi/weather"
 posturl = "http://10.59.176.71:8080/api/rpi/weather"
 posturl = "http://192.168.31.177:8080/api/rpi/weather"
+posturl = "http://192.168.31.180:8080/api/rpi/weather"
+posturl = "http://127.0.0.1:8080/api/rpi/weather"
 location="home"
 #pi1
 tty_device="/dev/ttyAMA0"
