@@ -7,6 +7,6 @@ if [ ${#} == 1 ];then
    file=${1}
 fi
 
-echo "Capture photo ${file}.png"
+echo "Capture photo ${file}.jpg"
 
-raspistill -o > ${file}.png
+raspistill -o ${file}.jpg
