@@ -1,6 +1,4 @@
 #!/usr/bin/env python    
-  
-  
 import RPi.GPIO as GPIO  
 import time  
 import signal  
@@ -9,7 +7,7 @@ import atexit
 #atexit.register(GPIO.cleanup)    
   
 GPIO.setmode(GPIO.BCM)  
-GPIO.setup(14, GPIO.OUT, initial=False)  
+GPIO.setup(17, GPIO.OUT, initial=False)  
 p = GPIO.PWM(17,50) #50HZ  
 p.start(0)  
 time.sleep(2)  

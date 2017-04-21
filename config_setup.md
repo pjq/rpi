@@ -37,3 +37,7 @@ create database rpi;
 cd /home/pi && java -jar swagger-spring-1.0.0.jar &
 cd /home/pi/rpi/pms5003t/ && ./monitor.sh >>/var/log/rpi.log &
 
+# make it speak
+sudo apt-get install espeak
+espeak "Hello, I am Raspberry Pi, I am online now" 2>/dev/null
+
