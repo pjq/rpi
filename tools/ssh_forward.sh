@@ -3,8 +3,10 @@
 if [ $# = 2 ];then
     localport=$1
     remoteport=$2
-    echo ssh -gNfR ef.pjq.me:${remoteport}:localhost:${localport} pjq@ef.pjq.me
-    ssh -gNfR ef.pjq.me:${remoteport}:localhost:${localport} pjq@ef.pjq.me
+    #echo ssh -gNfR ef.pjq.me:${remoteport}:localhost:${localport} pjq@ef.pjq.me
+    #ssh -gNfR ef.pjq.me:${remoteport}:localhost:${localport} pjq@ef.pjq.me
+    echo autossh -f -M 2"$1"  -NR ef.pjq.me:${remoteport}:localhost:${localport} pjq@ef.pjq.me
+    autossh -f -M 2"$1" -NR  ef.pjq.me:${remoteport}:localhost:${localport} pjq@ef.pjq.me
     echo DONE, Now you can visit it via
     echo http://ef.pjq.me:${remoteport}
 else

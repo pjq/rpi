@@ -11,8 +11,9 @@ espeak "Now everything is working perfectly" 2>/dev/null
 pulseaudio -D &
 espeak "Enjoy your time now"
 
-echo "`date` sleep 180 seconds" >>/var/log/rpi.log
-sleep 180 
+sleep_second=6
+echo "`date` sleep ${sleep_second} seconds" >>/var/log/rpi.log
+sleep ${sleep_second} 
 #ssh -gNfR ef.pjq.me:12222:localhost:22 pjq@ef.pjq.me 
 #ssh -gNfR ef.pjq.me:18080:localhost:8080 pjq@ef.pjq.me 
 #ssh -gNfR ef.pjq.me:18081:localhost:8081 pjq@ef.pjq.me 
