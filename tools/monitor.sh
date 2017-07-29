@@ -1,7 +1,7 @@
 #!/bin/bash
 echo `date` "start monitor pm2.5..."
 
-sleep_seconds=60
+sleep_seconds=600
 i=0
 while true;
 do
