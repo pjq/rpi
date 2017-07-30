@@ -4,11 +4,9 @@ import controller
 
 if __name__=="__main__":
     try:
-        controller.t_up()
-        time.sleep(5)
-        controller.t_stop()
+        controller.up(0)
     except KeyboardInterrupt:
         print "KeyboardInterrupt"
-        controller.t_stop()
+        controller.stop()
         
 
