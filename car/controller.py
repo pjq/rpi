@@ -17,7 +17,7 @@ GPIO.setup(PIN3,GPIO.OUT)
 GPIO.setup(PIN4,GPIO.OUT)
 #GPIO.setup(7,GPIO.IN)
 
-UNLIMITED_TIME=1000
+UNLIMITED_TIME=5
 
 def stop():
     print "stop"

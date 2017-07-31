@@ -8,7 +8,7 @@ if __name__=="__main__":
     if len(sys.argv)==2:
         sleep=float(sys.argv[1])
     try:
-        controller.right(sleep)
+        controller.stop(sleep)
     except KeyboardInterrupt:
         print "KeyboardInterrupt"
         controller.stop()
