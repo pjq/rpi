@@ -17,6 +17,16 @@ So I buy the new one, and now I have many hardwares for play with
 * PL2303, USB to TTL
 * Breadboard
 * Lines
+* Motors
+
+#### Car on Raspberry Pi
+Currently, I am working on the smart car on Raspberry Pi, I build:
+* The controller for the GPIO, so it can be used to control the motor engine forward/backward
+* I use pwm to controller the speed of the motor engine
+* I use camera, so I can see the real time video stream
+* I build one Android App, so I can use it to control the car without the computer.
+* I use some ssh forward commands, so I can control it or see the video stream even I am at office or at home
+
 
 #### Realtime Weather Station
 I have already built one simple realtime weather station, to provider the PM2.5/Temperature/Himidity, please check
