@@ -11,6 +11,6 @@ if __name__=="__main__":
         controller.stop(sleep)
     except KeyboardInterrupt:
         print "KeyboardInterrupt"
-        controller.stop()
+        controller.go_stop()
         
 

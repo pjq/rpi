@@ -4,13 +4,15 @@ import sys
 import controller
 
 if __name__=="__main__":
-    sleep=5
-    if len(sys.argv)==2:
+    sleep=1
+    speed=50
+    if len(sys.argv)==3:
         sleep=float(sys.argv[1])
+        speed=float(sys.argv[2])
     try:
-        controller.up(sleep)
+        controller.up(sleep, speed)
     except KeyboardInterrupt:
         print "KeyboardInterrupt"
-        controller.stop()
+        controller.go_stop()
         
 
