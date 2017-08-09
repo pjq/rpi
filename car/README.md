@@ -7,7 +7,11 @@ Currently, I am working on the smart car on Raspberry Pi, I build:
 * I build one Android App, so I can use it to control the car without the computer.
 * I use some ssh forward commands, so I can control it or see the video stream even I am at office or at home
 
-So from anywhere/anytime you can access your Car, control it and streaming it.
+So from **anywhere/anytime** you can access your Car, control it and streaming it.
+I also develop the auto-driven application, but not works perfectly, still need more time to improve it.
+* It use `Ultrasonic Sensor` to detect the obstacle distance, so it can decide stop or back.
+* It use `Obstacle Avoidance Sensor` to detect some obstacles are closely, so it can decide to turn left/right/back.
+
 And mostly important thing is make your pets happy if you have, it because I have cat, so I build it, just for kidding.
 
 #### Purpose
