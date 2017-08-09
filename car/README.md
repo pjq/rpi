@@ -41,6 +41,9 @@ The real time `Air Quality` screenshot, it will the
 * Humidity
 ![Alt text](../demo/pm25.png)
 
+Android App
+![Alt text](../demo/android_app.png)
+
 Here are the screenshots for the car
 
 ##### Demo
