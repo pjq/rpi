@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.pi4j:pi4j-core:1.1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/pi4j/pi4j-core/1.1/pi4j-core-1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/pi4j/pi4j-core/1.1/pi4j-core-1.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/pi4j/pi4j-core/1.1/pi4j-core-1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

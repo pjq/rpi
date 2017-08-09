@@ -19,6 +19,7 @@ public class RpiWeatherItem {
     @GeneratedValue
     private Long id = null;
 
+
     @JsonProperty("timestamp")
     private long timestamp;
 
@@ -43,18 +44,6 @@ public class RpiWeatherItem {
     @JsonProperty("raw_data")
     private String raw_data = null;
 
-    @JsonProperty("location")
-    private String location= null;
-
-    @JsonProperty("date")
-    private String date= null;
-
-    @JsonProperty("alt")
-    private float alt;
-
-    @JsonProperty("lat")
-    private float lat;
-
     public RpiWeatherItem id(Long id) {
         this.id = id;
         return this;
@@ -72,15 +61,6 @@ public class RpiWeatherItem {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    @ApiModelProperty(required = false, value = "")
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     /**
@@ -174,38 +154,6 @@ public class RpiWeatherItem {
 
     public void setRaw_data(String raw_data) {
         this.raw_data = raw_data;
-    }
-
-    /**
-     * Get location
-     *
-     * @return location
-     **/
-    @ApiModelProperty(value = "")
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    @ApiModelProperty(value = "")
-    public float getAlt() {
-        return alt;
-    }
-
-    public void setAlt(float alt) {
-        this.alt = alt;
-    }
-
-    @ApiModelProperty(value = "")
-    public float getLat() {
-        return lat;
-    }
-
-    public void setLat(float lat) {
-        this.lat = lat;
     }
 
     @Override

@@ -1,7 +1,8 @@
 package me.pjq.api;
 
-import io.swagger.annotations.*;
+import me.pjq.model.CarAction;
 import me.pjq.model.RpiWeatherItem;
+import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public interface RpiWeatherApi {
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "WeatherItem response", response = RpiWeatherItem.class),
         @ApiResponse(code = 200, message = "unexpected error", response = RpiWeatherItem.class) })
-    @RequestMapping(value = "/rpi/weather",
+    @RequestMapping(value = "/weather",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
     ResponseEntity<RpiWeatherItem> addWeatherItem(@ApiParam(value = "WeatherItem to add to the store", required = true) @RequestBody RpiWeatherItem WeatherItem);
@@ -27,7 +28,7 @@ public interface RpiWeatherApi {
     @ApiResponses(value = { 
         @ApiResponse(code = 204, message = "WeatherItem deleted", response = Void.class),
         @ApiResponse(code = 200, message = "unexpected error", response = Void.class) })
-    @RequestMapping(value = "/rpi/weather/{id}",
+    @RequestMapping(value = "/weather/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
     ResponseEntity<Void> deleteWeatherItem(@ApiParam(value = "ID of WeatherItem to delete", required = true) @PathVariable("id") Long id);
@@ -36,8 +37,17 @@ public interface RpiWeatherApi {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "WeatherItem response", response = RpiWeatherItem.class),
             @ApiResponse(code = 200, message = "unexpected error", response = RpiWeatherItem.class) })
-    @RequestMapping(value = "/rpi/weathers",
+    @RequestMapping(value = "/weathers",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<RpiWeatherItem>> findWeatherItems(@ApiParam(value = "pm25 to filter by") @RequestParam(value = "pm25", required = false) String pm25, @ApiParam(value = "maximum number of results to return") @RequestParam(value = "size", required = false) Integer size);
+    ResponseEntity<List<RpiWeatherItem>> findWeatherItems(@ApiParam(value = "pm25 to filter by") @RequestParam(value = "pm25", required = false) String pm25, @ApiParam(value = "maximum number of results to return") @RequestParam(value = "limit", required = false) Integer limit);
+
+    @ApiOperation(value = "", notes = "CarAction controller", response = RpiWeatherItem.class, tags={  })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "WeatherItem response", response = CarAction.class),
+            @ApiResponse(code = 200, message = "unexpected error", response = CarAction.class) })
+    @RequestMapping(value = "/car/controller",
+            produces = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<CarAction> carController(@ApiParam(value = "CarAction action", required = true) @RequestBody CarAction carAction);
 }

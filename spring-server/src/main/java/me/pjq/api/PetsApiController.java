@@ -2,10 +2,10 @@ package me.pjq.api;
 
 import me.pjq.model.NewPet;
 import me.pjq.model.Pet;
+import me.pjq.repository.PetsRepository;
 
 import io.swagger.annotations.*;
 
-import me.pjq.repository.PetsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
