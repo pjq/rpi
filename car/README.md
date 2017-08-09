@@ -16,7 +16,7 @@ So I think the days are coming, there are lots of chips, lots of softwares, lots
 
 So I build the car with lots of sensors and it can be controlled anywhere if you have network.
 
-####Hardware
+#### Hardware
 * Raspberry Pi 3
 * Motors * 4
 * Batteries
@@ -39,7 +39,7 @@ The real time `Air Quality` screenshot, it will the
 
 Here are the screenshots for the car
 
-#####Demo
+##### Demo
 Here are some video demos, let's see how it works magically.
 
 
@@ -79,7 +79,7 @@ Linux raspberrypi 4.9.35-v7+ 1014 SMP Fri Jun 30 14:47:43 BST 2017 armv7l GNU/Li
 │   └── up.py
 ```
 
-######Some Tools
+###### Some Tools
 ```
 └── tools
     ├── autoforward.sh
@@ -92,7 +92,7 @@ Linux raspberrypi 4.9.35-v7+ 1014 SMP Fri Jun 30 14:47:43 BST 2017 armv7l GNU/Li
     └── weathers
 ```
 
-######Air Quality Sensor PMS5003T
+###### Air Quality Sensor PMS5003T
 ```
 ├── pms5003t
 │   ├── g5_oririal.py
@@ -149,7 +149,7 @@ The main controller code is in `CarController.java` and `RpiWeatherApiController
 
 ```
 
-######Motion, for video streaming
+###### Motion, for video streaming
 I use [Motion](https://github.com/Motion-Project/motion) for the video streaming, it support record the video if something is moving.
 
 ###### Android App
