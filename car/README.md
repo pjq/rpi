@@ -1,18 +1,18 @@
 #### Raspberry Pi Car
 
 Currently, I am working on the smart car on Raspberry Pi, I build:
-* The controller for the GPIO, so it can be used to control the motor engine to forward/backward
-* I use PWM on the GPIO pins to control the speed of the motor engine
-* I use camera, so I can see the real time video stream
-* I build one Android App, so I can use it to control the car without the computer.
-* I use some ssh forward commands, so I can control it or see the video stream even I am at office or at home
+* The controller for the GPIO, so it can be used to control the motor engine to **forward/backward/left/right**
+* I use PWM on the GPIO pins to control the **speed** of the motor engine
+* I use camera, so I can see the **real time video stream**
+* I build one **Android App**, so I can use it to control the car without the computer.
+* I use some ssh forward commands, so I can control it or see the video stream even I am **at office** or **at home**
 
 So from **anywhere/anytime** you can access your Car, control it and streaming it.
 I also develop the auto-driven application, but not works perfectly, still need more time to improve it.
 * It use `Ultrasonic Sensor` to detect the obstacle distance, so it can decide stop or back.
 * It use `Obstacle Avoidance Sensor` to detect some obstacles are closely, so it can decide to turn left/right/back.
 
-And mostly important thing is make your pets happy if you have, it because I have cat, so I build it, just for kidding.
+And mostly important thing is to **make your pets happy** if you have, it because I have one cat, so I build it, just for kidding.
 
 #### Purpose
 I think boys have the dream that one day they can control the Robot when they are in childhood.
