@@ -48,6 +48,7 @@ Here are the screenshots for the car
 
 ##### Demo
 Here are some video demos, let's see how it works magically.
+[Video Demo](../demo/SmartCarOnRaspberryPi_JianqingPeng.mp4)
 
 
 #### Technology
