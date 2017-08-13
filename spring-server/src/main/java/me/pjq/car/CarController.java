@@ -200,6 +200,21 @@ public class CarController {
         });
     }
 
+    public void autoDrive(final CarAction actionDuration) {
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                if (usePython) {
+                    callPython("auto_car.py", actionDuration.getDuration(), actionDuration.getSpeed());
+
+                    return;
+                }
+
+                stopCar();
+            }
+        });
+    }
+
     public void speed(final CarAction speed) {
         executorService.submit(new Runnable() {
             @Override

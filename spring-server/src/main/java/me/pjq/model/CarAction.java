@@ -125,6 +125,7 @@ public class CarAction {
         LEFT("left"),
         RIGHT("right"),
         STOP("stop"),
+        AUTO_DRIVE("auto_drive"),
         SPEED("speed"),
         UNKNOWN("unknown");
         String action;
@@ -145,6 +146,8 @@ public class CarAction {
                 act = RIGHT;
             } else  if (STOP.action.equalsIgnoreCase(action)) {
                 act = STOP;
+            } else  if (AUTO_DRIVE.action.equalsIgnoreCase(action)) {
+                act = AUTO_DRIVE;
             } else  if (SPEED.action.equalsIgnoreCase(action)) {
                 act = SPEED;
             } else {
@@ -172,6 +175,10 @@ public class CarAction {
 
         public boolean isStop() {
             return STOP.action.equalsIgnoreCase(action);
+        }
+
+        public boolean isAutoDrive() {
+            return AUTO_DRIVE.action.equalsIgnoreCase(action);
         }
 
         public boolean isSpeed() {
