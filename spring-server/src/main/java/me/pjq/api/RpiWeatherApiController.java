@@ -72,6 +72,8 @@ public class RpiWeatherApiController implements RpiWeatherApi {
             carController.right(carAction);
         } else if (act.isStop()) {
             carController.stop(carAction);
+        } else if (act.isAutoDrive()) {
+            carController.autoDrive(carAction);
         } else if (act.isSpeed()) {
             carController.speed(carAction);
         }

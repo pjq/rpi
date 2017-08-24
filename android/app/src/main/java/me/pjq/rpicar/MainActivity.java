@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button right;
     Button up;
     Button down;
+    Button auto;
     View stop;
     WebView webView;
     EditText url;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         left = (Button) findViewById(R.id.left);
         right = (Button) findViewById(R.id.right);
         up = (Button) findViewById(R.id.up);
+        auto = (Button) findViewById(R.id.auto);
         down = (Button) findViewById(R.id.down);
         webView = (WebView) findViewById(R.id.webview);
         cameraOn = (TextView) findViewById(R.id.cameraOn);
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         left.setOnClickListener(this);
         right.setOnClickListener(this);
         up.setOnClickListener(this);
+        auto.setOnClickListener(this);
         down.setOnClickListener(this);
         cameraOn.setOnClickListener(this);
 
@@ -216,6 +219,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.down:
                 carAction.action = "down";
+                break;
+
+            case R.id.auto:
+                if (carAction.speed > 40) {
+                    carAction.speed = 40;
+                }
+
+                carAction.action = "auto_drive";
                 break;
 
             case R.id.cameraOn:

@@ -85,6 +85,16 @@
         </RelativeLayout>
 
         <Button
+            android:id="@+id/auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/speedLayout"
+            android:layout_marginTop="10dip"
+            android:text="Auto"
+            android:textSize="12sp"
+            tools:text="UP" />
+
+        <Button
             android:id="@+id/up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
