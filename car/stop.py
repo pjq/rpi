@@ -12,6 +12,7 @@ if __name__=="__main__":
         cmd="sh /home/pi/rpi/car/kill.sh"
         print cmd
         os.system(cmd)
+        controller.pwm_change_duty(0)
         controller.stop(sleep)
     except KeyboardInterrupt:
         print "KeyboardInterrupt"
