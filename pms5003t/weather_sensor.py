@@ -10,14 +10,14 @@ posturl = "http://10.129.41.134:8080/api/rpi/weather"
 posturl = "http://10.129.42.132:8080/api/rpi/weather"
 posturl = "http://10.59.176.71:8080/api/rpi/weather"
 posturl = "http://192.168.31.177:8080/api/rpi/weather"
-posturl = "http://192.168.31.180:8080/api/rpi/weather"
-posturl = "http://127.0.0.1:8080/api/rpi/weather"
+#posturl = "http://192.168.31.180:8080/api/rpi/weather"
+posturl = "http://127.0.0.1:8080/api/weather"
 location="home"
-location="office"
+#location="office"
 #pi1
 tty_device="/dev/ttyAMA0"
 #pi3
-#tty_device="/dev/serial0"
+tty_device="/dev/serial0"
 
 #data = { "id": 2, "pm25": 28, "pm25_cf": 27, "pm10": 25, "pm10_cf": 25, "temperature": 23.2, "humidity": 0.2, "raw_data": "string", "location": "home", "alt": 0, "lat": 0 }
 debug=0
@@ -220,8 +220,8 @@ def sendDatas():
 	try:
 	   while True:
 	     pmdata=air.read(tty_device)
-             sendUbidots(pmdata)
 	     send.post(posturl, pmdata)
+             sendUbidots(pmdata)
 	     if debug: print pmdata
              time.sleep(60)
 	except: 
