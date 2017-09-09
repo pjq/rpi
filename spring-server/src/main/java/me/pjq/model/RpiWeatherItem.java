@@ -18,10 +18,21 @@ public class RpiWeatherItem {
     @Id
     @GeneratedValue
     private Long id = null;
+    //{"lat": 0, "date": "Sun Sep 10 00:29:48 2017", "alt": 0, "temperature": 25.6, "pm10": 50, "raw_data": "", "humidity": 70.4, "pm25_cf": 48, "location": "home", "pm10_cf": 54, "pm25": 40}
 
+    @JsonProperty("alt")
+    private long alt;
+    @JsonProperty("lat")
+    private long lat;
 
     @JsonProperty("timestamp")
     private long timestamp;
+
+    @JsonProperty("date")
+    private String date;
+
+    @JsonProperty("location")
+    private String location;
 
     @JsonProperty("pm25")
     private float pm25;
@@ -140,6 +151,38 @@ public class RpiWeatherItem {
 
     public void setHumidity(float humidity) {
         this.humidity = humidity;
+    }
+
+    public long getAlt() {
+        return alt;
+    }
+
+    public void setAlt(long alt) {
+        this.alt = alt;
+    }
+
+    public long getLat() {
+        return lat;
+    }
+
+    public void setLat(long lat) {
+        this.lat = lat;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     /**
