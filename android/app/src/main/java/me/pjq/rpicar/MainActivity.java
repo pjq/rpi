@@ -1,7 +1,6 @@
 package me.pjq.rpicar;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -16,8 +15,17 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
@@ -37,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     SeekBar speed;
     TextView speedValue;
+    TextView weatherStatus;
 
     private static final long DEFAULT_DURATION = 500;
     private static final long MAX_DURATION = 4;
@@ -62,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         seekbarValue = (TextView) findViewById(R.id.seekbarValue);
         speed = (SeekBar) findViewById(R.id.speed);
         speedValue = (TextView) findViewById(R.id.speedValue);
+        weatherStatus = (TextView) findViewById(R.id.weatherStatus);
 
         stop.setOnClickListener(this);
         left.setOnClickListener(this);
@@ -130,6 +140,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         apiService = new CarControllerApiService();
         webView.loadUrl(CarControllerApiService.Config.STREAM_URL());
 //        hideSoftKeyboard();
+
+        initWeatherStatus();
+    }
+
+    Disposable disposable;
+
+    private void initWeatherStatus() {
+        Scheduler scheduler = Schedulers.from(Executors.newSingleThreadExecutor());
+        disposable = Observable.interval(0, 2, TimeUnit.SECONDS)
+                .flatMap(new Function<Long, ObservableSource<List<WeatherItem>>>() {
+                    @Override
+                    public ObservableSource<List<WeatherItem>> apply(Long aLong) throws Exception {
+                        return apiService.getApi().getWeatherItems(0, 2);
+                    }
+                })
+                .doOnError(new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        log(throwable.toString());
+                    }
+                })
+                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Observable<Throwable> throwablObservable) throws Exception {
+                        return throwablObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+                            @Override
+                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                return Observable.timer(2, TimeUnit.SECONDS);
+                            }
+                        });
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(scheduler)
+                .subscribe(new Consumer<List<WeatherItem>>() {
+                    @Override
+                    public void accept(List<WeatherItem> weatherItems) throws Exception {
+                        WeatherItem item = weatherItems.get(0);
+                        String value = item.getDate() + "\nPM2.5 " + item.getPm25() + " " + item.getTemperature() + "°C " + item.getHumidity() + "%";
+                        log(value);
+
+                        weatherStatus.setText(value);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        log(throwable.toString());
+                    }
+                });
     }
 
     private void initSettings() {
@@ -187,6 +246,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 settings.setSpeed(speed.getProgress());
             }
         });
+
+        disposable.dispose();
     }
 
     @Override

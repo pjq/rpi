@@ -168,4 +168,10 @@
             android:textStyle="bold" />
 
     </RelativeLayout>
+
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:id="@+id/weatherStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </RelativeLayout>
