@@ -89,3 +89,4 @@ ENV/
 .ropeproject
 
 spring-server/target
+spring-server/.idea

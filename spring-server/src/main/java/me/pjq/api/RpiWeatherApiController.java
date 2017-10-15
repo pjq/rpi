@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiParam;
 import me.pjq.car.CarController;
 import me.pjq.model.CarAction;
 import me.pjq.model.RpiWeatherItem;
+import me.pjq.model.ServerStatus;
 import me.pjq.repository.CarActionRepository;
 import me.pjq.repository.RpiWeatherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,5 +83,22 @@ public class RpiWeatherApiController implements RpiWeatherApi {
         }
 
         return new ResponseEntity<CarAction>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ServerStatus> serverStatus() {
+        final PageRequest page1 = new PageRequest(
+                0, 1, Sort.Direction.DESC, "id"
+        );
+         List<RpiWeatherItem> rpiWeatherItems = rpiWeatherRepository.findAll(page1).getContent();
+         RpiWeatherItem rpiWeatherItem = null;
+         if (rpiWeatherItems.size()==1) {
+             rpiWeatherItem = rpiWeatherItems.get(0);
+         }
+
+         ServerStatus serverStatus = new ServerStatus();
+
+
+        return new ResponseEntity<ServerStatus>( status, HttpStatus.OK);
     }
 }

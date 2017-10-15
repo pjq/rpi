@@ -10,6 +10,7 @@ public class Settings extends RealmObject {
     String host;
     int duration;
     int speed;
+    int name;
 
     public String getHost() {
         return host;

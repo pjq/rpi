@@ -1,6 +1,7 @@
 package me.pjq.rpicar;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -147,6 +148,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Disposable disposable;
 
     private void initWeatherStatus() {
+        weatherStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, LineChartTime.class);
+                startActivity(intent);
+            }
+        });
+
         Scheduler scheduler = Schedulers.from(Executors.newSingleThreadExecutor());
         disposable = Observable.interval(0, 2, TimeUnit.SECONDS)
                 .flatMap(new Function<Long, ObservableSource<List<WeatherItem>>>() {
