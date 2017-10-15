@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="me.pjq.rpicar.CameraControllerFragment">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5"
+        android:scaleType="center"
+        android:src="@mipmap/background" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="0dip">
+
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></WebView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <ImageView
+                android:id="@+id/stop"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:layout_below="@id/up"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dip"
+                android:src="@color/color3"
+                android:text="STOP"
+                android:textSize="12sp"
+                tools:text="stop" />
+
+            <ImageView
+                android:id="@+id/up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/chevron_up"
+                android:textSize="12sp"
+                tools:text="UP" />
+
+            <ImageView
+                android:id="@+id/left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/up"
+                android:layout_marginTop="8dip"
+                android:layout_toLeftOf="@id/stop"
+                android:background="@drawable/chevron_left"
+                android:textSize="12sp"
+                tools:text="Left" />
+
+
+            <ImageView
+                android:id="@+id/right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/up"
+                android:layout_marginTop="8dip"
+                android:layout_toRightOf="@id/stop"
+                android:background="@drawable/chevron_right"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stop"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/chevron_down"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/cameraOn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="10dip"
+            android:shadowDx="2"
+            android:shadowRadius="2"
+            android:text="Camera On"
+            android:textColor="@android:color/holo_green_dark"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/weatherStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dip"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/auto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dip"
+        android:background="@color/color1"
+        android:padding="5dip"
+        android:text="Self-Drive"
+        android:textSize="12sp" />
+</RelativeLayout>

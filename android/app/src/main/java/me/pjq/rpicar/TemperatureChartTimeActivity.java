@@ -2,9 +2,7 @@
 package me.pjq.rpicar;
 
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +31,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -47,21 +47,33 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 import me.pjq.rpicar.chart.DemoBase;
 
-public class LineChartTime extends DemoBase implements OnSeekBarChangeListener {
-    private static final String TAG = "LineChartTime";
+public class TemperatureChartTimeActivity extends DemoBase implements OnSeekBarChangeListener {
+    private static final String TAG = "TemperatureChart";
 
     private LineChart mChart;
     private SeekBar mSeekBarX;
     private TextView tvX;
+    private TextView colorPM25;
+    private TextView colorTemp;
+    private TextView colorHumidity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_linechart_time);
+        setContentView(R.layout.activity_temperature_chart);
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        setTitle(R.string.pm25title);
+
+        colorPM25 = (TextView) findViewById(R.id.colorPM25);
+        colorTemp = (TextView) findViewById(R.id.colorTemp);
+        colorHumidity = (TextView) findViewById(R.id.colorHumidity);
 
         tvX = (TextView) findViewById(R.id.tvXMax);
         mSeekBarX = (SeekBar) findViewById(R.id.seekBar1);
@@ -100,10 +112,11 @@ public class LineChartTime extends DemoBase implements OnSeekBarChangeListener {
         xAxis.setPosition(XAxis.XAxisPosition.TOP_INSIDE);
         xAxis.setTypeface(mTfLight);
         xAxis.setTextSize(10f);
-        xAxis.setTextColor(Color.WHITE);
+        xAxis.setTextColor(Color.GREEN);
         xAxis.setDrawAxisLine(false);
         xAxis.setDrawGridLines(true);
-        xAxis.setTextColor(Color.rgb(255, 192, 56));
+//        xAxis.setTextColor(Color.rgb(255, 192, 56));
+        xAxis.setTextColor(Color.DKGRAY);
         xAxis.setCenterAxisLabels(true);
         xAxis.setGranularity(1f); // one hour
         xAxis.setValueFormatter(new IAxisValueFormatter() {
@@ -112,9 +125,9 @@ public class LineChartTime extends DemoBase implements OnSeekBarChangeListener {
 
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-               if (value<0 || value>= weatherItems.size()) {
-                   return "";
-               }
+                if (value < 0 || value >= weatherItems.size()) {
+                    return "";
+                }
 
                 WeatherItem item = weatherItems.get((int) value);
                 return mFormat.format(new Date(item.getTimestamp()));
@@ -130,7 +143,8 @@ public class LineChartTime extends DemoBase implements OnSeekBarChangeListener {
         leftAxis.setAxisMinimum(0f);
         leftAxis.setAxisMaximum(170f);
         leftAxis.setYOffset(-9f);
-        leftAxis.setTextColor(Color.rgb(255, 192, 56));
+//        leftAxis.setTextColor(Color.rgb(255, 192, 56));
+        leftAxis.setTextColor(Color.DKGRAY);
 
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setEnabled(false);
@@ -140,6 +154,23 @@ public class LineChartTime extends DemoBase implements OnSeekBarChangeListener {
     }
 
     private void readDemoJson() {
+        final Settings settings = DataManager.getRealm().where(Settings.class).findFirst();
+        if (settings != null) {
+            final String weatherJson = settings.getWeatherJson();
+            if (null != weatherJson) {
+
+                List weatherItems = Arrays.asList(new Gson().fromJson(weatherJson, WeatherItem[].class));
+                WeatherItem item = (WeatherItem) weatherItems.get(0);
+                String value = item.getDate() + " PM2.5 " + item.getPm25() + " " + item.getTemperature() + "°C " + item.getHumidity() + "%";
+                Logger.log(TAG, value);
+
+                setData(weatherItems);
+                mChart.invalidate();
+            }
+
+            return;
+        }
+
         try {
             InputStream inputStream = getAssets().open("demo.json");
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -163,6 +194,7 @@ public class LineChartTime extends DemoBase implements OnSeekBarChangeListener {
             e.printStackTrace();
         }
     }
+
 
     Disposable disposable;
 
@@ -201,12 +233,19 @@ public class LineChartTime extends DemoBase implements OnSeekBarChangeListener {
                 .subscribeOn(scheduler)
                 .subscribe(new Consumer<List<WeatherItem>>() {
                     @Override
-                    public void accept(List<WeatherItem> weatherItems) throws Exception {
+                    public void accept(final List<WeatherItem> weatherItems) throws Exception {
                         WeatherItem item = weatherItems.get(0);
                         String value = item.getDate() + "\nPM2.5 " + item.getPm25() + " " + item.getTemperature() + "°C " + item.getHumidity() + "%";
                         log(value);
                         setData(weatherItems);
                         mChart.invalidate();
+                        DataManager.getRealm().executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                realm.where(Settings.class).findFirst().setWeatherJson(new Gson().toJson(weatherItems));
+                            }
+                        });
+
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -364,12 +403,18 @@ public class LineChartTime extends DemoBase implements OnSeekBarChangeListener {
 
     List<WeatherItem> weatherItems;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void setData(List<WeatherItem> weatherItemList) {
-        weatherItemList.sort(new Comparator<WeatherItem>() {
+//        weatherItemList.sort(new Comparator<WeatherItem>() {
+//            @Override
+//            public int compare(WeatherItem o1, WeatherItem o2) {
+//                return (int) (o1.getTimestamp()-o2.getTimestamp());
+//            }
+//        });
+
+        Collections.sort(weatherItemList, new Comparator<WeatherItem>() {
             @Override
             public int compare(WeatherItem o1, WeatherItem o2) {
-                return (int) (o1.getTimestamp()-o2.getTimestamp());
+                return (int) (o1.getTimestamp() - o2.getTimestamp());
             }
         });
 
@@ -418,6 +463,7 @@ public class LineChartTime extends DemoBase implements OnSeekBarChangeListener {
         set1.setFillColor(ColorTemplate.getHoloBlue());
         set1.setHighLightColor(Color.rgb(244, 117, 117));
         set1.setDrawCircleHole(false);
+        colorPM25.setTextColor(ColorTemplate.getHoloBlue());
 
         LineDataSet set2 = new LineDataSet(values2, "Temperature");
         set2.setAxisDependency(AxisDependency.LEFT);
@@ -430,8 +476,9 @@ public class LineChartTime extends DemoBase implements OnSeekBarChangeListener {
         set2.setFillColor(ColorTemplate.JOYFUL_COLORS[0]);
         set2.setHighLightColor(Color.rgb(244, 117, 117));
         set2.setDrawCircleHole(false);
+        colorTemp.setTextColor(ColorTemplate.JOYFUL_COLORS[0]);
 
-        LineDataSet set3 = new LineDataSet(values3, "Temperature");
+        LineDataSet set3 = new LineDataSet(values3, "Humidity");
         set3.setAxisDependency(AxisDependency.LEFT);
         set3.setColor(ColorTemplate.JOYFUL_COLORS[1]);
         set3.setValueTextColor(ColorTemplate.JOYFUL_COLORS[1]);
@@ -442,10 +489,11 @@ public class LineChartTime extends DemoBase implements OnSeekBarChangeListener {
         set3.setFillColor(ColorTemplate.JOYFUL_COLORS[1]);
         set3.setHighLightColor(Color.rgb(244, 117, 117));
         set3.setDrawCircleHole(false);
+        colorHumidity.setTextColor(ColorTemplate.JOYFUL_COLORS[1]);
 
         // create a data object with the datasets
         LineData data = new LineData(set1, set2, set3);
-        data.setValueTextColor(Color.WHITE);
+        data.setValueTextColor(ColorTemplate.JOYFUL_COLORS[2]);
         data.setValueTextSize(9f);
 
         // set data
@@ -462,5 +510,12 @@ public class LineChartTime extends DemoBase implements OnSeekBarChangeListener {
     public void onStopTrackingTouch(SeekBar seekBar) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        disposable.dispose();
     }
 }

@@ -38,6 +38,15 @@ public class CarControllerApiService {
             return HOST() + port;
         }
 
+        public static String CAPTURE_VIDEO_URL() {
+            String port = "";
+            if (isSshRediret()) {
+                port = ":18091";
+            }
+
+            return HOST() + port+ "/motion";
+        }
+
         private static boolean isSshRediret() {
             return HOST.contains("pjq");
         }

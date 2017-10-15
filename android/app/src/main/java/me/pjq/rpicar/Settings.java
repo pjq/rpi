@@ -11,6 +11,7 @@ public class Settings extends RealmObject {
     int duration;
     int speed;
     int name;
+    String weatherJson;
 
     public String getHost() {
         return host;
@@ -34,5 +35,23 @@ public class Settings extends RealmObject {
 
     public void setSpeed(int speed) {
         this.speed = speed;
+    }
+
+    public String getWeatherJson() {
+        return weatherJson;
+    }
+
+    public void setWeatherJson(String weatherJson) {
+        this.weatherJson = weatherJson;
+    }
+
+    @Override
+    public String toString() {
+        return "Settings{" +
+                "host='" + host + '\'' +
+                ", duration=" + duration +
+                ", speed=" + speed +
+                ", name=" + name +
+                '}';
     }
 }

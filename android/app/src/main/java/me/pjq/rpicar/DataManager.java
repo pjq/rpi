@@ -25,8 +25,8 @@ public class DataManager {
                 .modules(Realm.getDefaultModule())
                 .schemaVersion(SCHEME_VERSION_2)
                 .name("Realm")
-//                .deleteRealmIfMigrationNeeded() // TODO: which migration behavior do we want?
-                .migration(new MyRealmMigration())
+                .deleteRealmIfMigrationNeeded() // TODO: which migration behavior do we want?
+//                .migration(new MyRealmMigration())
                 .build();
 
         Realm realm = Realm.getInstance(realmConfig);

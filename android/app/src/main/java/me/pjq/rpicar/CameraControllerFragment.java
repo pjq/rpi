@@ -1,21 +1,22 @@
 package me.pjq.rpicar;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.text.TextUtils;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.SeekBar;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -30,49 +31,52 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
-    private static final String TAG = "MainActivity";
-    Button left;
-    Button right;
-    Button up;
-    Button down;
-    Button auto;
+public class CameraControllerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
+    private static final String TAG = "CameraController";
+    ImageView left;
+    ImageView right;
+    ImageView up;
+    ImageView down;
+    View auto;
     View stop;
     WebView webView;
-    EditText url;
     TextView cameraOn;
-    SeekBar durationSeekBar;
-    TextView seekbarValue;
 
-    SeekBar speed;
-    TextView speedValue;
     TextView weatherStatus;
-
-    private static final long DEFAULT_DURATION = 500;
-    private static final long MAX_DURATION = 4;
 
     CarControllerApiService apiService;
 
+    public static CameraControllerFragment newInstance() {
+        CameraControllerFragment fragment = new CameraControllerFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        AppCompatDelegate appCompatDelegate = getDelegate();
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        url = (EditText) findViewById(R.id.url);
-        stop = findViewById(R.id.stop);
-        left = (Button) findViewById(R.id.left);
-        right = (Button) findViewById(R.id.right);
-        up = (Button) findViewById(R.id.up);
-        auto = (Button) findViewById(R.id.auto);
-        down = (Button) findViewById(R.id.down);
-        webView = (WebView) findViewById(R.id.webview);
-        cameraOn = (TextView) findViewById(R.id.cameraOn);
-        durationSeekBar = (SeekBar) findViewById(R.id.seekbar);
-        seekbarValue = (TextView) findViewById(R.id.seekbarValue);
-        speed = (SeekBar) findViewById(R.id.speed);
-        speedValue = (TextView) findViewById(R.id.speedValue);
-        weatherStatus = (TextView) findViewById(R.id.weatherStatus);
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        getActivity().setTitle("Camera");
+
+    }
+
+    private void initView(View view) {
+        stop = view.findViewById(R.id.stop);
+        left = (ImageView) view.findViewById(R.id.left);
+        right = (ImageView) view.findViewById(R.id.right);
+        up = (ImageView) view.findViewById(R.id.up);
+        auto = view.findViewById(R.id.auto);
+        down = (ImageView) view.findViewById(R.id.down);
+        webView = (WebView) view.findViewById(R.id.webview);
+        cameraOn = (TextView) view.findViewById(R.id.cameraOn);
+        weatherStatus = (TextView) view.findViewById(R.id.weatherStatus);
 
         stop.setOnClickListener(this);
         left.setOnClickListener(this);
@@ -94,55 +98,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setUseWideViewPort(true);
 
-        durationSeekBar.setMax(100);
-        durationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                seekbarValue.setText(getDuration() + " ms");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-
-        speed.setMax(100);
-        speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                speedValue.setText(getSpeed() + " %");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                speedValue.setText(getSpeed() + " %");
-
-                final CarAction carAction = new CarAction();
-                //set the default duration to 1 second.
-                carAction.duration = getDuration();
-                carAction.action = "speed";
-                carAction.speed = getSpeed();
-
-                sendCommand(carAction);
-            }
-        });
-
-        initSettings();
         apiService = new CarControllerApiService();
         webView.loadUrl(CarControllerApiService.Config.STREAM_URL());
 //        hideSoftKeyboard();
 
         initWeatherStatus();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_camera_controller, container, false);
+        initView(view);
+
+        return view;
     }
 
     Disposable disposable;
@@ -152,12 +122,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(MainActivity.this, LineChartTime.class);
-                startActivity(intent);
+                intent.setClass(getActivity(), TemperatureChartTimeActivity.class);
+                getActivity().startActivity(intent);
             }
         });
 
         Scheduler scheduler = Schedulers.from(Executors.newSingleThreadExecutor());
+
+        final Settings settings = getSettings();
+        final String weatherJson = settings.getWeatherJson();
+
+        if (weatherJson != null) {
+            List weatherItems = Arrays.asList(new Gson().fromJson(weatherJson, WeatherItem[].class));
+            WeatherItem item = (WeatherItem) weatherItems.get(0);
+            String value = item.getDate() + " PM2.5 " + item.getPm25() + " " + item.getTemperature() + "°C " + item.getHumidity() + "%";
+            Logger.log(TAG, value);
+
+            weatherStatus.setText(value);
+        }
+
         disposable = Observable.interval(0, 2, TimeUnit.SECONDS)
                 .flatMap(new Function<Long, ObservableSource<List<WeatherItem>>>() {
                     @Override
@@ -168,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .doOnError(new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        log(throwable.toString());
+                        Logger.log(TAG, throwable.toString());
                     }
                 })
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
@@ -186,44 +169,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .subscribeOn(scheduler)
                 .subscribe(new Consumer<List<WeatherItem>>() {
                     @Override
-                    public void accept(List<WeatherItem> weatherItems) throws Exception {
+                    public void accept(final List<WeatherItem> weatherItems) throws Exception {
                         WeatherItem item = weatherItems.get(0);
-                        String value = item.getDate() + "\nPM2.5 " + item.getPm25() + " " + item.getTemperature() + "°C " + item.getHumidity() + "%";
-                        log(value);
+                        String value = item.getDate() + " PM2.5 " + item.getPm25() + " " + item.getTemperature() + "°C " + item.getHumidity() + "%";
+                        Logger.log(TAG, value);
 
                         weatherStatus.setText(value);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        log(throwable.toString());
+                        Logger.log(TAG, throwable.toString());
                     }
                 });
-    }
-
-    private void initSettings() {
-        DataManager.init(seekbarValue.getContext());
-        Settings settings = DataManager.getRealm().where(Settings.class).findFirst();
-        if (null != settings && !TextUtils.isEmpty(settings.getHost())) {
-            durationSeekBar.setProgress(settings.getDuration());
-            speed.setProgress(settings.getSpeed());
-            url.setText(settings.getHost());
-            CarControllerApiService.Config.HOST = settings.getHost();
-        } else {
-            durationSeekBar.setProgress(10);
-            speed.setProgress(50);
-            url.setText(CarControllerApiService.Config.HOST());
-
-            DataManager.getRealm().executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    Settings newSetting = DataManager.getRealm().createObject(Settings.class);
-                    newSetting.setDuration(durationSeekBar.getProgress());
-                    newSetting.setSpeed(speed.getProgress());
-                    newSetting.setHost(url.getText().toString());
-                }
-            });
-        }
     }
 
     public void hideSoftKeyboard(Activity activity) {
@@ -235,29 +193,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        }
     }
 
-    private int getSpeed() {
-        return speed.getProgress();
-    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
 
-    private long getDuration() {
-        return (long) ((float) durationSeekBar.getProgress() / (float) 100 * MAX_DURATION * 1000);
+        disposable.dispose();
+        CarAction carAction = new CarAction();
+        carAction.action = "stop";
+        sendCommand(carAction);
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
+    }
 
-        DataManager.getRealm().executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Settings settings = DataManager.getRealm().where(Settings.class).findFirst();
-                settings.setHost(url.getText().toString());
-                settings.setDuration(durationSeekBar.getProgress());
-                settings.setSpeed(speed.getProgress());
-            }
-        });
+    private Settings getSettings() {
+        DataManager.init(getActivity().getApplicationContext());
+        Settings settings = DataManager.getRealm().where(Settings.class).findFirst();
+        if (null == settings) {
+            DataManager.getRealm().executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    Settings newSetting = DataManager.getRealm().createObject(Settings.class);
+                    newSetting.setDuration(100);
+                    newSetting.setSpeed(10);
+                }
+            });
 
-        disposable.dispose();
+            return settings;
+        } else {
+            return settings;
+        }
     }
 
     @Override
@@ -268,8 +235,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         final CarAction carAction = new CarAction();
         //set the default duration to 1 second.
-        carAction.duration = getDuration();
-        carAction.speed = getSpeed();
+        carAction.duration = getSettings().duration;
+        carAction.speed = getSettings().speed;
 
         switch (id) {
             case R.id.stop:
@@ -359,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             carAction.action = "stop";
         }
 
-        log(carAction.action);
+        Logger.log(TAG, carAction.action);
 
         apiService.getApi().sendCommand(carAction)
                 .subscribeOn(Schedulers.single())
@@ -391,7 +358,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    void log(String log) {
-        Log.i(TAG, log);
-    }
 }
