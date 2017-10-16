@@ -49,6 +49,9 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import me.pjq.rpicar.chart.DemoBase;
+import me.pjq.rpicar.models.WeatherItem;
+import me.pjq.rpicar.realm.Settings;
+import me.pjq.rpicar.utils.Logger;
 
 public class TemperatureChartTimeActivity extends DemoBase implements OnSeekBarChangeListener {
     private static final String TAG = "TemperatureChart";

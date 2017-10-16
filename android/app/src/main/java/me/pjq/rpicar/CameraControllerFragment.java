@@ -30,6 +30,11 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
+import me.pjq.rpicar.models.CarAction;
+import me.pjq.rpicar.models.SensorStatus;
+import me.pjq.rpicar.models.WeatherItem;
+import me.pjq.rpicar.realm.Settings;
+import me.pjq.rpicar.utils.Logger;
 
 public class CameraControllerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
     private static final String TAG = "CameraController";
@@ -119,10 +124,11 @@ public class CameraControllerFragment extends Fragment implements View.OnClickLi
     Disposable disposable;
     Disposable disposable2;
     SensorStatus sensorStatus;
+    WeatherItem weatherItem;
 
     private void getSensorStatus() {
         Scheduler scheduler = Schedulers.from(Executors.newSingleThreadExecutor());
-        disposable2 = Observable.interval(0, 2, TimeUnit.SECONDS)
+        disposable2 = Observable.interval(0, 400, TimeUnit.MILLISECONDS)
                 .flatMap(new Function<Long, ObservableSource<SensorStatus>>() {
                     @Override
                     public ObservableSource<SensorStatus> apply(Long aLong) throws Exception {
@@ -155,6 +161,7 @@ public class CameraControllerFragment extends Fragment implements View.OnClickLi
                         Logger.log(TAG, weatherItems.toString());
 //                        weatherStatus.append("\nDistance(cm): " +weatherItems.distance);
                         sensorStatus = weatherItems;
+                        updateStatus();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -162,6 +169,18 @@ public class CameraControllerFragment extends Fragment implements View.OnClickLi
                         Logger.log(TAG, throwable.toString());
                     }
                 });
+    }
+
+    private void updateStatus() {
+        if (null != weatherItem) {
+            String value = weatherItem.getDate() + " PM2.5 " + weatherItem.getPm25() + " " + weatherItem.getTemperature() + "°C " + weatherItem.getHumidity() + "%";
+            Logger.log(TAG, value);
+            weatherStatus.setText(value);
+        }
+
+        if (null != sensorStatus) {
+            weatherStatus.append("\nDistance(cm) " + sensorStatus.distance);
+        }
     }
 
     private void initWeatherStatus() {
@@ -217,14 +236,8 @@ public class CameraControllerFragment extends Fragment implements View.OnClickLi
                 .subscribe(new Consumer<List<WeatherItem>>() {
                     @Override
                     public void accept(final List<WeatherItem> weatherItems) throws Exception {
-                        WeatherItem item = weatherItems.get(0);
-                        String value = item.getDate() + " PM2.5 " + item.getPm25() + " " + item.getTemperature() + "°C " + item.getHumidity() + "%";
-                        Logger.log(TAG, value);
-
-                        weatherStatus.setText(value);
-                        if (null != sensorStatus) {
-                            weatherStatus.append("\nDistance(cm) " + sensorStatus.distance);
-                        }
+                        weatherItem = weatherItems.get(0);
+                        updateStatus();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -393,18 +406,6 @@ public class CameraControllerFragment extends Fragment implements View.OnClickLi
 
                     }
                 });
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Call<CarAction> response = apiService.getApi().sendCommand(carAction);
-//                try {
-//                    response.execute();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
 
         return false;
     }

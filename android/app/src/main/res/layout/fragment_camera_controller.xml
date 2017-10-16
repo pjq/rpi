@@ -29,12 +29,12 @@
 
             <ImageView
                 android:id="@+id/stop"
-                android:layout_width="40dip"
-                android:layout_height="40dip"
+                android:layout_width="60dip"
+                android:layout_height="60dip"
                 android:layout_below="@id/up"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="10dip"
-                android:src="@color/color3"
+                android:src="@drawable/stop_sign"
                 android:text="STOP"
                 android:textSize="12sp"
                 tools:text="stop" />
@@ -105,15 +105,16 @@
         android:textColor="@android:color/darker_gray"
         android:textSize="10sp" />
 
-    <TextView
+    <ImageView
         android:id="@+id/auto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dip"
+        android:layout_height="60dip"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="10dip"
         android:background="@color/color1"
         android:padding="5dip"
+        android:src="@drawable/steering_wheel"
         android:text="Self-Drive"
         android:textSize="12sp" />
 </RelativeLayout>

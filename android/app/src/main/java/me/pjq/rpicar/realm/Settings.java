@@ -1,4 +1,4 @@
-package me.pjq.rpicar;
+package me.pjq.rpicar.realm;
 
 import io.realm.RealmObject;
 
@@ -7,11 +7,11 @@ import io.realm.RealmObject;
  */
 
 public class Settings extends RealmObject {
-    String host;
-    int duration;
-    int speed;
-    int name;
-    String weatherJson;
+    public String host;
+    public int duration;
+    public int speed;
+    public int name;
+    public String weatherJson;
 
     public String getHost() {
         return host;

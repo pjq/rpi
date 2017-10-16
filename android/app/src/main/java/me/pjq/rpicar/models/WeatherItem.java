@@ -1,4 +1,4 @@
-package me.pjq.rpicar;
+package me.pjq.rpicar.models;
 
 /**
  * Created by i329817(Jianqing.Peng@sap.com) on 10/09/2017.

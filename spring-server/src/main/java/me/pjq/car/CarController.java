@@ -1,8 +1,11 @@
 package me.pjq.car;
 
+import com.google.gson.Gson;
 import com.pi4j.io.gpio.*;
 import me.pjq.model.CarAction;
 import me.pjq.model.SensorStatus;
+import org.springframework.boot.json.GsonJsonParser;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -91,17 +94,10 @@ public class CarController {
 
     public SensorStatus getSensorStatus() {
         String path = "/home/pi/rpi/car";
-        String command = "python " + path + "/get_distance.py";
+        String command = "python " + path + "/get_sensorstatus.py";
         log(command);
         String value = runCommand(command);
-        SensorStatus sensorStatus = new SensorStatus();
-
-        try {
-            sensorStatus.distance = Float.valueOf(value);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        SensorStatus sensorStatus = new Gson().fromJson(value, SensorStatus.class);
         return sensorStatus;
     }
 

@@ -3,6 +3,9 @@ package me.pjq.rpicar;
 import java.util.List;
 
 import io.reactivex.Observable;
+import me.pjq.rpicar.models.CarAction;
+import me.pjq.rpicar.models.SensorStatus;
+import me.pjq.rpicar.models.WeatherItem;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;

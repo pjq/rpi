@@ -1,8 +1,9 @@
-package me.pjq.model;
+package me.pjq.rpicar.models;
 
 /**
  * Created by i329817(Jianqing.Peng@sap.com) on 16/10/2017.
  */
+
 public class SensorStatus {
     public float distance;
     /**
