@@ -18,4 +18,7 @@ public interface CarControllerApi {
 
     @GET("/api/weathers")
     Observable<List<WeatherItem>> getWeatherItems(@Query("page") int page, @Query("size") int size);
+
+    @GET("/api/car/sensorstatus")
+    Observable<SensorStatus> getSensorStatus();
 }

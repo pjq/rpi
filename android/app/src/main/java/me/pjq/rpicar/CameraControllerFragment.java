@@ -103,6 +103,7 @@ public class CameraControllerFragment extends Fragment implements View.OnClickLi
 //        hideSoftKeyboard();
 
         initWeatherStatus();
+        getSensorStatus();
     }
 
     @Override
@@ -116,6 +117,52 @@ public class CameraControllerFragment extends Fragment implements View.OnClickLi
     }
 
     Disposable disposable;
+    Disposable disposable2;
+    SensorStatus sensorStatus;
+
+    private void getSensorStatus() {
+        Scheduler scheduler = Schedulers.from(Executors.newSingleThreadExecutor());
+        disposable2 = Observable.interval(0, 2, TimeUnit.SECONDS)
+                .flatMap(new Function<Long, ObservableSource<SensorStatus>>() {
+                    @Override
+                    public ObservableSource<SensorStatus> apply(Long aLong) throws Exception {
+                        return apiService.getApi().getSensorStatus();
+                    }
+                })
+                .doOnError(new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Logger.log(TAG, throwable.toString());
+                    }
+                })
+                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Observable<Throwable> throwablObservable) throws Exception {
+                        return throwablObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+                            @Override
+                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                return Observable.timer(2, TimeUnit.SECONDS);
+                            }
+                        });
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(scheduler)
+                .subscribe(new Consumer<SensorStatus>() {
+                    @Override
+                    public void accept(final SensorStatus weatherItems) throws Exception {
+
+                        Logger.log(TAG, weatherItems.toString());
+//                        weatherStatus.append("\nDistance(cm): " +weatherItems.distance);
+                        sensorStatus = weatherItems;
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Logger.log(TAG, throwable.toString());
+                    }
+                });
+    }
 
     private void initWeatherStatus() {
         weatherStatus.setOnClickListener(new View.OnClickListener() {
@@ -175,6 +222,9 @@ public class CameraControllerFragment extends Fragment implements View.OnClickLi
                         Logger.log(TAG, value);
 
                         weatherStatus.setText(value);
+                        if (null != sensorStatus) {
+                            weatherStatus.append("\nDistance(cm) " + sensorStatus.distance);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -198,6 +248,7 @@ public class CameraControllerFragment extends Fragment implements View.OnClickLi
         super.onDetach();
 
         disposable.dispose();
+        disposable2.dispose();
         CarAction carAction = new CarAction();
         carAction.action = "stop";
         sendCommand(carAction);

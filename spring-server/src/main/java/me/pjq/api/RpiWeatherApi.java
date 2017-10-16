@@ -3,6 +3,7 @@ package me.pjq.api;
 import me.pjq.model.CarAction;
 import me.pjq.model.RpiWeatherItem;
 import io.swagger.annotations.*;
+import me.pjq.model.SensorStatus;
 import me.pjq.model.ServerStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,4 +57,9 @@ public interface RpiWeatherApi {
             produces = { "application/json" },
             method = RequestMethod.GET)
     ResponseEntity<ServerStatus> serverStatus();
+
+    @RequestMapping(value = "/car/sensorstatus",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<SensorStatus> sensorStatus();
 }

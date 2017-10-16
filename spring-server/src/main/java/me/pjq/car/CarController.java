@@ -2,8 +2,12 @@ package me.pjq.car;
 
 import com.pi4j.io.gpio.*;
 import me.pjq.model.CarAction;
+import me.pjq.model.SensorStatus;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -50,14 +54,31 @@ public class CarController {
 
     private void callPython(String pythonFile, long duration, int speed) {
         String path = "/home/pi/rpi/car";
-        Runtime rt = Runtime.getRuntime();
-        String command = "python " + path + "/" + pythonFile + " " + duration/1000.0f + " " + speed;
+        String command = "python " + path + "/" + pythonFile + " " + duration / 1000.0f + " " + speed;
         log(command);
+
+        runCommand(command);
+    }
+
+    private String runCommand(String command) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Runtime rt = Runtime.getRuntime();
         try {
             Process pr = rt.exec(command);
+            BufferedReader input =
+                    new BufferedReader
+                            (new InputStreamReader(pr.getInputStream()));
+            String line;
+            while ((line = input.readLine()) != null) {
+                System.out.println(line);
+                stringBuilder.append(line + '\n');
+            }
+            input.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return stringBuilder.toString();
     }
 
     private void callPythonSpeed(String pythonFile, int speed) {
@@ -65,18 +86,30 @@ public class CarController {
         Runtime rt = Runtime.getRuntime();
         String command = "python " + path + "/" + pythonFile + " " + speed;
         log(command);
+        runCommand(command);
+    }
+
+    public SensorStatus getSensorStatus() {
+        String path = "/home/pi/rpi/car";
+        String command = "python " + path + "/get_distance.py";
+        log(command);
+        String value = runCommand(command);
+        SensorStatus sensorStatus = new SensorStatus();
+
         try {
-            Process pr = rt.exec(command);
-        } catch (IOException e) {
+            sensorStatus.distance = Float.valueOf(value);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return sensorStatus;
     }
 
     public void up(final CarAction actionDuration) {
         executorService.submit(new Runnable() {
             @Override
             public void run() {
-                long duration =  actionDuration.getDuration()> 0 ? actionDuration.getDuration() : max_time;
+                long duration = actionDuration.getDuration() > 0 ? actionDuration.getDuration() : max_time;
                 log("forward seconds: " + duration / 1000);
 
                 if (usePython) {

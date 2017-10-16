@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiParam;
 import me.pjq.car.CarController;
 import me.pjq.model.CarAction;
 import me.pjq.model.RpiWeatherItem;
+import me.pjq.model.SensorStatus;
 import me.pjq.model.ServerStatus;
 import me.pjq.repository.CarActionRepository;
 import me.pjq.repository.RpiWeatherRepository;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import sun.management.Sensor;
 
 import java.nio.file.WatchEvent;
 import java.util.Date;
@@ -32,7 +34,7 @@ public class RpiWeatherApiController implements RpiWeatherApi {
     @Autowired
     private CarActionRepository carActionRepository;
 
-    public ResponseEntity<RpiWeatherItem> addWeatherItem(@ApiParam(value = "WeatherItem to add to the store" ,required=true ) @RequestBody RpiWeatherItem WeatherItem) {
+    public ResponseEntity<RpiWeatherItem> addWeatherItem(@ApiParam(value = "WeatherItem to add to the store", required = true) @RequestBody RpiWeatherItem WeatherItem) {
         WeatherItem.setTimestamp(System.currentTimeMillis());
         WeatherItem.setDate(new Date(System.currentTimeMillis()).toLocaleString());
         rpiWeatherRepository.saveAndFlush(WeatherItem);
@@ -40,7 +42,7 @@ public class RpiWeatherApiController implements RpiWeatherApi {
         return new ResponseEntity<RpiWeatherItem>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> deleteWeatherItem(@ApiParam(value = "ID of WeatherItem to delete",required=true ) @PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteWeatherItem(@ApiParam(value = "ID of WeatherItem to delete", required = true) @PathVariable("id") Long id) {
         // do some magic!
         RpiWeatherItem WeatherItem = new RpiWeatherItem();
         WeatherItem.setId(id);
@@ -90,15 +92,23 @@ public class RpiWeatherApiController implements RpiWeatherApi {
         final PageRequest page1 = new PageRequest(
                 0, 1, Sort.Direction.DESC, "id"
         );
-         List<RpiWeatherItem> rpiWeatherItems = rpiWeatherRepository.findAll(page1).getContent();
-         RpiWeatherItem rpiWeatherItem = null;
-         if (rpiWeatherItems.size()==1) {
-             rpiWeatherItem = rpiWeatherItems.get(0);
-         }
+        List<RpiWeatherItem> rpiWeatherItems = rpiWeatherRepository.findAll(page1).getContent();
+        RpiWeatherItem rpiWeatherItem = null;
+        if (rpiWeatherItems.size() == 1) {
+            rpiWeatherItem = rpiWeatherItems.get(0);
+        }
 
-         ServerStatus serverStatus = new ServerStatus();
+        ServerStatus serverStatus = new ServerStatus();
 
 
-        return new ResponseEntity<ServerStatus>( status, HttpStatus.OK);
+        return new ResponseEntity<ServerStatus>(serverStatus, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<SensorStatus> sensorStatus() {
+        CarController carController = CarController.getInstance().init();
+        SensorStatus sensorStatus = carController.getSensorStatus();
+
+        return new ResponseEntity<SensorStatus>(sensorStatus, HttpStatus.OK);
     }
 }
