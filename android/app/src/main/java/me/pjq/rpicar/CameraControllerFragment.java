@@ -156,11 +156,10 @@ public class CameraControllerFragment extends Fragment implements View.OnClickLi
                 .subscribeOn(scheduler)
                 .subscribe(new Consumer<SensorStatus>() {
                     @Override
-                    public void accept(final SensorStatus weatherItems) throws Exception {
+                    public void accept(final SensorStatus status) throws Exception {
 
-                        Logger.log(TAG, weatherItems.toString());
-//                        weatherStatus.append("\nDistance(cm): " +weatherItems.distance);
-                        sensorStatus = weatherItems;
+                        Logger.log(TAG, status.toString());
+                        sensorStatus = status;
                         updateStatus();
                     }
                 }, new Consumer<Throwable>() {
@@ -179,7 +178,7 @@ public class CameraControllerFragment extends Fragment implements View.OnClickLi
         }
 
         if (null != sensorStatus) {
-            weatherStatus.append("\nDistance(cm) " + sensorStatus.distance);
+            weatherStatus.append("\nDistance(cm) " + sensorStatus.distance + "\n" + sensorStatus.obstacles.toString());
         }
     }
 

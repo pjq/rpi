@@ -27,12 +27,10 @@ public class SensorStatus {
 
         @Override
         public String toString() {
-            return "Obstacles{" +
-                    "obstacle1=" + obstacle1 +
-                    ", obstacle2=" + obstacle2 +
-                    ", obstacle3=" + obstacle3 +
-                    ", obstacle4=" + obstacle4 +
-                    '}';
+            return "obstacle1: " + obstacle1 +
+                    " obstacle2: " + obstacle2 +
+                    " obstacle3: " + obstacle3 +
+                    " obstacle4: " + obstacle4;
         }
     }
 
