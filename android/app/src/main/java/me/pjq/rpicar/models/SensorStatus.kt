@@ -1,18 +1,18 @@
-package me.pjq.rpicar.models;
+package me.pjq.rpicar.models
 
 /**
  * Created by i329817(Jianqing.Peng@sap.com) on 16/10/2017.
  */
 
-public class SensorStatus {
-    public float distance;
+class SensorStatus {
+    var distance: Float = 0.toFloat()
     /**
      * obstacles : {"obstacle1":false,"obstacle2":false,"obstacle3":true,"obstacle4":false}
      */
 
-    public Obstacles obstacles;
+    var obstacles: Obstacles? = null
 
-    public static class Obstacles {
+    class Obstacles {
         /**
          * obstacle1 : false
          * obstacle2 : false
@@ -20,25 +20,23 @@ public class SensorStatus {
          * obstacle4 : false
          */
 
-        public boolean obstacle1;
-        public boolean obstacle2;
-        public boolean obstacle3;
-        public boolean obstacle4;
+        var obstacle1: Boolean = false
+        var obstacle2: Boolean = false
+        var obstacle3: Boolean = false
+        var obstacle4: Boolean = false
 
-        @Override
-        public String toString() {
+        override fun toString(): String {
             return "obstacle1: " + obstacle1 +
                     " obstacle2: " + obstacle2 +
                     " obstacle3: " + obstacle3 +
-                    " obstacle4: " + obstacle4;
+                    " obstacle4: " + obstacle4
         }
     }
 
-    @Override
-    public String toString() {
+    override fun toString(): String {
         return "SensorStatus{" +
                 "distance=" + distance +
                 ", obstacles=" + obstacles +
-                '}';
+                '}'
     }
 }
