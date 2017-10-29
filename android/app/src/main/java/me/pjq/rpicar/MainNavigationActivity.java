@@ -20,6 +20,7 @@ import android.view.View;
 
 public class MainNavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AboutFragment.OnFragmentInteractionListener {
+    private OnBackKeyListener onBackKeyListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,12 +101,14 @@ public class MainNavigationActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.content, fragment);
 //            fragmentTransaction.addToBackStack(SettingsFragment.class.getSimpleName());
             fragmentTransaction.commitAllowingStateLoss();
+            onBackKeyListener = null;
         } else if (id == R.id.nav_slideshow) {
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             Fragment fragment = CaptureVideoFragment.newInstance();
             fragmentTransaction.replace(R.id.content, fragment);
 //            fragmentTransaction.addToBackStack(CaptureVideoFragment.class.getSimpleName());
             fragmentTransaction.commitAllowingStateLoss();
+             onBackKeyListener = (OnBackKeyListener) fragment;
 
         } else if (id == R.id.nav_settings) {
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -114,17 +117,19 @@ public class MainNavigationActivity extends AppCompatActivity
 //            fragmentTransaction.addToBackStack(SettingsFragment.class.getSimpleName());
             fragmentTransaction.commitAllowingStateLoss();
 //            setTitle("Settings");
+            onBackKeyListener = null;
         } else if (id == R.id.nav_about) {
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             Fragment fragment = AboutFragment.newInstance();
             fragmentTransaction.replace(R.id.content, fragment);
 //            fragmentTransaction.addToBackStack(AboutFragment.class.getSimpleName());
             fragmentTransaction.commitAllowingStateLoss();
-
+            onBackKeyListener = null;
         } else if (id == R.id.nav_temp) {
             Intent intent = new Intent();
             intent.setClass(this, TemperatureChartTimeActivity.class);
             startActivity(intent);
+            onBackKeyListener = null;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -138,6 +143,16 @@ public class MainNavigationActivity extends AppCompatActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (KeyEvent.KEYCODE_BACK == keyCode) {
+            if (null != onBackKeyListener) {
+                return onBackKeyListener.onBackKeyDown();
+            }
+        }
+
         return super.onKeyDown(keyCode, event);
+    }
+
+    public interface OnBackKeyListener {
+        boolean onBackKeyDown();
     }
 }

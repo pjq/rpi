@@ -14,7 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 
-public class CaptureVideoFragment extends Fragment {
+public class CaptureVideoFragment extends Fragment implements MainNavigationActivity.OnBackKeyListener{
     WebView webView;
     private static final String username = "pjq";
     private static final String passwd = "pjq";
@@ -67,9 +67,17 @@ public class CaptureVideoFragment extends Fragment {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 if (request.getUrl().getEncodedPath().endsWith("avi")) {
                     String url = request.getUrl().toString();
-                    url =url.replace("http://", "http://" + username + ":" + passwd + "@");
+                    url = url.replace("http://", "http://" + username + ":" + passwd + "@");
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setDataAndType(Uri.parse(url), "video/*");
+                    startActivity(intent);
+
+                    return true;
+                } else if (request.getUrl().getEncodedPath().endsWith("disablejpg")) {
+                    String url = request.getUrl().toString();
+                    url = url.replace("http://", "http://" + username + ":" + passwd + "@");
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse(url), "image/*");
                     startActivity(intent);
 
                     return true;
@@ -95,5 +103,15 @@ public class CaptureVideoFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public boolean onBackKeyDown() {
+        if (webView.canGoBack()) {
+            webView.goBack();
+            return true;
+        }
+
+        return false;
     }
 }
