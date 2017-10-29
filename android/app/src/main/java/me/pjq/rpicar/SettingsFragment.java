@@ -57,7 +57,7 @@ public class SettingsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        apiService = new CarControllerApiService();
+        apiService = CarControllerApiService.getInstance();
     }
 
     @Override
@@ -185,18 +185,25 @@ public class SettingsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
 
+        final Settings settings = DataManager.getRealm().where(Settings.class).findFirst();
+        final boolean isHostChanged = !settings.getHost().equalsIgnoreCase(url.getText().toString());
+
         DataManager.getRealm().executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Settings settings = DataManager.getRealm().where(Settings.class).findFirst();
-                settings.setHost(url.getText().toString());
+                if (isHostChanged) {
+                    settings.setHost(url.getText().toString());
+                }
                 settings.setDuration(durationSeekBar.getProgress());
                 settings.setSpeed(speed.getProgress());
-
-
                 Logger.log(TAG, settings.toString());
             }
         });
+
+        if (isHostChanged) {
+            //reinit the api
+            CarControllerApiService.getInstance().init();
+        }
 
         SnackbarUtil.makeText(getActivity(), "Save settings", Snackbar.LENGTH_LONG).show();
     }

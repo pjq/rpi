@@ -113,7 +113,7 @@ public class WeatherItem {
     }
 
     public int getPm25() {
-        return pm25;
+        return (int)(pm25 * 2);
     }
 
     public int getPm25_cf() {

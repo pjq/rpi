@@ -103,7 +103,7 @@ public class CameraControllerFragment extends Fragment implements View.OnClickLi
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setUseWideViewPort(true);
 
-        apiService = new CarControllerApiService();
+        apiService = CarControllerApiService.getInstance();
         webView.loadUrl(CarControllerApiService.Config.STREAM_URL());
 //        hideSoftKeyboard();
 

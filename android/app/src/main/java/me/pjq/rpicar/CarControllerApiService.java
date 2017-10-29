@@ -56,7 +56,17 @@ public class CarControllerApiService {
     CarControllerApi api;
     OkHttpClient mOkHttpClient;
 
-    public CarControllerApiService() {
+    private static CarControllerApiService INSTANCE;
+
+    public static CarControllerApiService getInstance() {
+        if (null == INSTANCE) {
+            INSTANCE = new CarControllerApiService();
+        }
+
+        return INSTANCE;
+    }
+
+    private CarControllerApiService() {
         init();
     }
 

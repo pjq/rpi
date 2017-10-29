@@ -13,10 +13,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import me.pjq.rpicar.realm.Settings;
 
 public class MainNavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AboutFragment.OnFragmentInteractionListener {
@@ -47,7 +50,16 @@ public class MainNavigationActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        initSettings();
         initFirstFragment();
+    }
+
+    private void initSettings() {
+        DataManager.init(getApplicationContext());
+        Settings settings = DataManager.getRealm().where(Settings.class).findFirst();
+        if (null != settings && !TextUtils.isEmpty(settings.getHost())) {
+            CarControllerApiService.Config.HOST = settings.getHost();
+        }
     }
 
     private void initFirstFragment() {

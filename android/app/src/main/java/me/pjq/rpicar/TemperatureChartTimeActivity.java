@@ -144,7 +144,7 @@ public class TemperatureChartTimeActivity extends DemoBase implements OnSeekBarC
         leftAxis.setDrawGridLines(true);
         leftAxis.setGranularityEnabled(true);
         leftAxis.setAxisMinimum(0f);
-        leftAxis.setAxisMaximum(170f);
+        leftAxis.setAxisMaximum(500f);
         leftAxis.setYOffset(-9f);
 //        leftAxis.setTextColor(Color.rgb(255, 192, 56));
         leftAxis.setTextColor(Color.DKGRAY);
@@ -206,7 +206,7 @@ public class TemperatureChartTimeActivity extends DemoBase implements OnSeekBarC
             disposable.dispose();
         }
 
-        final CarControllerApiService apiService = new CarControllerApiService();
+        final CarControllerApiService apiService = CarControllerApiService.getInstance();
         Scheduler scheduler = Schedulers.from(Executors.newSingleThreadExecutor());
         disposable = Observable.interval(0, 2, TimeUnit.SECONDS)
                 .flatMap(new Function<Long, ObservableSource<List<WeatherItem>>>() {
