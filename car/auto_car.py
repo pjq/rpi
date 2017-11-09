@@ -24,8 +24,7 @@ if __name__=="__main__":
     controller.go_up()
     try:
         while True:
-            #distance=ultrasound.get_distance()
-            distance=90
+            distance=ultrasound.get_distance()
             back_obstacle1=obst.has_obstacle(obst.PIN1)
             back_obstacle2=obst.has_obstacle(obst.PIN2)
             back_obstacle3=obst.has_obstacle(obst.PIN3)
@@ -39,8 +38,16 @@ if __name__=="__main__":
             obstacle=back_obstacle1 or  back_obstacle3 or back_obstacle4 
 
             count+=1
-            #print "%s:distance: %s (cm), has back obstacle, left:%s middle_left:%s middle_right:%s right:%s" %(count, distance, left, middle_left, middle_right, right)
+            print "%s:distance: %s (cm), has back obstacle, left:%s middle_left:%s middle_right:%s right:%s" %(count, distance, left, middle_left, middle_right, right)
             print "%s left:%s  right:%s" %(count, left, right)
+
+            if distance <  min_distance:
+                print "backward"
+                controller.go_down()
+
+            #if distance > max_distance:
+            #    print "forward"
+            #    controller.go_up()
 
             if  ((left == False) and (right == False)) :
                 controller.go_left()
@@ -70,6 +77,7 @@ if __name__=="__main__":
                 controller.go_right()
                 time.sleep(turn_time)
                 controller.go_up()
+
 
             time.sleep(0.05)
     except KeyboardInterrupt:

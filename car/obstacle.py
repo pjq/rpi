@@ -3,6 +3,7 @@
 import time
 import RPi.GPIO as GPIO
 import datetime as dt
+import json
  
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
@@ -19,14 +20,21 @@ GPIO.setup(PIN4, GPIO.IN)
  
 def has_obstacle(pin):
    return GPIO.input(pin) == False
+
+def has_obstacles():
+   obstacle1=has_obstacle(PIN1)
+   obstacle2=has_obstacle(PIN2)
+   obstacle3=has_obstacle(PIN3)
+   obstacle4=has_obstacle(PIN4)
+   value={'obstacle1':obstacle1, "obstacle2":obstacle2, "obstacle3":obstacle3, "obstacle4":obstacle4 }
+   #print "obstacles: %s %s %s %s "%(obstacle1, obstacle2, obstacle3, obstacle4)
+   #value=json.dumps(value, ensure_ascii=False)
+   return value
     
 if __name__=="__main__":
     while  1:
        time.sleep(0.2)
-       obstacle1=has_obstacle(PIN1)
-       obstacle2=has_obstacle(PIN2)
-       obstacle3=has_obstacle(PIN3)
-       obstacle4=has_obstacle(PIN4)
-       print "obstacles: %s %s %s %s "%(obstacle1, obstacle2, obstacle3, obstacle4)
+       value=has_obstacles()
+       print value
        
 

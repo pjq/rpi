@@ -1,7 +1,7 @@
 #!/bin/sh 
 espeak "Hello, I am Raspberry Pi, I am online now" 2>/dev/null
 WORK_DIR="/home/pi"
-cd $WORK_DIR && java -jar swagger-spring-1.0.0.jar &
+cd $WORK_DIR/rpi/target && java -jar swagger-spring-1.0.0.jar &
 espeak "Let me start the weather monitor service" 2>/dev/null
 cd $WORK_DIR/rpi/pms5003t/ && ./monitor.sh >>/var/log/rpi.log &
 #cd $WORK_DIR/rpi/tools/images && python -m SimpleHTTPServer 8081 &
