@@ -82,6 +82,8 @@ public class RpiWeatherApiController implements RpiWeatherApi {
             carController.autoDrive(carAction);
         } else if (act.isSpeed()) {
             carController.speed(carAction);
+        } else if (act.isAngle()) {
+            carController.angle(carAction);
         }
 
         return new ResponseEntity<CarAction>(HttpStatus.OK);

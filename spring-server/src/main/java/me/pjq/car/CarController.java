@@ -63,6 +63,14 @@ public class CarController {
         runCommand(command);
     }
 
+    private void callPython(String pythonFile, int value) {
+        String path = "/home/pi/rpi/car";
+        String command = "python " + path + "/" + pythonFile + " " + value;
+        log(command);
+
+        runCommand(command);
+    }
+
     private String runCommand(String command) {
         StringBuilder stringBuilder = new StringBuilder();
         Runtime rt = Runtime.getRuntime();
@@ -99,6 +107,20 @@ public class CarController {
         String value = runCommand(command);
         SensorStatus sensorStatus = new Gson().fromJson(value, SensorStatus.class);
         return sensorStatus;
+    }
+
+
+    public void angle(final CarAction actionDuration) {
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                if (usePython) {
+                    callPython("angle.py", actionDuration.getAngle());
+
+                    return;
+                }
+            }
+        });
     }
 
     public void up(final CarAction actionDuration) {

@@ -29,6 +29,9 @@ public class CarAction {
     @JsonProperty("speed")
     private int speed;
 
+    @JsonProperty("angle")
+    private int angle;
+
     public CarAction id(Long id) {
         this.id = id;
         return this;
@@ -119,6 +122,14 @@ public class CarAction {
         return o.toString().replace("\n", "\n    ");
     }
 
+    public int getAngle() {
+        return angle;
+    }
+
+    public void setAngle(int angle) {
+        this.angle = angle;
+    }
+
     public enum Action {
         UP("up"),
         DOWN("down"),
@@ -127,6 +138,7 @@ public class CarAction {
         STOP("stop"),
         AUTO_DRIVE("auto_drive"),
         SPEED("speed"),
+        ANGLE("angle"),
         UNKNOWN("unknown");
         String action;
 
@@ -150,6 +162,8 @@ public class CarAction {
                 act = AUTO_DRIVE;
             } else  if (SPEED.action.equalsIgnoreCase(action)) {
                 act = SPEED;
+            } else  if (ANGLE.action.equalsIgnoreCase(action)) {
+                act = ANGLE;
             } else {
                 act = UNKNOWN;
             }
@@ -183,6 +197,10 @@ public class CarAction {
 
         public boolean isSpeed() {
             return SPEED.action.equalsIgnoreCase(action);
+        }
+
+        public boolean isAngle() {
+            return ANGLE.action.equalsIgnoreCase(action);
         }
     }
 }
