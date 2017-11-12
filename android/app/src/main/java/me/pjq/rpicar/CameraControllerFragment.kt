@@ -311,7 +311,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     }
 
     private fun updateRelayOnStatus(on: Boolean) {
-        if (isRelayOn) {
+        if (on) {
             relayOn!!.setText("Power On")
         } else {
             relayOn!!.setText("Power Off")
