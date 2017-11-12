@@ -6,12 +6,13 @@ package me.pjq.model;
 public class SensorStatus {
     public float distance;
 
-    public boolean relay_on;
     /**
      * obstacles : {"obstacle1":false,"obstacle2":false,"obstacle3":true,"obstacle4":false}
      */
 
     public Obstacles obstacles;
+
+    public boolean relay_on;
 
     public static class Obstacles {
         /**
