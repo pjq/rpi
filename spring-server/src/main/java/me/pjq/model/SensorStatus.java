@@ -41,6 +41,7 @@ public class SensorStatus {
     public String toString() {
         return "SensorStatus{" +
                 "distance=" + distance +
+                "relay_on=" + relay_on +
                 ", obstacles=" + obstacles +
                 '}';
     }

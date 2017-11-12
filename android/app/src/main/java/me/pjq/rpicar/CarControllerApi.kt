@@ -15,8 +15,8 @@ import retrofit2.http.Query
 
 interface CarControllerApi {
 
-    @get:GET("/api/car/sensorstatus")
-    val sensorStatus: Observable<SensorStatus>
+    @GET("/api/car/sensorstatus")
+    fun getSensorStatus(): Observable<SensorStatus>
 
     @POST("/api/car/controller")
     fun sendCommand(@Body command: CarAction): Observable<CarAction>

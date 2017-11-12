@@ -12,6 +12,27 @@
         android:scaleType="center"
         android:src="@mipmap/background" />
 
+    <Button
+        android:id="@+id/angle_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dip"
+        android:text="Angle +"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="10sp" />
+
+    <Button
+        android:layout_below="@id/angle_add"
+        android:id="@+id/angle_sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dip"
+        android:text="Angle -"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="10sp" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -116,5 +137,18 @@
         android:padding="5dip"
         android:src="@drawable/steering_wheel"
         android:text="Self-Drive"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/relayOn"
+        android:layout_width="60dip"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dip"
+        android:background="@android:color/holo_red_dark"
+        android:padding="5dip"
+        android:gravity="center"
+        android:visibility="visible"
+        android:text="Power On"
         android:textSize="12sp" />
 </RelativeLayout>

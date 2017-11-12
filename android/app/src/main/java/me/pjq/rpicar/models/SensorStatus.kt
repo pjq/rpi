@@ -10,6 +10,8 @@ class SensorStatus {
      * obstacles : {"obstacle1":false,"obstacle2":false,"obstacle3":true,"obstacle4":false}
      */
 
+    var relay_on: Boolean = false
+
     var obstacles: Obstacles? = null
 
     class Obstacles {

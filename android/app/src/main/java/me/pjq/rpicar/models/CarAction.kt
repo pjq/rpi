@@ -9,4 +9,5 @@ class CarAction {
     var duration: Long = 0
     //0-100
     var speed: Int = 0
+    var angle: Int = 0
 }

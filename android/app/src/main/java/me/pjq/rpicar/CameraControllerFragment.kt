@@ -12,29 +12,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-
 import com.google.gson.Gson
-
-import java.util.Arrays
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
-import io.realm.Realm
 import me.pjq.rpicar.models.CarAction
 import me.pjq.rpicar.models.SensorStatus
 import me.pjq.rpicar.models.WeatherItem
 import me.pjq.rpicar.realm.Settings
 import me.pjq.rpicar.utils.Logger
+import java.util.*
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchListener {
     internal var left: ImageView? = null
@@ -45,6 +40,11 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     internal var stop: View? = null
     internal var webView: WebView? = null
     internal var cameraOn: TextView? = null
+    internal var angleAdd: Button? = null
+    internal var angleSub: Button? = null
+    var angleValue: Int = 0
+    internal var relayOn: TextView? = null
+    var isRelayOn: Boolean = false
 
     internal var weatherStatus: TextView? = null
 
@@ -54,6 +54,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     internal var disposable2: Disposable? = null
     internal var sensorStatus: SensorStatus? = null
     internal var weatherItem: WeatherItem? = null
+
 
     private val settings: Settings?
         get() {
@@ -95,6 +96,9 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         webView = view.findViewById(R.id.webview) as WebView
         cameraOn = view.findViewById(R.id.cameraOn) as TextView
         weatherStatus = view.findViewById(R.id.weatherStatus) as TextView
+        relayOn = view.findViewById(R.id.relayOn) as TextView
+        angleAdd = view.findViewById(R.id.angle_add) as Button
+        angleSub = view.findViewById(R.id.angle_sub) as Button
 
         stop?.setOnClickListener(this)
         left?.setOnClickListener(this)
@@ -103,6 +107,9 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         auto?.setOnClickListener(this)
         down?.setOnClickListener(this)
         cameraOn?.setOnClickListener(this)
+        angleAdd?.setOnClickListener(this)
+        angleSub?.setOnClickListener(this)
+        relayOn?.setOnClickListener(this)
 
         //        left.setOnTouchListener(this);
         //        right.setOnTouchListener(this);
@@ -135,11 +142,11 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
 
     private fun getSensorStatus() {
         val scheduler = Schedulers.from(Executors.newSingleThreadExecutor())
-        disposable2 = Observable.interval(0, 400, TimeUnit.MILLISECONDS)
+        disposable2 = Observable.interval(0, 1000, TimeUnit.MILLISECONDS)
                 .flatMap(object : Function<Long, ObservableSource<SensorStatus>> {
                     @Throws(Exception::class)
                     override fun apply(t: Long): ObservableSource<SensorStatus>? {
-                        return apiService?.api!!.sensorStatus
+                        return apiService?.api!!.getSensorStatus()
                     }
                 })
                 .doOnError { throwable -> Logger.log(TAG, throwable.toString()) }
@@ -162,6 +169,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
 
         if (null != sensorStatus) {
             weatherStatus?.append("\nDistance(cm) " + sensorStatus!!.distance + "\n" + sensorStatus!!.obstacles!!.toString())
+            updateRelayOnStatus(sensorStatus!!.relay_on)
         }
     }
 
@@ -186,7 +194,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
             weatherStatus?.text = value
         }
 
-        disposable = Observable.interval(0, 2, TimeUnit.SECONDS)
+        disposable = Observable.interval(0, 60, TimeUnit.SECONDS)
                 .flatMap(object : Function<Long, ObservableSource<List<WeatherItem>>> {
                     @Throws(Exception::class)
                     override fun apply(t: Long): ObservableSource<List<WeatherItem>>? {
@@ -215,8 +223,6 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     override fun onDetach() {
         super.onDetach()
 
-        disposable?.dispose()
-        disposable2?.dispose()
         val carAction = CarAction()
         carAction.action = "stop"
         sendCommand(carAction)
@@ -224,6 +230,8 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
 
     override fun onDestroy() {
         super.onDestroy()
+        disposable?.dispose()
+        disposable2?.dispose()
     }
 
     override fun onClick(v: View) {
@@ -231,7 +239,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
 
         //        CarControllerApiService.API_URL = url.getText().toString();
 
-        val carAction = CarAction()
+        var carAction = CarAction()
         //set the default duration to 1 second.
         carAction.duration = settings!!.duration.toLong()
         carAction.speed = settings!!.speed
@@ -256,9 +264,58 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
             }
 
             R.id.cameraOn -> webView?.reload()
+
+            R.id.angle_add -> {
+                carAction.action = "angle"
+                angleValue += 10;
+                if (angleValue > 180) {
+                    angleValue = 0;
+                }
+
+                angleAdd!!.setText("Angle: " + angleValue);
+                angleSub!!.setText("Angle: " + angleValue);
+                carAction.angle = angleValue;
+            }
+
+            R.id.angle_sub -> {
+                carAction.action = "angle"
+                angleValue -= 10;
+                if (angleValue < 0) {
+                    angleValue = 180;
+                }
+
+                angleAdd!!.setText("Angle: " + angleValue);
+                angleSub!!.setText("Angle: " + angleValue);
+                carAction.angle = angleValue;
+            }
+
+            R.id.relayOn -> {
+                carAction = onRelayClick(carAction)
+            }
         }
 
         sendCommand(carAction)
+    }
+
+    private fun onRelayClick(carAction: CarAction): CarAction {
+        isRelayOn = !isRelayOn
+        if (isRelayOn) {
+            carAction.action = "relay_on"
+        } else {
+            carAction.action = "relay_off"
+        }
+
+        updateRelayOnStatus(isRelayOn)
+
+        return carAction
+    }
+
+    private fun updateRelayOnStatus(on: Boolean) {
+        if (isRelayOn) {
+            relayOn!!.setText("Power On")
+        } else {
+            relayOn!!.setText("Power Off")
+        }
     }
 
     private fun sendCommand(carAction: CarAction) {
