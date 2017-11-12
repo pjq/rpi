@@ -139,6 +139,8 @@ public class CarAction {
         AUTO_DRIVE("auto_drive"),
         SPEED("speed"),
         ANGLE("angle"),
+        RELAY_ON("relay_on"),
+        RELAY_OFF("relay_off"),
         UNKNOWN("unknown");
         String action;
 
@@ -164,6 +166,10 @@ public class CarAction {
                 act = SPEED;
             } else  if (ANGLE.action.equalsIgnoreCase(action)) {
                 act = ANGLE;
+            } else  if (RELAY_ON.action.equalsIgnoreCase(action)) {
+                act = RELAY_ON;
+            } else  if (RELAY_OFF.action.equalsIgnoreCase(action)) {
+                act = RELAY_OFF;
             } else {
                 act = UNKNOWN;
             }
@@ -201,6 +207,14 @@ public class CarAction {
 
         public boolean isAngle() {
             return ANGLE.action.equalsIgnoreCase(action);
+        }
+
+        public boolean isRelayOn() {
+            return RELAY_ON.action.equalsIgnoreCase(action);
+        }
+
+        public boolean isRelayOff() {
+            return RELAY_OFF.action.equalsIgnoreCase(action);
         }
     }
 }

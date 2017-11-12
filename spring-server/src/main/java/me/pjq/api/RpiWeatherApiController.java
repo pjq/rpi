@@ -84,6 +84,10 @@ public class RpiWeatherApiController implements RpiWeatherApi {
             carController.speed(carAction);
         } else if (act.isAngle()) {
             carController.angle(carAction);
+        } else if (act.isRelayOn()) {
+            carController.relay(carAction, "on");
+        } else if (act.isRelayOff()) {
+            carController.relay(carAction, "off");
         }
 
         return new ResponseEntity<CarAction>(HttpStatus.OK);

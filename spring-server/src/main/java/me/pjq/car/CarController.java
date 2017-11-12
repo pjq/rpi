@@ -71,6 +71,14 @@ public class CarController {
         runCommand(command);
     }
 
+    private void callPython(String pythonFile, String value) {
+        String path = "/home/pi/rpi/car";
+        String command = "python " + path + "/" + pythonFile + " " + value;
+        log(command);
+
+        runCommand(command);
+    }
+
     private String runCommand(String command) {
         StringBuilder stringBuilder = new StringBuilder();
         Runtime rt = Runtime.getRuntime();
@@ -109,6 +117,18 @@ public class CarController {
         return sensorStatus;
     }
 
+    public void relay(final CarAction actionDuration, final String on) {
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                if (usePython) {
+                    callPython("relay_control.py", on);
+
+                    return;
+                }
+            }
+        });
+    }
 
     public void angle(final CarAction actionDuration) {
         executorService.submit(new Runnable() {
