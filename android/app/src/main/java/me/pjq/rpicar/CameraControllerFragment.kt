@@ -22,6 +22,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
+import me.pjq.rpicar.aliyun.IoT
 import me.pjq.rpicar.models.CarAction
 import me.pjq.rpicar.models.SensorStatus
 import me.pjq.rpicar.models.WeatherItem
@@ -55,6 +56,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     internal var sensorStatus: SensorStatus? = null
     internal var weatherItem: WeatherItem? = null
 
+    val enableIoT: Boolean = true
 
     private val settings: Settings?
         get() {
@@ -318,7 +320,17 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         }
     }
 
+
     private fun sendCommand(carAction: CarAction) {
+        var action:String = Gson().toJson(carAction)
+        print(action)
+
+        if (enableIoT) {
+            IoT.getInstance().send(action)
+
+            return
+        }
+
         apiService?.api.sendCommand(carAction)
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
