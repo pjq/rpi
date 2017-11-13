@@ -9,12 +9,14 @@ import com.aliyun.iot.util.SignUtil;
 import com.google.gson.Gson;
 import me.pjq.car.CarController;
 import me.pjq.model.CarAction;
+import me.pjq.model.SensorStatus;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,6 +74,16 @@ public class SimpleClient4IOT {
         connectMqtt(targetServer, mqttclientId, mqttUsername, mqttPassword, deviceName);
     }
 
+    public static MqttClient sampleClient;
+    public static void sendMessage(String content) throws MqttException, UnsupportedEncodingException {
+        //这里测试发送一条消息
+//        String content = "{'content':'msg from :" + clientId + "," + System.currentTimeMillis() + "'}";
+        MqttMessage message = new MqttMessage(content.getBytes("utf-8"));
+        message.setQos(0);
+        //System.out.println(System.currentTimeMillis() + "消息发布:---");
+        sampleClient.publish(pubTopic, message);
+    }
+
     public static void connectMqtt(String url, String clientId, String mqttUsername,
                                    String mqttPassword, final String deviceName) throws Exception {
         MemoryPersistence persistence = new MemoryPersistence();
@@ -120,15 +132,10 @@ public class SimpleClient4IOT {
         });
         LogUtil.print("连接成功:---");
 
-        //这里测试发送一条消息
         String content = "{'content':'msg from :" + clientId + "," + System.currentTimeMillis() + "'}";
+        sendMessage(content);
 
-        MqttMessage message = new MqttMessage(content.getBytes("utf-8"));
-        message.setQos(0);
-        //System.out.println(System.currentTimeMillis() + "消息发布:---");
-        sampleClient.publish(pubTopic, message);
-
-        //一次订阅永久生效 
+        //一次订阅永久生效
         //这个是第一种订阅topic方式，回调到统一的callback
         sampleClient.subscribe(subTopic);
 
@@ -145,6 +152,31 @@ public class SimpleClient4IOT {
         final ExecutorService executorService = new ThreadPoolExecutor(2,
             4, 600, TimeUnit.SECONDS,
             new ArrayBlockingQueue<Runnable>(100), new CallerRunsPolicy());
+
+
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    SensorStatus sensorStatus = CarController.getInstance().init().getSensorStatus();
+
+                    try {
+                        sendMessage(new Gson().toJson(sensorStatus));
+                    } catch (MqttException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
 
         String reqTopic = "/sys/" + productKey + "/" + deviceName + "/rrpc/request/+";
         sampleClient.subscribe(reqTopic, new IMqttMessageListener() {
