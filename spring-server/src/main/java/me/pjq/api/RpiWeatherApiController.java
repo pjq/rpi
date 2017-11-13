@@ -1,5 +1,6 @@
 package me.pjq.api;
 
+import com.aliyun.iot.demo.iothub.SimpleClient4IOT;
 import io.swagger.annotations.ApiParam;
 import me.pjq.car.CarController;
 import me.pjq.model.CarAction;
@@ -10,7 +11,6 @@ import me.pjq.repository.CarActionRepository;
 import me.pjq.repository.RpiWeatherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import sun.management.Sensor;
 
-import java.nio.file.WatchEvent;
 import java.util.Date;
 import java.util.List;
 
@@ -65,30 +63,7 @@ public class RpiWeatherApiController implements RpiWeatherApi {
         carAction.setTimestamp(System.currentTimeMillis());
         carActionRepository.saveAndFlush(carAction);
 
-        String action = carAction.getAction();
-        CarController carController = CarController.getInstance().init();
-        CarAction.Action act = CarAction.Action.toAction(action);
-        if (act.isUp()) {
-            carController.up(carAction);
-        } else if (act.isDown()) {
-            carController.down(carAction);
-        } else if (act.isLeft()) {
-            carController.left(carAction);
-        } else if (act.isRight()) {
-            carController.right(carAction);
-        } else if (act.isStop()) {
-            carController.stop(carAction);
-        } else if (act.isAutoDrive()) {
-            carController.autoDrive(carAction);
-        } else if (act.isSpeed()) {
-            carController.speed(carAction);
-        } else if (act.isAngle()) {
-            carController.angle(carAction);
-        } else if (act.isRelayOn()) {
-            carController.relay(carAction, "on");
-        } else if (act.isRelayOff()) {
-            carController.relay(carAction, "off");
-        }
+        CarController.getInstance().init().control(carAction);
 
         return new ResponseEntity<CarAction>(HttpStatus.OK);
     }
@@ -114,6 +89,15 @@ public class RpiWeatherApiController implements RpiWeatherApi {
     public ResponseEntity<SensorStatus> sensorStatus() {
         CarController carController = CarController.getInstance().init();
         SensorStatus sensorStatus = carController.getSensorStatus();
+
+        try {
+            SimpleClient4IOT.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            SimpleClient4IOT.isRunning = false;
+        } finally {
+            SimpleClient4IOT.isRunning = true;
+        }
 
         return new ResponseEntity<SensorStatus>(sensorStatus, HttpStatus.OK);
     }

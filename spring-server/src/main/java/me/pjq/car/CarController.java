@@ -55,6 +55,33 @@ public class CarController {
     }
 
 
+    public void control(CarAction carAction){
+        String action = carAction.getAction();
+        CarController carController = CarController.getInstance().init();
+        CarAction.Action act = CarAction.Action.toAction(action);
+        if (act.isUp()) {
+            carController.up(carAction);
+        } else if (act.isDown()) {
+            carController.down(carAction);
+        } else if (act.isLeft()) {
+            carController.left(carAction);
+        } else if (act.isRight()) {
+            carController.right(carAction);
+        } else if (act.isStop()) {
+            carController.stop(carAction);
+        } else if (act.isAutoDrive()) {
+            carController.autoDrive(carAction);
+        } else if (act.isSpeed()) {
+            carController.speed(carAction);
+        } else if (act.isAngle()) {
+            carController.angle(carAction);
+        } else if (act.isRelayOn()) {
+            carController.relay(carAction, "on");
+        } else if (act.isRelayOff()) {
+            carController.relay(carAction, "off");
+        }
+    }
+
     private void callPython(String pythonFile, long duration, int speed) {
         String path = "/home/pi/rpi/car";
         String command = "python " + path + "/" + pythonFile + " " + duration / 1000.0f + " " + speed;
