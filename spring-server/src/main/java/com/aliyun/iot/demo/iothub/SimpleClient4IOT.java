@@ -88,7 +88,7 @@ public class SimpleClient4IOT {
                                    String mqttPassword, final String deviceName) throws Exception {
         MemoryPersistence persistence = new MemoryPersistence();
         SSLSocketFactory socketFactory = createSSLSocket();
-        final MqttClient sampleClient = new MqttClient(url, clientId, persistence);
+        sampleClient = new MqttClient(url, clientId, persistence);
         MqttConnectOptions connOpts = new MqttConnectOptions();
         connOpts.setMqttVersion(4); // MQTT 3.1.1
         connOpts.setSocketFactory(socketFactory);
