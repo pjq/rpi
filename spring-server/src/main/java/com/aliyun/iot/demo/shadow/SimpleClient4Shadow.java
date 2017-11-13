@@ -170,7 +170,7 @@ public class SimpleClient4Shadow {
         }
     }
 
-    public static void main(String... strings) throws Exception {
+    public static void main2(String... strings) throws Exception {
 
         /* 客户端设备 自己的一个标记 */
         String clientId = productKey + "&" + deviceName;
