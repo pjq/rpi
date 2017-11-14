@@ -29,23 +29,31 @@ import java.util.concurrent.TimeUnit;
 /**
  * IoT套件JAVA版设备接入demo
  */
-public class SimpleClient4IOT {
-	
+public enum  SimpleClient4IOT {
 	/******这里是客户端需要的参数*******/
-    public static String deviceName = "RpiCarHome";
-    public static String productKey = "tKB3pmbLvnA";
-    public static String secret = "fT9ryVgfucZNs2g0VZkj8kzV3eNjY55E";
+	INSTANCE;
+    public static final String deviceName = "RpiCarHome";
+    public static final String productKey = "tKB3pmbLvnA";
+    public static final String secret = "fT9ryVgfucZNs2g0VZkj8kzV3eNjY55E";
 
     //用于测试的topic
     private static String subTopic = "/" + productKey + "/" + deviceName + "/get";
     private static String pubTopic = "/" + productKey + "/" + deviceName + "/update";
 
-    public static boolean isRunning = false;
+    private boolean isRunning = false;
 //    public static void main(String... strings) throws Exception {
 //        start();
 //    }
 
-    public static void start() throws Exception {
+    private SimpleClient4IOT() {
+        try {
+            start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void start() throws Exception {
         //客户端设备自己的一个标记，建议是MAC或SN，不能为空，32字符内
         if (isRunning) {
             return;
@@ -72,10 +80,12 @@ public class SimpleClient4IOT {
         System.err.println("mqttclientId=" + mqttclientId);
 
         connectMqtt(targetServer, mqttclientId, mqttUsername, mqttPassword, deviceName);
+
+        isRunning = true;
     }
 
-    public static MqttClient sampleClient;
-    public static void sendMessage(String content) throws MqttException, UnsupportedEncodingException {
+    public MqttClient sampleClient;
+    public void sendMessage(String content) throws MqttException, UnsupportedEncodingException {
         //这里测试发送一条消息
 //        String content = "{'content':'msg from :" + clientId + "," + System.currentTimeMillis() + "'}";
         MqttMessage message = new MqttMessage(content.getBytes("utf-8"));
@@ -84,7 +94,7 @@ public class SimpleClient4IOT {
         sampleClient.publish(pubTopic, message);
     }
 
-    public static void connectMqtt(String url, String clientId, String mqttUsername,
+    public void connectMqtt(String url, String clientId, String mqttUsername,
                                    String mqttPassword, final String deviceName) throws Exception {
         MemoryPersistence persistence = new MemoryPersistence();
         SSLSocketFactory socketFactory = createSSLSocket();

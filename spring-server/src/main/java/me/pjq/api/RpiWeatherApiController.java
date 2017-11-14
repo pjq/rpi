@@ -1,6 +1,7 @@
 package me.pjq.api;
 
 import com.aliyun.iot.demo.iothub.SimpleClient4IOT;
+import com.google.gson.Gson;
 import io.swagger.annotations.ApiParam;
 import me.pjq.car.CarController;
 import me.pjq.model.CarAction;
@@ -9,6 +10,7 @@ import me.pjq.model.SensorStatus;
 import me.pjq.model.ServerStatus;
 import me.pjq.repository.CarActionRepository;
 import me.pjq.repository.RpiWeatherRepository;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
@@ -32,10 +35,29 @@ public class RpiWeatherApiController implements RpiWeatherApi {
     @Autowired
     private CarActionRepository carActionRepository;
 
+    SimpleClient4IOT iot;
+
     public ResponseEntity<RpiWeatherItem> addWeatherItem(@ApiParam(value = "WeatherItem to add to the store", required = true) @RequestBody RpiWeatherItem WeatherItem) {
         WeatherItem.setTimestamp(System.currentTimeMillis());
         WeatherItem.setDate(new Date(System.currentTimeMillis()).toLocaleString());
-        rpiWeatherRepository.saveAndFlush(WeatherItem);
+
+        try {
+            rpiWeatherRepository.saveAndFlush(WeatherItem);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (null == iot) {
+            iot = SimpleClient4IOT.INSTANCE;
+        }
+
+        try {
+            iot.sendMessage(new Gson().toJson(WeatherItem));
+        } catch (MqttException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         return new ResponseEntity<RpiWeatherItem>(HttpStatus.OK);
     }
@@ -89,15 +111,6 @@ public class RpiWeatherApiController implements RpiWeatherApi {
     public ResponseEntity<SensorStatus> sensorStatus() {
         CarController carController = CarController.getInstance().init();
         SensorStatus sensorStatus = carController.getSensorStatus();
-
-        try {
-            SimpleClient4IOT.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-            SimpleClient4IOT.isRunning = false;
-        } finally {
-            SimpleClient4IOT.isRunning = true;
-        }
 
         return new ResponseEntity<SensorStatus>(sensorStatus, HttpStatus.OK);
     }
