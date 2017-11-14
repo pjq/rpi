@@ -30,6 +30,29 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+                <executions>
+                    <execution>
+                        <id>install-external</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <file>${basedir}/libs/aliyun-java-sdk-dysmsapi-1.0.0.jar</file>
+                            <repositoryLayout>default</repositoryLayout>
+                            <groupId>com.aliyun</groupId>
+                            <artifactId>dysmsapi</artifactId>
+                            <version>1.0.0</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
@@ -114,8 +137,8 @@
             <groupId>com.aliyun</groupId>
             <artifactId>dysmsapi</artifactId>
             <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/src/main/resources/libs/aliyun-java-sdk-dysmsapi-1.0.0.jar</systemPath>
+            <!--<scope>system</scope>-->
+            <!--<systemPath>${project.basedir}/libs/aliyun-java-sdk-dysmsapi-1.0.0.jar</systemPath>-->
         </dependency>
 
     </dependencies>
