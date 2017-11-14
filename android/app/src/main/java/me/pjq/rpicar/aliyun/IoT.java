@@ -2,12 +2,18 @@ package me.pjq.rpicar.aliyun;
 
 import android.util.Base64;
 
+import com.aliyun.mns.client.CloudAccount;
+import com.aliyun.mns.client.CloudQueue;
+import com.aliyun.mns.client.MNSClient;
+import com.aliyun.mns.model.Message;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.iot.model.v20170620.PubRequest;
 import com.aliyuncs.iot.model.v20170620.PubResponse;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+
+import org.apache.log4j.BasicConfigurator;
 
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ExecutorService;
@@ -17,7 +23,8 @@ import java.util.concurrent.Executors;
  * Created by i329817(Jianqing.Peng@sap.com) on 13/11/2017.
  */
 
-public class IoT {
+public enum IoT {
+    instance;
     public static String deviceName = "RpiCarHome";
     public static String productKey = "tKB3pmbLvnA";
     public static String secret = "fT9ryVgfucZNs2g0VZkj8kzV3eNjY55E";
@@ -30,21 +37,11 @@ public class IoT {
     String accessKey = "LTAICKNMlWBxm7GR";
     String accessSecret = "cMgi0pjAewppBdpESDlI3CXZpAKFwc";
     String AccountEndpoint = "https://1386496277130610.mns.cn-shanghai.aliyuncs.com/";
-
-    private static IoT instance;
-
     private ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     private IoT() {
+        BasicConfigurator.configure();
         init();
-    }
-
-    public static IoT getInstance() {
-        if (null == instance) {
-            instance = new IoT();
-        }
-
-        return instance;
     }
 
     public void init() {
@@ -55,6 +52,8 @@ public class IoT {
         }
         IClientProfile profile = DefaultProfile.getProfile("cn-shanghai", accessKey, accessSecret);
         client = new DefaultAcsClient(profile); //初始化SDK客户端
+
+        receive();
     }
 
     public void send(final String message) {
@@ -99,7 +98,7 @@ public class IoT {
 //        return (new sun.misc.BASE64Encoder()).encode( s.getBytes() );
 //    }
 
-//    public void receive() {
+    public void receive() {
 //        executorService.execute(new Runnable() {
 //            @Override
 //            public void run() {
@@ -112,6 +111,7 @@ public class IoT {
 //                while (true) {
 //                    // 获取消息
 //                    Message popMsg = queue.popMessage(10); //长轮询等待时间为10秒
+//                    System.out.println("popMsg: " + popMsg);
 //                    if (popMsg != null) {
 //                        System.out.println("PopMessage Body: "
 //                                + popMsg.getMessageBodyAsRawString()); //获取原始消息
@@ -122,5 +122,5 @@ public class IoT {
 //                }
 //            }
 //        });
-//    }
+    }
 }

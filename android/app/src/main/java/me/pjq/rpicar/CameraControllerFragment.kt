@@ -57,6 +57,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     internal var weatherItem: WeatherItem? = null
 
     val enableIoT: Boolean = true
+    var iot:IoT? = null
 
     private val settings: Settings?
         get() {
@@ -77,7 +78,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        iot = IoT.instance;
     }
 
     override fun onAttach(context: Context) {
@@ -326,7 +327,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         print(action)
 
         if (enableIoT) {
-            IoT.getInstance().send(action)
+            IoT.instance.send(action)
 
             return
         }
