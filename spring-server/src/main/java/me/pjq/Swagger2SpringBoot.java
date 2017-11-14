@@ -1,5 +1,6 @@
 package me.pjq;
 
+import com.aliyun.iot.demo.iothub.SimpleClient4IOT;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
@@ -22,6 +23,9 @@ public class Swagger2SpringBoot implements CommandLineRunner {
 
 	public static void main(String[] args) throws Exception {
 		new SpringApplication(Swagger2SpringBoot.class).run(args);
+
+		SimpleClient4IOT iot = SimpleClient4IOT.INSTANCE;
+
 	}
 
 	class ExitException extends RuntimeException implements ExitCodeGenerator {

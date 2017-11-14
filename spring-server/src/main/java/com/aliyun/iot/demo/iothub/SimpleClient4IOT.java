@@ -58,6 +58,7 @@ public enum  SimpleClient4IOT {
         if (isRunning) {
             return;
         }
+        LogUtil.print("start the IoT connection...");
 
         String clientId = InetAddress.getLocalHost().getHostAddress();
 
@@ -90,7 +91,7 @@ public enum  SimpleClient4IOT {
 //        String content = "{'content':'msg from :" + clientId + "," + System.currentTimeMillis() + "'}";
         MqttMessage message = new MqttMessage(content.getBytes("utf-8"));
         message.setQos(0);
-        //System.out.println(System.currentTimeMillis() + "消息发布:---");
+//        System.out.println(System.currentTimeMillis() + " sendMessage:" + content);
         sampleClient.publish(pubTopic, message);
     }
 
