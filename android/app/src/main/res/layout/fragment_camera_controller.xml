@@ -18,16 +18,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_margin="10dip"
+        android:layout_marginTop="100dip"
         android:text="Angle +"
         android:textColor="@android:color/darker_gray"
         android:textSize="10sp" />
 
     <Button
-        android:layout_below="@id/angle_add"
         android:id="@+id/angle_sub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_below="@id/angle_add"
         android:layout_margin="10dip"
         android:text="Angle -"
         android:textColor="@android:color/darker_gray"
@@ -126,6 +127,83 @@
         android:textColor="@android:color/darker_gray"
         android:textSize="10sp" />
 
+    <TextView
+        android:id="@+id/relayOn"
+        android:layout_width="60dip"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dip"
+        android:background="@android:color/holo_red_dark"
+        android:gravity="center"
+        android:padding="5dip"
+        android:text="Power On"
+        android:textSize="12sp"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/car"
+        android:layout_width="100dip"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/relayOn">
+
+        <ImageView
+            android:id="@+id/ultrasound"
+            android:layout_width="10dip"
+            android:layout_height="30dip"
+            android:layout_centerHorizontal="true"
+            android:src="@android:color/holo_blue_dark" />
+
+        <ImageView
+            android:id="@+id/motion_detect"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:src="@color/motion_detected_on" />
+
+        <LinearLayout
+            android:id="@+id/obstacles"
+            android:layout_width="match_parent"
+            android:layout_height="40dip"
+            android:layout_below="@id/ultrasound"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/obstacles1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:src="@android:color/holo_red_dark" />
+
+            <ImageView
+                android:id="@+id/obstacles2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:src="@android:color/holo_green_dark" />
+
+            <ImageView
+                android:id="@+id/obstacles3"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:src="@android:color/holo_red_dark" />
+
+            <ImageView
+                android:id="@+id/obstacles4"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:src="@android:color/holo_green_dark" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/carBody"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_below="@id/obstacles"
+            android:src="@android:color/white" />
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/auto"
         android:layout_width="60dip"
@@ -139,16 +217,4 @@
         android:text="Self-Drive"
         android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/relayOn"
-        android:layout_width="60dip"
-        android:layout_height="60dip"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="10dip"
-        android:background="@android:color/holo_red_dark"
-        android:padding="5dip"
-        android:gravity="center"
-        android:visibility="visible"
-        android:text="Power On"
-        android:textSize="12sp" />
 </RelativeLayout>

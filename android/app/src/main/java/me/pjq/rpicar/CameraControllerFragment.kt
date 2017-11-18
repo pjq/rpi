@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.aliyun.iot.demo.iothub.SimpleClient4IOT
 import com.google.gson.Gson
@@ -61,6 +62,16 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     internal var cameraOn: TextView? = null
     internal var angleAdd: Button? = null
     internal var angleSub: Button? = null
+
+
+    internal var motion_detect: ImageView? = null
+    internal var ultrasound: ImageView? = null
+    internal var obstacles1: ImageView? = null
+    internal var obstacles2: ImageView? = null
+    internal var obstacles3: ImageView? = null
+    internal var obstacles4: ImageView? = null
+    internal var carBody: ImageView? = null
+
     var angleValue: Int = 0
     internal var relayOn: TextView? = null
     var isRelayOn: Boolean = false
@@ -124,6 +135,14 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         angleAdd = view.findViewById(R.id.angle_add) as Button
         angleSub = view.findViewById(R.id.angle_sub) as Button
 
+        motion_detect = view.findViewById(R.id.motion_detect) as ImageView
+        ultrasound = view.findViewById(R.id.ultrasound) as ImageView
+        obstacles1 = view.findViewById(R.id.obstacles1) as ImageView
+        obstacles2 = view.findViewById(R.id.obstacles2) as ImageView
+        obstacles3 = view.findViewById(R.id.obstacles3) as ImageView
+        obstacles4 = view.findViewById(R.id.obstacles4) as ImageView
+        carBody = view.findViewById(R.id.carBody) as ImageView
+
         stop?.setOnClickListener(this)
         left?.setOnClickListener(this)
         right?.setOnClickListener(this)
@@ -185,7 +204,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     }
 
     private fun updateStatus() {
-        weatherStatus?.text=""
+        weatherStatus?.text = ""
         if (null != weatherItem) {
             val value = weatherItem!!.date + " PM2.5 " + weatherItem!!.pm25 + " " + weatherItem!!.temperature + "°C " + weatherItem!!.humidity + "%"
             Logger.log(TAG, value)
@@ -196,6 +215,51 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
             weatherStatus?.append("\nDistance(cm) " + sensorStatus!!.distance + "\n" + sensorStatus!!.obstacles!!.toString() + "\nPeople Detected " + sensorStatus!!.motion_detected)
             updateRelayOnStatus(sensorStatus!!.relay_on)
         }
+
+        updateCarStatus()
+    }
+
+    private fun updateCarStatus() {
+        if (sensorStatus?.relay_on!!) {
+            carBody?.setBackgroundColor(resources.getColor(R.color.power_on));
+        } else {
+            carBody?.setBackgroundColor(resources.getColor(R.color.power_off));
+        }
+
+        if (sensorStatus?.motion_detected!!) {
+            motion_detect?.setBackgroundColor(resources.getColor(R.color.motion_detected_on));
+        } else {
+            motion_detect?.setBackgroundColor(resources.getColor(R.color.white));
+        }
+
+        if (sensorStatus?.obstacles?.obstacle1!!) {
+            obstacles1?.setBackgroundColor(resources.getColor(R.color.obstacles_on))
+        } else {
+            obstacles1?.setBackgroundColor(resources.getColor(R.color.obstacles_off))
+        }
+
+        if (sensorStatus?.obstacles?.obstacle2!!) {
+            obstacles2?.setBackgroundColor(resources.getColor(R.color.obstacles_on))
+        } else {
+            obstacles2?.setBackgroundColor(resources.getColor(R.color.obstacles_off))
+        }
+
+        if (sensorStatus?.obstacles?.obstacle3!!) {
+            obstacles3?.setBackgroundColor(resources.getColor(R.color.obstacles_on))
+        } else {
+            obstacles3?.setBackgroundColor(resources.getColor(R.color.obstacles_off))
+        }
+
+        if (sensorStatus?.obstacles?.obstacle4!!) {
+            obstacles4?.setBackgroundColor(resources.getColor(R.color.obstacles_on))
+        } else {
+            obstacles4?.setBackgroundColor(resources.getColor(R.color.obstacles_off))
+        }
+
+        var params: RelativeLayout.LayoutParams = ultrasound?.layoutParams as RelativeLayout.LayoutParams;
+
+        params.height = sensorStatus?.distance!!.toInt()
+        ultrasound?.layoutParams = params;
     }
 
     private fun initWeatherStatus() {

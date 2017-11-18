@@ -120,8 +120,12 @@ public enum Monitor {
                     }
 
                     try {
-                        Log.log(TAG, "sleep: " + Constants.INSTANCE.getConfig().SENSOR_STATUS_UPDATE_INTERVAL);
-                        Thread.sleep(Constants.INSTANCE.getConfig().SENSOR_STATUS_UPDATE_INTERVAL);
+                        if (relayOn) {
+                            //if relay on, it means the car is active, so need update the status quickly
+                            Thread.sleep(100);
+                        } else {
+                            Thread.sleep(Constants.INSTANCE.getConfig().SENSOR_STATUS_UPDATE_INTERVAL);
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
