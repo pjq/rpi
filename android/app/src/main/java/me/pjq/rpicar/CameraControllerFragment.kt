@@ -15,6 +15,7 @@ import android.webkit.WebView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import com.aliyun.iot.demo.iothub.SimpleClient4IOT
 import com.google.gson.Gson
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -23,7 +24,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import me.pjq.rpicar.aliyun.IoT
-import com.aliyun.iot.demo.iothub.SimpleClient4IOT
 import me.pjq.rpicar.models.CarAction
 import me.pjq.rpicar.models.SensorStatus
 import me.pjq.rpicar.models.WeatherItem
@@ -36,13 +36,19 @@ import java.util.concurrent.TimeUnit
 class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchListener, SimpleClient4IOT.Listener {
     override fun onUpdate(sensorStatus: SensorStatus?) {
         this.sensorStatus = sensorStatus;
-//        activity.runOnUiThread { () -> updateStatus() }
-        activity.runOnUiThread { updateStatus()  }
+        if (null == activity || isDetached) {
+            return
+        }
+
+        activity.runOnUiThread { updateStatus() }
     }
 
     override fun onUpdate(weatherItem: WeatherItem?) {
         this.weatherItem = weatherItem;
-        activity.runOnUiThread { updateStatus()  }
+        if (null == activity || isDetached) {
+            return
+        }
+        activity.runOnUiThread { updateStatus() }
     }
 
     internal var left: ImageView? = null
@@ -70,7 +76,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     internal var monitor: Monitor? = null
 
     val enableIoT: Boolean = true
-    var iot:IoT? = null
+    var iot: IoT? = null
 
     private val settings: Settings?
         get() {
@@ -145,7 +151,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         webView?.loadUrl(CarControllerApiService.Config.STREAM_URL())
         //        hideSoftKeyboard();
 
-        initWeatherStatus()
+//        initWeatherStatus()
 //        getSensorStatus()
     }
 
@@ -179,6 +185,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     }
 
     private fun updateStatus() {
+        weatherStatus?.text=""
         if (null != weatherItem) {
             val value = weatherItem!!.date + " PM2.5 " + weatherItem!!.pm25 + " " + weatherItem!!.temperature + "°C " + weatherItem!!.humidity + "%"
             Logger.log(TAG, value)
@@ -186,7 +193,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         }
 
         if (null != sensorStatus) {
-            weatherStatus?.append("\nDistance(cm) " + sensorStatus!!.distance + "\n" + sensorStatus!!.obstacles!!.toString() + "\n People Detected " + sensorStatus!!.motion_detected)
+            weatherStatus?.append("\nDistance(cm) " + sensorStatus!!.distance + "\n" + sensorStatus!!.obstacles!!.toString() + "\nPeople Detected " + sensorStatus!!.motion_detected)
             updateRelayOnStatus(sensorStatus!!.relay_on)
         }
     }
@@ -244,6 +251,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         val carAction = CarAction()
         carAction.action = "stop"
         sendCommand(carAction)
+        Monitor.instance.home4IOT.close()
     }
 
     override fun onDestroy() {
@@ -338,11 +346,12 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
 
 
     private fun sendCommand(carAction: CarAction) {
-        var action:String = Gson().toJson(carAction)
+        var action: String = Gson().toJson(carAction)
         print(action)
 
         if (enableIoT) {
-            IoT.instance.send(action)
+//            IoT.instance.send(action)
+            Monitor.instance.home4IOT.sendMessage(action)
 
             return
         }

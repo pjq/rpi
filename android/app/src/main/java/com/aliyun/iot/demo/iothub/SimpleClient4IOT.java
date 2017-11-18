@@ -221,7 +221,7 @@ public class SimpleClient4IOT {
                     if (null != listener) {
                         listener.onUpdate(weatherItem);
                     }
-                } else if (payload.contains("")) {
+                } else if (payload.contains("obstacles")) {
                     SensorStatus sensorStatus = new Gson().fromJson(payload, SensorStatus.class);
 
                     if (null != listener) {
@@ -284,6 +284,16 @@ public class SimpleClient4IOT {
 //                });
 //            }
 //        });
+    }
+
+    public void close() {
+        try {
+            sampleClient.unsubscribe(config.subTopic);
+            sampleClient.disconnect();
+            sampleClient.close();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     private static SSLSocketFactory createSSLSocket() throws Exception {

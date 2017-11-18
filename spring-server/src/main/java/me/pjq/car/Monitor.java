@@ -3,14 +3,12 @@ package me.pjq.car;
 import com.aliyun.iot.demo.iothub.SimpleClient4IOT;
 import com.google.gson.Gson;
 import me.pjq.Constants;
-import me.pjq.model.Config;
-import me.pjq.model.CarAction;
-import me.pjq.model.MotionDetect;
-import me.pjq.model.SensorStatus;
+import me.pjq.model.*;
 import me.pjq.Utils.Log;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.io.UnsupportedEncodingException;
+import java.util.WeakHashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -26,6 +24,8 @@ public enum Monitor {
     boolean relayOn = false;
     SimpleClient4IOT home4IOT;
     SimpleClient4IOT client4IOT;
+
+    public RpiWeatherItem weatherItem;
 
     private Monitor() {
         lastCommandTime = System.currentTimeMillis();
@@ -66,6 +66,9 @@ public enum Monitor {
                             CarAction action = new CarAction();
                             CarController.instance.relay(action, "on");
                             relayOn = true;
+
+                            //When power on, also update the Weather status.
+                            sendWeatherItem();
                         }
                     }
 
@@ -81,6 +84,21 @@ public enum Monitor {
 
     public void onCommand() {
         lastCommandTime = System.currentTimeMillis();
+    }
+
+    private void sendWeatherItem() {
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    home4IOT.sendMessage(new Gson().toJson(weatherItem));
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     // Start the SensorStatus Monitor

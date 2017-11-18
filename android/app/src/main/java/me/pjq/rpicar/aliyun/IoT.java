@@ -13,7 +13,6 @@ import com.aliyuncs.iot.model.v20170620.PubResponse;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 
-import org.apache.log4j.BasicConfigurator;
 
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ExecutorService;
@@ -41,7 +40,7 @@ public enum IoT {
 
     private IoT() {
 //        BasicConfigurator.configure();
-        init();
+//        init();
     }
 
     public void init() {
