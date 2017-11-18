@@ -7,6 +7,16 @@ public class Config {
     public String pubTopic;
     public String subTopic;
 
+    public String accessKeyId;
+    public String accessKeySecret;
+    public String phone;
+    public String signName;
+    public String templateCode;
+    //10 seconds, interval for SensorStatus update.
+    public long SENSOR_STATUS_UPDATE_INTERVAL;
+    // duration for auto turn off the power via relay control
+    public long RELAY_OFF_INTERVAL;
+
     public Config(String deviceName, String productKey, String secret) {
         this.deviceName = deviceName;
         this.productKey = productKey;
@@ -15,7 +25,6 @@ public class Config {
         pubTopic = "/" + productKey + "/" + deviceName + "/update";
         subTopic = "/" + productKey + "/" + deviceName + "/get";
     }
-
 
     public static Config getConfigRpiCarHome() {
         String deviceName = "RpiCarHome";

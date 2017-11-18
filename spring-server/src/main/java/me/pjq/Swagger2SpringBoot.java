@@ -23,10 +23,9 @@ public class Swagger2SpringBoot implements CommandLineRunner {
 	}
 
 	public static void main(String[] args) throws Exception {
-		new SpringApplication(Swagger2SpringBoot.class).run(args);
-
 		Constants constants = Constants.INSTANCE;
 		Monitor monitor = Monitor.instance;
+		new SpringApplication(Swagger2SpringBoot.class).run(args);
 	}
 
 	class ExitException extends RuntimeException implements ExitCodeGenerator {

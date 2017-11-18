@@ -55,7 +55,7 @@ public enum Monitor {
                 while (true) {
                     long currentTime = System.currentTimeMillis();
                     // if no command for such interval, then need power off via relay control
-                    if ((currentTime - lastCommandTime) > Constants.RELAY_OFF_INTERVAL) {
+                    if ((currentTime - lastCommandTime) > Constants.INSTANCE.getConfig().RELAY_OFF_INTERVAL) {
                         if (relayOn) {
                             CarAction action = new CarAction();
                             CarController.instance.relay(action, "off");
@@ -100,8 +100,8 @@ public enum Monitor {
                     }
 
                     try {
-                        Log.log(TAG, "sleep: " + Constants.SENSOR_STATUS_UPDATE_INTERVAL);
-                        Thread.sleep(Constants.SENSOR_STATUS_UPDATE_INTERVAL);
+                        Log.log(TAG, "sleep: " + Constants.INSTANCE.getConfig().SENSOR_STATUS_UPDATE_INTERVAL);
+                        Thread.sleep(Constants.INSTANCE.getConfig().SENSOR_STATUS_UPDATE_INTERVAL);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
