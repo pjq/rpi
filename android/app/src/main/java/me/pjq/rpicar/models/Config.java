@@ -1,4 +1,4 @@
-package me.pjq.model;
+package me.pjq.rpicar.models;
 
 public class Config {
     public String deviceName;

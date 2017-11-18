@@ -40,7 +40,7 @@ public enum IoT {
     private ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     private IoT() {
-        BasicConfigurator.configure();
+//        BasicConfigurator.configure();
         init();
     }
 

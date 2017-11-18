@@ -1,11 +1,11 @@
-package me.pjq;
-
-import me.pjq.Utils.Log;
+package me.pjq.rpicar;
 
 import java.io.*;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
+
+import me.pjq.rpicar.utils.Log;
 
 public enum Constants {
     INSTANCE;

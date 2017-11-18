@@ -54,9 +54,13 @@ dependencies {
     implementation 'com.aliyun:aliyun-java-sdk-core:3.2.10'
 //    implementation 'com.aliyun.mns:aliyun-sdk-mns:1.1.5'
     implementation 'com.aliyun.mns:aliyun-sdk-mns:1.1.8.4'
+//    implementation 'com.aliyun:dysmsapi:1.0.0'
+    implementation 'com.alibaba:fastjson:1.2.28'
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
     implementation 'com.android.support:design:25.4.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
+
 repositories {
     mavenCentral()
 }

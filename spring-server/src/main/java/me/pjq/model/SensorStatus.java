@@ -13,6 +13,7 @@ public class SensorStatus {
     public Obstacles obstacles;
 
     public boolean relay_on;
+    public boolean motion_detected;
 
     public static class Obstacles {
         /**

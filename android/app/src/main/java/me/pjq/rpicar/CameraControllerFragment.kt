@@ -23,6 +23,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import me.pjq.rpicar.aliyun.IoT
+import com.aliyun.iot.demo.iothub.SimpleClient4IOT
 import me.pjq.rpicar.models.CarAction
 import me.pjq.rpicar.models.SensorStatus
 import me.pjq.rpicar.models.WeatherItem
@@ -32,7 +33,18 @@ import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchListener {
+class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchListener, SimpleClient4IOT.Listener {
+    override fun onUpdate(sensorStatus: SensorStatus?) {
+        this.sensorStatus = sensorStatus;
+//        activity.runOnUiThread { () -> updateStatus() }
+        activity.runOnUiThread { updateStatus()  }
+    }
+
+    override fun onUpdate(weatherItem: WeatherItem?) {
+        this.weatherItem = weatherItem;
+        activity.runOnUiThread { updateStatus()  }
+    }
+
     internal var left: ImageView? = null
     internal var right: ImageView? = null
     internal var up: ImageView? = null
@@ -55,6 +67,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     internal var disposable2: Disposable? = null
     internal var sensorStatus: SensorStatus? = null
     internal var weatherItem: WeatherItem? = null
+    internal var monitor: Monitor? = null
 
     val enableIoT: Boolean = true
     var iot:IoT? = null
@@ -79,13 +92,15 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         iot = IoT.instance;
+
+        monitor = Monitor.instance
+        monitor!!.init(this);
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         activity.title = "Camera"
-
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -131,7 +146,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         //        hideSoftKeyboard();
 
         initWeatherStatus()
-        getSensorStatus()
+//        getSensorStatus()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
