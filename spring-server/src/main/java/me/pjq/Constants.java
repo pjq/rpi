@@ -23,7 +23,8 @@ public enum Constants {
     //用于测试的topic
     public static String subTopic = "/" + productKey + "/" + deviceName + "/get";
 
-    private static final String CONFIG_FILE = "./src/main/resources/config.properties";
+//    private static final String CONFIG_FILE = "./src/main/resources/config.properties";
+    private static final String CONFIG_FILE = "config.properties";
 
     //10 seconds, interval for SensorStatus update.
     public static final long SENSOR_STATUS_UPDATE_INTERVAL = 10000;
