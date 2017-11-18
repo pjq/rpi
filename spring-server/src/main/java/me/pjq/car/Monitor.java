@@ -31,6 +31,7 @@ public enum Monitor {
         lastCommandTime = System.currentTimeMillis();
         Log.log(TAG, "init");
         home4IOT = new SimpleClient4IOT(Config.getConfigRpiCarHome());
+//        home4IOT = new SimpleClient4IOT(Config.getConfigRpiCarClient());
         //client4IOT = new SimpleClient4IOT(Config.getConfigRpiCarClient());
 
         init();

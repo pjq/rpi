@@ -32,7 +32,7 @@ public enum Constants {
     private static final String CONFIG_FILE = "config.properties";
 
     //10 seconds, interval for SensorStatus update.
-    public static final long SENSOR_STATUS_UPDATE_INTERVAL = 100000;
+    public static final long SENSOR_STATUS_UPDATE_INTERVAL = 10000;
     //    long RELAY_OFF_INTERVAL = 5 * 60 * 1000;
     // duration for auto turn off the power via relay control
     public static long RELAY_OFF_INTERVAL = 30 * 1000;
