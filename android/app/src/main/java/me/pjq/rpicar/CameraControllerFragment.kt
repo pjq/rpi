@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.ScaleAnimation
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
 import android.widget.Button
@@ -259,7 +261,21 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         var params: RelativeLayout.LayoutParams = ultrasound?.layoutParams as RelativeLayout.LayoutParams;
 
         params.height = sensorStatus?.distance!!.toInt()
-        ultrasound?.layoutParams = params;
+//        ultrasound?.layoutParams = params;
+//        ultrasound?.scaleY = sensorStatus?.distance!!
+
+        scaleView(ultrasound!!, .0f, (sensorStatus?.distance!!/100.0).toFloat())
+    }
+
+    private fun scaleView(v: View, startScale: Float, endScale: Float) {
+        var anim: Animation = ScaleAnimation(
+                1f, 1f, // Start and end values for the X axis scaling
+                startScale, endScale, // Start and end values for the Y axis scaling
+                Animation.RELATIVE_TO_SELF, 0f, // Pivot point of X scaling
+                Animation.RELATIVE_TO_SELF, 1f); // Pivot point of Y scaling
+        anim.setFillAfter(true) // Needed to keep the result of the animation
+        anim.setDuration(200)
+        v.startAnimation(anim)
     }
 
     private fun initWeatherStatus() {
