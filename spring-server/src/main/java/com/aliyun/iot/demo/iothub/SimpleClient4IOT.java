@@ -15,6 +15,8 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.google.gson.Gson;
+import me.pjq.Constants;
+import me.pjq.Utils.Log;
 import me.pjq.car.CarController;
 import me.pjq.model.CarAction;
 import me.pjq.model.SensorStatus;
@@ -40,24 +42,17 @@ import java.util.concurrent.TimeUnit;
 public enum  SimpleClient4IOT {
 	/******这里是客户端需要的参数*******/
 	INSTANCE;
-    public static final String deviceName = "RpiCarHome";
-    public static final String productKey = "tKB3pmbLvnA";
-    public static final String secret = "fT9ryVgfucZNs2g0VZkj8kzV3eNjY55E";
+    private static final String TAG = "SimpleClient4IOT";
 
-    //用于测试的topic
-    private static String subTopic = "/" + productKey + "/" + deviceName + "/get";
-    private static String pubTopic = "/" + productKey + "/" + deviceName + "/update";
+    public MqttClient sampleClient;
+    final ExecutorService executorService = new ThreadPoolExecutor(2,
+            4, 600, TimeUnit.SECONDS,
+            new ArrayBlockingQueue<Runnable>(100), new CallerRunsPolicy());
 
-    String accessKeyId = "LTAICKNMlWBxm7GR";
-    String accessKeySecret = "cMgi0pjAewppBdpESDlI3CXZpAKFwc";
-
-    String phone = "18621517768";
-    String signName = "树霉派IoT";
-    String templateCode = "SMS_110310049";
 
     private boolean isRunning = false;
 //    public static void main(String... strings) throws Exception {
-//        start();
+//        init();
 //    }
 
     private SimpleClient4IOT() {
@@ -73,41 +68,38 @@ public enum  SimpleClient4IOT {
         if (isRunning) {
             return;
         }
-        LogUtil.print("start the IoT connection...");
+        Log.log(TAG, "init the IoT connection...");
 
         String clientId = InetAddress.getLocalHost().getHostAddress();
 
         //设备认证
         Map<String, String> params = new HashMap<String, String>();
-        params.put("productKey", productKey); //这个是对应用户在控制台注册的 设备productkey
-        params.put("deviceName", deviceName); //这个是对应用户在控制台注册的 设备name
+        params.put("productKey", Constants.productKey); //这个是对应用户在控制台注册的 设备productkey
+        params.put("deviceName", Constants.deviceName); //这个是对应用户在控制台注册的 设备name
         params.put("clientId", clientId);
         String t = System.currentTimeMillis() + "";
         params.put("timestamp", t);
 
         //MQTT服务器地址，TLS连接使用ssl开头
-        String targetServer = "ssl://" + productKey + ".com.aliyun.iot-as-mqtt.cn-shanghai.aliyuncs.com:1883";
+        String targetServer = "ssl://" + Constants.productKey + ".com.aliyun.iot-as-mqtt.cn-shanghai.aliyuncs.com:1883";
 
         //客户端ID格式，两个||之间的内容为设备端自定义的标记，字符范围[0-9][a-z][A-Z]
         String mqttclientId = clientId + "|securemode=2,signmethod=hmacsha1,timestamp=" + t + "|";
-        String mqttUsername = deviceName + "&" + productKey; //mqtt用户名格式
-        String mqttPassword = SignUtil.sign(params, secret, "hmacsha1"); //签名
+        String mqttUsername = Constants.deviceName + "&" + Constants.productKey; //mqtt用户名格式
+        String mqttPassword = SignUtil.sign(params, Constants.secret, "hmacsha1"); //签名
 
         System.err.println("mqttclientId=" + mqttclientId);
 
-        connectMqtt(targetServer, mqttclientId, mqttUsername, mqttPassword, deviceName);
+        connectMqtt(targetServer, mqttclientId, mqttUsername, mqttPassword, Constants.deviceName);
 
         isRunning = true;
     }
 
-    public MqttClient sampleClient;
     public void sendMessage(String content) throws MqttException, UnsupportedEncodingException {
-        //这里测试发送一条消息
 //        String content = "{'content':'msg from :" + clientId + "," + System.currentTimeMillis() + "'}";
         MqttMessage message = new MqttMessage(content.getBytes("utf-8"));
         message.setQos(0);
-//        System.out.println(System.currentTimeMillis() + " sendMessage:" + content);
-        sampleClient.publish(pubTopic, message);
+        sampleClient.publish(Constants.pubTopic, message);
     }
 
     public void sendSMS(String content) {
@@ -121,8 +113,8 @@ public enum  SimpleClient4IOT {
 //        final String accessKeyId = "yourAccessKeyId";//你的accessKeyId,参考本文档步骤2
 //        final String accessKeySecret = "yourAccessKeySecret";//你的accessKeySecret，参考本文档步骤2
 //初始化ascClient,暂时不支持多region（请勿修改）
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId,
-                accessKeySecret);
+        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", Constants.accessKeyId,
+                Constants.accessKeySecret);
         try {
             DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
         } catch (ClientException e) {
@@ -134,11 +126,11 @@ public enum  SimpleClient4IOT {
         //使用post提交
         request.setMethod(MethodType.POST);
         //必填:待发送手机号。支持以逗号分隔的形式进行批量调用，批量上限为1000个手机号码,批量调用相对于单条调用及时性稍有延迟,验证码类型的短信推荐使用单条调用的方式
-        request.setPhoneNumbers(phone);
+        request.setPhoneNumbers(Constants.phone);
         //必填:短信签名-可在短信控制台中找到
-        request.setSignName(signName);
+        request.setSignName(Constants.signName);
         //必填:短信模板-可在短信控制台中找到
-        request.setTemplateCode(templateCode);
+        request.setTemplateCode(Constants.templateCode);
         //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
         //友情提示:如果JSON中需要带换行符,请参照标准的JSON协议对换行符的要求,比如短信内容中包含\r\n的情况在JSON中需要表示成\\r\\n,否则会导致JSON在服务端解析失败
         request.setTemplateParam(String.format("{\"code\":\"%s\"}", content));
@@ -155,13 +147,13 @@ public enum  SimpleClient4IOT {
         }
         if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
 //请求成功
-            System.out.println("send sms success");
+            Log.log(TAG, "send sms success");
         } else {
-            System.out.println("send sms failed: " + sendSmsResponse.getMessage());
+            Log.log(TAG,"send sms failed: " + sendSmsResponse.getMessage());
         }
     }
 
-    public void connectMqtt(String url, String clientId, String mqttUsername,
+    private void connectMqtt(String url, String clientId, String mqttUsername,
                                    String mqttPassword, final String deviceName) throws Exception {
         MemoryPersistence persistence = new MemoryPersistence();
         SSLSocketFactory socketFactory = createSSLSocket();
@@ -192,31 +184,31 @@ public enum  SimpleClient4IOT {
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                LogUtil.print("接收到消息,来至Topic [" + topic + "] , 内容是:["
+                Log.log(TAG,"Receive message,from Topic [" + topic + "] , content:["
                     + new String(message.getPayload(), "UTF-8") + "],  ");
 
                 String payload = message.toString();
                 CarAction carAction = new Gson().fromJson(payload, CarAction.class);
-                CarController.getInstance().init().control(carAction);
+                CarController.instance.control(carAction);
             }
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
                 //如果是QoS0的消息，token.resp是没有回复的
-                LogUtil.print("消息发送成功! " + ((token == null || token.getResponse() == null) ? "null"
+                LogUtil.print("Send message success! " + ((token == null || token.getResponse() == null) ? "null"
                     : token.getResponse().getKey()));
             }
         });
-        LogUtil.print("连接成功:---");
+        Log.log(TAG,"Connect success---");
 
-        sendSMS("Connected");
+//        sendSMS("Connected");
 
         String content = "{'content':'msg from :" + clientId + "," + System.currentTimeMillis() + "'}";
         sendMessage(content);
 
         //一次订阅永久生效
         //这个是第一种订阅topic方式，回调到统一的callback
-        sampleClient.subscribe(subTopic);
+        sampleClient.subscribe(Constants.subTopic);
 
         //这个是第二种订阅方式, 订阅某个topic，有独立的callback
         //sampleClient.subscribe(subTopic, new IMqttMessageListener() {
@@ -228,59 +220,33 @@ public enum  SimpleClient4IOT {
         //});
 
         //回复RRPC响应
-        final ExecutorService executorService = new ThreadPoolExecutor(2,
-            4, 600, TimeUnit.SECONDS,
-            new ArrayBlockingQueue<Runnable>(100), new CallerRunsPolicy());
 
 
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    SensorStatus sensorStatus = CarController.getInstance().init().getSensorStatus();
 
-                    try {
-                        sendMessage(new Gson().toJson(sensorStatus));
-                    } catch (MqttException e) {
-                        e.printStackTrace();
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-
-        String reqTopic = "/sys/" + productKey + "/" + deviceName + "/rrpc/request/+";
-        sampleClient.subscribe(reqTopic, new IMqttMessageListener() {
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                LogUtil.print("收到请求：" + message + ", topic=" + topic);
-                String messageId = topic.substring(topic.lastIndexOf('/') + 1);
-                final String respTopic = "/sys/" + productKey + "/" + deviceName + "/rrpc/response/" + messageId;
-                String content = "hello world";
-                final MqttMessage response = new MqttMessage(content.getBytes());
-                response.setQos(0); //RRPC只支持QoS0
-                //不能在回调线程中调用publish，会阻塞线程，所以使用线程池
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            sampleClient.publish(respTopic, response);
-                            LogUtil.print("回复响应成功，topic=" + respTopic);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
-        });
+//        String reqTopic = "/sys/" + productKey + "/" + deviceName + "/rrpc/request/+";
+//        sampleClient.subscribe(reqTopic, new IMqttMessageListener() {
+//            @Override
+//            public void messageArrived(String topic, MqttMessage message) throws Exception {
+//                LogUtil.print("收到请求：" + message + ", topic=" + topic);
+//                String messageId = topic.substring(topic.lastIndexOf('/') + 1);
+//                final String respTopic = "/sys/" + productKey + "/" + deviceName + "/rrpc/response/" + messageId;
+//                String content = "hello world";
+//                final MqttMessage response = new MqttMessage(content.getBytes());
+//                response.setQos(0); //RRPC只支持QoS0
+//                //不能在回调线程中调用publish，会阻塞线程，所以使用线程池
+//                executorService.submit(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            sampleClient.publish(respTopic, response);
+//                            LogUtil.print("回复响应成功，topic=" + respTopic);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//            }
+//        });
     }
 
     private static SSLSocketFactory createSSLSocket() throws Exception {

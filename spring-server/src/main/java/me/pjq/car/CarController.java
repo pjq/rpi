@@ -3,6 +3,7 @@ package me.pjq.car;
 import com.google.gson.Gson;
 import com.pi4j.io.gpio.*;
 import me.pjq.model.CarAction;
+import me.pjq.model.MotionDetect;
 import me.pjq.model.SensorStatus;
 import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.http.converter.json.GsonBuilderUtils;
@@ -17,8 +18,8 @@ import java.util.concurrent.Executors;
 /**
  * Created by i329817 on 30/07/2017.
  */
-public class CarController {
-    private static CarController instance;
+public enum CarController {
+    instance;
     private Config config;
     GpioPinDigitalOutput pin1;
     GpioPinDigitalOutput pin2;
@@ -30,6 +31,10 @@ public class CarController {
     private boolean usePython = true;
 
     private static final long max_time = 10 * 1000;
+
+    private CarController() {
+        init();
+    }
 
     public CarController init() {
         if (usePython) {
@@ -55,9 +60,9 @@ public class CarController {
     }
 
 
-    public void control(CarAction carAction){
+    public void control(CarAction carAction) {
         String action = carAction.getAction();
-        CarController carController = CarController.getInstance().init();
+        CarController carController = CarController.getInstance();
         CarAction.Action act = CarAction.Action.toAction(action);
         if (act.isUp()) {
             carController.up(carAction);
@@ -90,20 +95,27 @@ public class CarController {
         runCommand(command);
     }
 
-    private void callPython(String pythonFile, int value) {
-        String path = "/home/pi/rpi/car";
-        String command = "python " + path + "/" + pythonFile + " " + value;
-        log(command);
+    public MotionDetect motionDetect() {
+        String result = callPython("motion_detect.py", null);
 
-        runCommand(command);
+        MotionDetect motionDetect = new Gson().fromJson(result, MotionDetect.class);
+        return motionDetect;
     }
 
-    private void callPython(String pythonFile, String value) {
+    private String callPython(String pythonFile, int value) {
         String path = "/home/pi/rpi/car";
         String command = "python " + path + "/" + pythonFile + " " + value;
         log(command);
 
-        runCommand(command);
+        return runCommand(command);
+    }
+
+    private String callPython(String pythonFile, String value) {
+        String path = "/home/pi/rpi/car";
+        String command = "python " + path + "/" + pythonFile + " " + value;
+        log(command);
+
+        return runCommand(command);
     }
 
     private String runCommand(String command) {
@@ -144,12 +156,18 @@ public class CarController {
         return sensorStatus;
     }
 
-    public void relay(final CarAction actionDuration, final String on) {
+    public void relay(final CarAction action, final String on) {
         executorService.submit(new Runnable() {
             @Override
             public void run() {
                 if (usePython) {
                     callPython("relay_control.py", on);
+
+                    if ("on".equalsIgnoreCase(on)) {
+                        Monitor.instance.relayOn = true;
+                    } else {
+                        Monitor.instance.relayOn = false;
+                    }
 
                     return;
                 }
@@ -342,10 +360,6 @@ public class CarController {
     }
 
     public static CarController getInstance() {
-        if (null == instance) {
-            instance = new CarController();
-        }
-
         return instance;
     }
 

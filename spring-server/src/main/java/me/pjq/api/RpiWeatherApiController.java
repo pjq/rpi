@@ -4,6 +4,7 @@ import com.aliyun.iot.demo.iothub.SimpleClient4IOT;
 import com.google.gson.Gson;
 import io.swagger.annotations.ApiParam;
 import me.pjq.car.CarController;
+import me.pjq.car.Monitor;
 import me.pjq.model.CarAction;
 import me.pjq.model.RpiWeatherItem;
 import me.pjq.model.SensorStatus;
@@ -85,7 +86,9 @@ public class RpiWeatherApiController implements RpiWeatherApi {
         carAction.setTimestamp(System.currentTimeMillis());
         carActionRepository.saveAndFlush(carAction);
 
-        CarController.getInstance().init().control(carAction);
+        CarController.getInstance().control(carAction);
+
+        Monitor.instance.onCommand();
 
         return new ResponseEntity<CarAction>(HttpStatus.OK);
     }
