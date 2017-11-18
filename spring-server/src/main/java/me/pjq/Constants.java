@@ -25,18 +25,18 @@ public enum Constants {
     public static String signName = "树霉派IoT";
     public static String templateCode = "SMS_110310049";
 
+    //10 seconds, interval for SensorStatus update.
+    public static long SENSOR_STATUS_UPDATE_INTERVAL = 10000;
+    // duration for auto turn off the power via relay control
+    public static long RELAY_OFF_INTERVAL = 30 * 1000;
+
     public static String pubTopic = "/" + productKey + "/" + deviceName + "/update";
     //用于测试的topic
     public static String subTopic = "/" + productKey + "/" + deviceName + "/get";
 
-//    private static final String CONFIG_FILE = "./src/main/resources/config.properties";
-    private static final String CONFIG_FILE = "config.properties";
+    private static final String CONFIG_FILE = "./src/main/resources/config.properties";
+//    private static final String CONFIG_FILE = "config.properties";
 
-    //10 seconds, interval for SensorStatus update.
-    public static final long SENSOR_STATUS_UPDATE_INTERVAL = 10000;
-    //    long RELAY_OFF_INTERVAL = 5 * 60 * 1000;
-    // duration for auto turn off the power via relay control
-    public static long RELAY_OFF_INTERVAL = 30 * 1000;
 
 
     private Constants() {
@@ -98,6 +98,14 @@ public enum Constants {
         }
         if (map.containsKey("templateCode")) {
             templateCode = map.get("templateCode");
+        }
+
+        if (map.containsKey("SENSOR_STATUS_UPDATE_INTERVAL")) {
+            SENSOR_STATUS_UPDATE_INTERVAL = Long.valueOf(map.get("SENSOR_STATUS_UPDATE_INTERVAL"));
+        }
+
+        if (map.containsKey("RELAY_OFF_INTERVAL")) {
+            RELAY_OFF_INTERVAL = Long.valueOf(map.get("RELAY_OFF_INTERVAL"));
         }
 
         pubTopic = "/" + productKey + "/" + deviceName + "/update";
