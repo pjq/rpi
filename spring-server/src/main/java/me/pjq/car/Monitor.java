@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit;
 public enum Monitor {
     instance;
     private static final String TAG = "Monitor";
-    final ExecutorService executorService = new ThreadPoolExecutor(2,
-            4, 600, TimeUnit.SECONDS,
+    final ExecutorService executorService = new ThreadPoolExecutor(10,
+            10, 600, TimeUnit.SECONDS,
             new ArrayBlockingQueue<Runnable>(100), new ThreadPoolExecutor.CallerRunsPolicy());
     long lastCommandTime;
     boolean relayOn = false;
