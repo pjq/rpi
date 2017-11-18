@@ -91,7 +91,9 @@ public enum Monitor {
             @Override
             public void run() {
                 try {
-                    home4IOT.sendMessage(new Gson().toJson(weatherItem));
+                    if (null != weatherItem) {
+                        home4IOT.sendMessage(new Gson().toJson(weatherItem));
+                    }
                 } catch (MqttException e) {
                     e.printStackTrace();
                 } catch (UnsupportedEncodingException e) {
