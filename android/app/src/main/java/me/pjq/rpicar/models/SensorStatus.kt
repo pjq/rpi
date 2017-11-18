@@ -11,6 +11,8 @@ class SensorStatus {
      */
 
     var relay_on: Boolean = false
+    var motion_detected: Boolean = false
+
 
     var obstacles: Obstacles? = null
 

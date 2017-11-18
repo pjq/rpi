@@ -186,7 +186,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         }
 
         if (null != sensorStatus) {
-            weatherStatus?.append("\nDistance(cm) " + sensorStatus!!.distance + "\n" + sensorStatus!!.obstacles!!.toString())
+            weatherStatus?.append("\nDistance(cm) " + sensorStatus!!.distance + "\n" + sensorStatus!!.obstacles!!.toString() + "\n People Detected " + sensorStatus!!.motion_detected)
             updateRelayOnStatus(sensorStatus!!.relay_on)
         }
     }
