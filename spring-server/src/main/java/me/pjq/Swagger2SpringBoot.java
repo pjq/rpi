@@ -2,6 +2,7 @@ package me.pjq;
 
 import com.aliyun.iot.demo.iothub.SimpleClient4IOT;
 import me.pjq.car.Monitor;
+import me.pjq.model.Config;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
@@ -25,10 +26,8 @@ public class Swagger2SpringBoot implements CommandLineRunner {
 	public static void main(String[] args) throws Exception {
 		new SpringApplication(Swagger2SpringBoot.class).run(args);
 
-		SimpleClient4IOT iot = SimpleClient4IOT.INSTANCE;
-		Monitor monitor = Monitor.instance;
 		Constants constants = Constants.INSTANCE;
-
+		Monitor monitor = Monitor.instance;
 	}
 
 	class ExitException extends RuntimeException implements ExitCodeGenerator {

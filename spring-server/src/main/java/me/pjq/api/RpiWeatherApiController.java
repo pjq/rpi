@@ -49,7 +49,7 @@ public class RpiWeatherApiController implements RpiWeatherApi {
         }
 
         if (null == iot) {
-            iot = SimpleClient4IOT.INSTANCE;
+            iot = Monitor.instance.getHome4IOT();
         }
 
         try {

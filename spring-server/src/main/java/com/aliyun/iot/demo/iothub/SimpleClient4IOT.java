@@ -19,7 +19,7 @@ import me.pjq.Constants;
 import me.pjq.Utils.Log;
 import me.pjq.car.CarController;
 import me.pjq.model.CarAction;
-import me.pjq.model.SensorStatus;
+import me.pjq.model.Config;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
@@ -39,12 +39,12 @@ import java.util.concurrent.TimeUnit;
 /**
  * IoT套件JAVA版设备接入demo
  */
-public enum  SimpleClient4IOT {
-	/******这里是客户端需要的参数*******/
-	INSTANCE;
+public class SimpleClient4IOT {
+    /******这里是客户端需要的参数*******/
     private static final String TAG = "SimpleClient4IOT";
 
     public MqttClient sampleClient;
+    Config config = null;
     final ExecutorService executorService = new ThreadPoolExecutor(2,
             4, 600, TimeUnit.SECONDS,
             new ArrayBlockingQueue<Runnable>(100), new CallerRunsPolicy());
@@ -55,42 +55,44 @@ public enum  SimpleClient4IOT {
 //        init();
 //    }
 
-    private SimpleClient4IOT() {
+    public SimpleClient4IOT(Config config) {
         try {
+            this.config = config;
             start();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
     public void start() throws Exception {
         //客户端设备自己的一个标记，建议是MAC或SN，不能为空，32字符内
         if (isRunning) {
             return;
         }
-        Log.log(TAG, "init the IoT connection...");
+        Log.log(TAG, "init the IoT connection..." + config.deviceName);
 
         String clientId = InetAddress.getLocalHost().getHostAddress();
 
         //设备认证
         Map<String, String> params = new HashMap<String, String>();
-        params.put("productKey", Constants.productKey); //这个是对应用户在控制台注册的 设备productkey
-        params.put("deviceName", Constants.deviceName); //这个是对应用户在控制台注册的 设备name
+        params.put("productKey", config.productKey); //这个是对应用户在控制台注册的 设备productkey
+        params.put("deviceName", config.deviceName); //这个是对应用户在控制台注册的 设备name
         params.put("clientId", clientId);
         String t = System.currentTimeMillis() + "";
         params.put("timestamp", t);
 
         //MQTT服务器地址，TLS连接使用ssl开头
-        String targetServer = "ssl://" + Constants.productKey + ".com.aliyun.iot-as-mqtt.cn-shanghai.aliyuncs.com:1883";
+        String targetServer = "ssl://" + config.productKey + ".com.aliyun.iot-as-mqtt.cn-shanghai.aliyuncs.com:1883";
 
         //客户端ID格式，两个||之间的内容为设备端自定义的标记，字符范围[0-9][a-z][A-Z]
         String mqttclientId = clientId + "|securemode=2,signmethod=hmacsha1,timestamp=" + t + "|";
-        String mqttUsername = Constants.deviceName + "&" + Constants.productKey; //mqtt用户名格式
-        String mqttPassword = SignUtil.sign(params, Constants.secret, "hmacsha1"); //签名
+        String mqttUsername = config.deviceName + "&" + config.productKey; //mqtt用户名格式
+        String mqttPassword = SignUtil.sign(params, config.secret, "hmacsha1"); //签名
 
         System.err.println("mqttclientId=" + mqttclientId);
 
-        connectMqtt(targetServer, mqttclientId, mqttUsername, mqttPassword, Constants.deviceName);
+        connectMqtt(targetServer, mqttclientId, mqttUsername, mqttPassword, config.deviceName);
 
         isRunning = true;
     }
@@ -99,7 +101,7 @@ public enum  SimpleClient4IOT {
 //        String content = "{'content':'msg from :" + clientId + "," + System.currentTimeMillis() + "'}";
         MqttMessage message = new MqttMessage(content.getBytes("utf-8"));
         message.setQos(0);
-        sampleClient.publish(Constants.pubTopic, message);
+        sampleClient.publish(config.pubTopic, message);
     }
 
     public void sendSMS(String content) {
@@ -145,16 +147,16 @@ public enum  SimpleClient4IOT {
         } catch (ClientException e) {
             e.printStackTrace();
         }
-        if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
+        if (sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
 //请求成功
             Log.log(TAG, "send sms success");
         } else {
-            Log.log(TAG,"send sms failed: " + sendSmsResponse.getMessage());
+            Log.log(TAG, "send sms failed: " + sendSmsResponse.getMessage());
         }
     }
 
     private void connectMqtt(String url, String clientId, String mqttUsername,
-                                   String mqttPassword, final String deviceName) throws Exception {
+                             String mqttPassword, final String deviceName) throws Exception {
         MemoryPersistence persistence = new MemoryPersistence();
         SSLSocketFactory socketFactory = createSSLSocket();
         sampleClient = new MqttClient(url, clientId, persistence);
@@ -184,8 +186,8 @@ public enum  SimpleClient4IOT {
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                Log.log(TAG,"Receive message,from Topic [" + topic + "] , content:["
-                    + new String(message.getPayload(), "UTF-8") + "],  ");
+                Log.log(TAG, "Receive message,from Topic [" + topic + "] , content:["
+                        + new String(message.getPayload(), "UTF-8") + "],  ");
 
                 String payload = message.toString();
                 CarAction carAction = new Gson().fromJson(payload, CarAction.class);
@@ -196,10 +198,10 @@ public enum  SimpleClient4IOT {
             public void deliveryComplete(IMqttDeliveryToken token) {
                 //如果是QoS0的消息，token.resp是没有回复的
                 LogUtil.print("Send message success! " + ((token == null || token.getResponse() == null) ? "null"
-                    : token.getResponse().getKey()));
+                        : token.getResponse().getKey()));
             }
         });
-        Log.log(TAG,"Connect success---");
+        Log.log(TAG, "Connect success---");
 
 //        sendSMS("Connected");
 
@@ -208,7 +210,7 @@ public enum  SimpleClient4IOT {
 
         //一次订阅永久生效
         //这个是第一种订阅topic方式，回调到统一的callback
-        sampleClient.subscribe(Constants.subTopic);
+        sampleClient.subscribe(config.subTopic);
 
         //这个是第二种订阅方式, 订阅某个topic，有独立的callback
         //sampleClient.subscribe(subTopic, new IMqttMessageListener() {
@@ -220,7 +222,6 @@ public enum  SimpleClient4IOT {
         //});
 
         //回复RRPC响应
-
 
 
 //        String reqTopic = "/sys/" + productKey + "/" + deviceName + "/rrpc/request/+";
@@ -251,7 +252,7 @@ public enum  SimpleClient4IOT {
 
     private static SSLSocketFactory createSSLSocket() throws Exception {
         SSLContext context = SSLContext.getInstance("TLSV1.2");
-        context.init(null, new TrustManager[] {new ALiyunIotX509TrustManager()}, null);
+        context.init(null, new TrustManager[]{new ALiyunIotX509TrustManager()}, null);
         SSLSocketFactory socketFactory = context.getSocketFactory();
         return socketFactory;
     }

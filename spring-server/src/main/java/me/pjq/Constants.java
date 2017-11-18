@@ -13,6 +13,11 @@ public enum Constants {
     public static String deviceName = "RpiCarHome";
     public static String productKey = "tKB3pmbLvnA";
     public static String secret = "fT9ryVgfucZNs2g0VZkj8kzV3eNjY55E";
+
+//    public static String deviceName = "RpiCarClient";
+//    public static String productKey = "tKB3pmbLvnA";
+//    public static String secret = "w7TT5kvx1xdzfVogH7RfUUto4kWoSCq4";
+
     public static String accessKeyId = "LTAICKNMlWBxm7GR";
     public static String accessKeySecret = "cMgi0pjAewppBdpESDlI3CXZpAKFwc";
     public static String phone = "18621517768";
@@ -27,7 +32,7 @@ public enum Constants {
     private static final String CONFIG_FILE = "config.properties";
 
     //10 seconds, interval for SensorStatus update.
-    public static final long SENSOR_STATUS_UPDATE_INTERVAL = 10000;
+    public static final long SENSOR_STATUS_UPDATE_INTERVAL = 100000;
     //    long RELAY_OFF_INTERVAL = 5 * 60 * 1000;
     // duration for auto turn off the power via relay control
     public static long RELAY_OFF_INTERVAL = 30 * 1000;

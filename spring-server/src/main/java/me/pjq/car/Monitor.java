@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import me.pjq.Constants;
 import me.pjq.Utils.Log;
 import me.pjq.model.CarAction;
+import me.pjq.model.Config;
 import me.pjq.model.MotionDetect;
 import me.pjq.model.SensorStatus;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -23,13 +24,27 @@ public enum Monitor {
             new ArrayBlockingQueue<Runnable>(100), new ThreadPoolExecutor.CallerRunsPolicy());
     long lastCommandTime;
     boolean relayOn = false;
+    SimpleClient4IOT home4IOT;
+    SimpleClient4IOT client4IOT;
 
     private Monitor() {
         lastCommandTime = System.currentTimeMillis();
         Log.log(TAG, "init");
+        home4IOT = new SimpleClient4IOT(Config.getConfigRpiCarHome());
+        //client4IOT = new SimpleClient4IOT(Config.getConfigRpiCarClient());
+
         init();
         startSensorStatusMonitor();
         startMotionDetect();
+
+    }
+
+    public SimpleClient4IOT getHome4IOT() {
+        return home4IOT;
+    }
+
+    public SimpleClient4IOT getClient4IOT() {
+        return client4IOT;
     }
 
     public void init() {
@@ -76,7 +91,7 @@ public enum Monitor {
                 while (true) {
                     SensorStatus sensorStatus = CarController.instance.getSensorStatus();
                     try {
-                        SimpleClient4IOT.INSTANCE.sendMessage(new Gson().toJson(sensorStatus));
+                        home4IOT.sendMessage(new Gson().toJson(sensorStatus));
                     } catch (MqttException e) {
                         e.printStackTrace();
                     } catch (UnsupportedEncodingException e) {
