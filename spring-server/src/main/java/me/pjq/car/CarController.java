@@ -5,12 +5,9 @@ import com.pi4j.io.gpio.*;
 import me.pjq.model.CarAction;
 import me.pjq.model.MotionDetect;
 import me.pjq.model.SensorStatus;
-import org.springframework.boot.json.GsonJsonParser;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

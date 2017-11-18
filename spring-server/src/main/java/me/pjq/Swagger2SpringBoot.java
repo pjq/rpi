@@ -1,6 +1,5 @@
 package me.pjq;
 
-import com.aliyun.iot.demo.iothub.SimpleClient4IOT;
 import me.pjq.car.Monitor;
 import me.pjq.model.Config;
 import org.springframework.boot.CommandLineRunner;
