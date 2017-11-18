@@ -155,8 +155,8 @@
 
         <ImageView
             android:id="@+id/motion_detect"
-            android:layout_width="30dip"
-            android:layout_height="30dip"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
             android:src="@color/motion_detected_on" />
 
         <LinearLayout

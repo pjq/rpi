@@ -54,7 +54,7 @@ public class RpiWeatherApiController implements RpiWeatherApi {
 
         try {
             iot.sendMessage(new Gson().toJson(WeatherItem));
-            iot.weatherItem = WeatherItem;
+            Monitor.instance.weatherItem = WeatherItem;
         } catch (MqttException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
