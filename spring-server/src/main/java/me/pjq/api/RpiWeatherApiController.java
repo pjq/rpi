@@ -88,8 +88,6 @@ public class RpiWeatherApiController implements RpiWeatherApi {
 
         CarController.getInstance().control(carAction);
 
-        Monitor.instance.onCommand();
-
         return new ResponseEntity<CarAction>(HttpStatus.OK);
     }
 

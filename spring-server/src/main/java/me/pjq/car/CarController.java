@@ -61,6 +61,8 @@ public enum CarController {
 
 
     public void control(CarAction carAction) {
+        Monitor.instance.onCommand();
+
         String action = carAction.getAction();
         CarController carController = CarController.getInstance();
         CarAction.Action act = CarAction.Action.toAction(action);
