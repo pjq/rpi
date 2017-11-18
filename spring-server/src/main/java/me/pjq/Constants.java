@@ -34,9 +34,8 @@ public enum Constants {
     //用于测试的topic
     public static String subTopic = "/" + productKey + "/" + deviceName + "/get";
 
-//    private static final String CONFIG_FILE = "./src/main/resources/config.properties";
+    //    private static final String CONFIG_FILE = "./src/main/resources/config.properties";
     private static final String CONFIG_FILE = "config.properties";
-
 
 
     private Constants() {
@@ -60,8 +59,8 @@ public enum Constants {
         while (en.hasMoreElements()) {
             String strKey = (String) en.nextElement();
             String strValue = pps.getProperty(strKey);
-            strValue = new String(strValue.getBytes("ISO-8859-1"),"utf-8");
-            System.out.println(strKey + "=" + strValue);
+            strValue = new String(strValue.getBytes("ISO-8859-1"), "utf-8");
+            Log.log(TAG, strKey + "=" + strValue);
             map.put(strKey, strValue);
         }
 
@@ -107,6 +106,9 @@ public enum Constants {
         if (map.containsKey("RELAY_OFF_INTERVAL")) {
             RELAY_OFF_INTERVAL = Long.valueOf(map.get("RELAY_OFF_INTERVAL"));
         }
+
+        Log.log(TAG, "SENSOR_STATUS_UPDATE_INTERVAL: " + SENSOR_STATUS_UPDATE_INTERVAL);
+        Log.log(TAG, "RELAY_OFF_INTERVAL: " + RELAY_OFF_INTERVAL);
 
         pubTopic = "/" + productKey + "/" + deviceName + "/update";
         subTopic = "/" + productKey + "/" + deviceName + "/get";

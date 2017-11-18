@@ -100,6 +100,7 @@ public enum Monitor {
                     }
 
                     try {
+                        Log.log(TAG, "sleep: " + Constants.SENSOR_STATUS_UPDATE_INTERVAL);
                         Thread.sleep(Constants.SENSOR_STATUS_UPDATE_INTERVAL);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
