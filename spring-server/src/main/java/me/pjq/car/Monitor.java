@@ -60,6 +60,8 @@ public enum Monitor {
                             CarAction action = new CarAction();
                             CarController.instance.relay(action, "off");
                             relayOn = false;
+
+                            startSensorStatusMonitor();
                         }
                     } else {
                         if (!relayOn) {
@@ -67,6 +69,7 @@ public enum Monitor {
                             CarController.instance.relay(action, "on");
                             relayOn = true;
 
+                            startSensorStatusMonitor();
                             //When power on, also update the Weather status.
                             sendWeatherItem();
                         }
@@ -103,8 +106,63 @@ public enum Monitor {
         });
     }
 
-    // Start the SensorStatus Monitor
+
     public void startSensorStatusMonitor() {
+        startSensorStatusMonitorSlow();
+        startSensorStatusMonitorFast();
+    }
+
+    // if relay on, it means the car is active, so need update the status quickly
+    public void startSensorStatusMonitorFast() {
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                while (relayOn) {
+                    SensorStatus sensorStatus = CarController.instance.getSensorStatus();
+                    try {
+                        home4IOT.sendMessage(new Gson().toJson(sensorStatus));
+                    } catch (MqttException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    public void startSensorStatusMonitorSlow() {
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                while (!relayOn) {
+                    SensorStatus sensorStatus = CarController.instance.getSensorStatus();
+                    try {
+                        home4IOT.sendMessage(new Gson().toJson(sensorStatus));
+                    } catch (MqttException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        Thread.sleep(Constants.INSTANCE.getConfig().SENSOR_STATUS_UPDATE_INTERVAL);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    // Start the SensorStatus Monitor
+    public void startSensorStatusMonitor(final long sleepTime) {
         Log.log(TAG, "startSensorStatusMonitor");
         executorService.submit(new Runnable() {
             @Override
@@ -120,12 +178,7 @@ public enum Monitor {
                     }
 
                     try {
-                        if (relayOn) {
-                            //if relay on, it means the car is active, so need update the status quickly
-                            Thread.sleep(100);
-                        } else {
-                            Thread.sleep(Constants.INSTANCE.getConfig().SENSOR_STATUS_UPDATE_INTERVAL);
-                        }
+                        Thread.sleep(sleepTime);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
