@@ -14,7 +14,6 @@ import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -31,13 +30,15 @@ import me.pjq.rpicar.models.CarAction
 import me.pjq.rpicar.models.SensorStatus
 import me.pjq.rpicar.models.WeatherItem
 import me.pjq.rpicar.realm.Settings
+import me.pjq.rpicar.utils.Log
 import me.pjq.rpicar.utils.Logger
+import me.pjq.rpicar.widget.RadarView
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchListener, SimpleClient4IOT.Listener {
-    override fun onUpdate(sensorStatus: SensorStatus?) {
+    override fun onUpdate(sensorStatus: SensorStatus) {
         this.sensorStatus = sensorStatus;
         if (null == activity || isDetached) {
             return
@@ -62,9 +63,8 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     internal var stop: View? = null
     internal var webView: WebView? = null
     internal var cameraOn: TextView? = null
-    internal var angleAdd: Button? = null
-    internal var angleSub: Button? = null
-
+    internal var angleAdd: TextView? = null
+    internal var angleSub: TextView? = null
 
     internal var motion_detect: ImageView? = null
     internal var ultrasound: ImageView? = null
@@ -73,6 +73,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     internal var obstacles3: ImageView? = null
     internal var obstacles4: ImageView? = null
     internal var carBody: ImageView? = null
+    internal var radarview: RadarView? = null
 
     var angleValue: Int = 0
     internal var relayOn: TextView? = null
@@ -84,7 +85,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
 
     internal var disposable: Disposable? = null
     internal var disposable2: Disposable? = null
-    internal var sensorStatus: SensorStatus? = null
+    var sensorStatus: SensorStatus? = null
     internal var weatherItem: WeatherItem? = null
     internal var monitor: Monitor? = null
 
@@ -134,8 +135,8 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         cameraOn = view.findViewById(R.id.cameraOn) as TextView
         weatherStatus = view.findViewById(R.id.weatherStatus) as TextView
         relayOn = view.findViewById(R.id.relayOn) as TextView
-        angleAdd = view.findViewById(R.id.angle_add) as Button
-        angleSub = view.findViewById(R.id.angle_sub) as Button
+        angleAdd = view.findViewById(R.id.angle_add) as TextView
+        angleSub = view.findViewById(R.id.angle_sub) as TextView
 
         motion_detect = view.findViewById(R.id.motion_detect) as ImageView
         ultrasound = view.findViewById(R.id.ultrasound) as ImageView
@@ -144,6 +145,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         obstacles3 = view.findViewById(R.id.obstacles3) as ImageView
         obstacles4 = view.findViewById(R.id.obstacles4) as ImageView
         carBody = view.findViewById(R.id.carBody) as ImageView
+        radarview = view.findViewById(R.id.radarview) as RadarView
 
         stop?.setOnClickListener(this)
         left?.setOnClickListener(this)
@@ -155,6 +157,8 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         angleAdd?.setOnClickListener(this)
         angleSub?.setOnClickListener(this)
         relayOn?.setOnClickListener(this)
+
+        radarview?.start()
 
         //        left.setOnTouchListener(this);
         //        right.setOnTouchListener(this);
@@ -208,30 +212,38 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     private fun updateStatus() {
         weatherStatus?.text = ""
         if (null != weatherItem) {
-            val value = weatherItem!!.date + " PM2.5 " + weatherItem!!.pm25 + " " + weatherItem!!.temperature + "°C " + weatherItem!!.humidity + "%"
+            val value = weatherItem!!.date + "\nPM2.5 " + weatherItem!!.pm25 + " " + weatherItem!!.temperature + "°C " + weatherItem!!.humidity + "%"
             Logger.log(TAG, value)
             weatherStatus?.text = value
         }
 
         if (null != sensorStatus) {
-            weatherStatus?.append("\nDistance(cm) " + sensorStatus!!.distance + "\n" + sensorStatus!!.obstacles!!.toString() + "\nPeople Detected " + sensorStatus!!.motion_detected)
-            updateRelayOnStatus(sensorStatus!!.relay_on)
+//            weatherStatus?.append("\nDistance(cm) " + sensorStatus!!.distance + "\n" + sensorStatus!!.obstacles!!.toString() + "\nPeople Detected " + sensorStatus!!.motion_detected)
+            weatherStatus?.append("\nUltra Sound(cm) " + sensorStatus!!.distance)
+            updateRelayOnStatus(sensorStatus?.relay_on!!)
         }
 
         updateCarStatus()
     }
 
     private fun updateCarStatus() {
+        if (null == sensorStatus) {
+            return
+        }
         if (sensorStatus?.relay_on!!) {
             carBody?.setBackgroundColor(resources.getColor(R.color.power_on));
+            radarview?.visibility = View.VISIBLE
         } else {
             carBody?.setBackgroundColor(resources.getColor(R.color.power_off));
+            radarview?.visibility = View.GONE
         }
 
         if (sensorStatus?.motion_detected!!) {
             motion_detect?.setBackgroundColor(resources.getColor(R.color.motion_detected_on));
+            motion_detect?.visibility = View.VISIBLE
         } else {
             motion_detect?.setBackgroundColor(resources.getColor(R.color.white));
+            motion_detect?.visibility = View.GONE
         }
 
         if (sensorStatus?.obstacles?.obstacle1!!) {
@@ -264,17 +276,19 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
 //        ultrasound?.layoutParams = params;
 //        ultrasound?.scaleY = sensorStatus?.distance!!
 
-        scaleView(ultrasound!!, .0f, (sensorStatus?.distance!!/100.0).toFloat())
+        scaleView(ultrasound!!, 1.0f, (sensorStatus?.distance!! / 200.0).toFloat())
+
     }
 
     private fun scaleView(v: View, startScale: Float, endScale: Float) {
+        Log.log(TAG, "startScale: " + startScale + " endScale: " + endScale)
         var anim: Animation = ScaleAnimation(
                 1f, 1f, // Start and end values for the X axis scaling
                 startScale, endScale, // Start and end values for the Y axis scaling
                 Animation.RELATIVE_TO_SELF, 0f, // Pivot point of X scaling
                 Animation.RELATIVE_TO_SELF, 1f); // Pivot point of Y scaling
-        anim.setFillAfter(true) // Needed to keep the result of the animation
-        anim.setDuration(200)
+        anim.setFillAfter(false) // Needed to keep the result of the animation
+        anim.setDuration(100)
         v.startAnimation(anim)
     }
 

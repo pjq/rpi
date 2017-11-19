@@ -12,27 +12,6 @@
         android:scaleType="center"
         android:src="@mipmap/background" />
 
-    <Button
-        android:id="@+id/angle_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="10dip"
-        android:layout_marginTop="100dip"
-        android:text="Angle +"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="10sp" />
-
-    <Button
-        android:id="@+id/angle_sub"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/angle_add"
-        android:layout_margin="10dip"
-        android:text="Angle -"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="10sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -101,22 +80,48 @@
                 android:background="@drawable/chevron_down"
                 android:textSize="12sp" />
         </RelativeLayout>
+    </RelativeLayout>
 
+    <TextView
+        android:id="@+id/cameraOn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dip"
+        android:shadowDx="2"
+        android:shadowRadius="2"
+        android:text="Camera On"
+        android:textColor="@android:color/holo_green_dark"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:layout_width="60dip"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weatherStatus">
 
         <TextView
-            android:id="@+id/cameraOn"
-            android:layout_width="wrap_content"
+            android:id="@+id/angle_add"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="10dip"
-            android:shadowDx="2"
-            android:shadowRadius="2"
-            android:text="Camera On"
-            android:textColor="@android:color/holo_green_dark"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:visibility="invisible" />
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:text="+"
+            android:textColor="@color/red"
+            android:textSize="12sp" />
 
+        <TextView
+            android:id="@+id/angle_sub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/angle_add"
+            android:layout_marginTop="10dip"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:text="-"
+            android:textColor="@color/red"
+            android:textSize="12sp" />
     </RelativeLayout>
 
     <TextView
@@ -140,59 +145,52 @@
         android:textSize="12sp"
         android:visibility="visible" />
 
+
     <RelativeLayout
         android:id="@+id/car"
         android:layout_width="100dip"
         android:layout_height="wrap_content"
-        android:layout_above="@id/relayOn">
-
-        <ImageView
-            android:id="@+id/ultrasound"
-            android:layout_width="10dip"
-            android:layout_height="30dip"
-            android:layout_centerHorizontal="true"
-            android:src="@android:color/holo_blue_dark" />
-
-        <ImageView
-            android:id="@+id/motion_detect"
-            android:layout_width="20dip"
-            android:layout_height="20dip"
-            android:src="@color/motion_detected_on" />
+        android:layout_above="@id/relayOn"
+        android:layout_alignParentBottom="true">
 
         <LinearLayout
             android:id="@+id/obstacles"
             android:layout_width="match_parent"
-            android:layout_height="40dip"
-            android:layout_below="@id/ultrasound"
+            android:layout_height="30dip"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/obstacles1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dip"
                 android:layout_weight="1.0"
-                android:src="@android:color/holo_red_dark" />
+                android:src="@color/obstacles_off" />
 
             <ImageView
                 android:id="@+id/obstacles2"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dip"
+                android:layout_marginTop="15dip"
                 android:layout_weight="1.0"
-                android:src="@android:color/holo_green_dark" />
+                android:src="@color/obstacles_off" />
 
             <ImageView
                 android:id="@+id/obstacles3"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dip"
+                android:layout_marginTop="15dip"
                 android:layout_weight="1.0"
-                android:src="@android:color/holo_red_dark" />
+                android:src="@color/obstacles_off" />
 
             <ImageView
                 android:id="@+id/obstacles4"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1.0"
-                android:src="@android:color/holo_green_dark" />
+                android:src="@color/obstacles_off" />
 
         </LinearLayout>
 
@@ -200,9 +198,30 @@
             android:id="@+id/carBody"
             android:layout_width="match_parent"
             android:layout_height="100dip"
+            android:layout_below="@id/obstacles" />
+
+        <me.pjq.rpicar.widget.RadarView
+            android:id="@+id/radarview"
+            android:layout_width="100dip"
+            android:layout_height="100dip"
             android:layout_below="@id/obstacles"
-            android:src="@android:color/white" />
+            android:layout_margin="0dip" />
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/ultrasound"
+        android:layout_width="100dip"
+        android:layout_height="30dip"
+        android:layout_above="@id/car"
+        android:alpha="@dimen/alpha"
+        android:src="@android:color/holo_blue_dark" />
+
+    <ImageView
+        android:id="@+id/motion_detect"
+        android:layout_width="100dip"
+        android:layout_height="10dip"
+        android:layout_above="@id/ultrasound"
+        android:alpha="@dimen/alpha" />
 
     <ImageView
         android:id="@+id/auto"

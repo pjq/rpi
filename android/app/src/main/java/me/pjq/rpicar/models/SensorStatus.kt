@@ -5,13 +5,13 @@ package me.pjq.rpicar.models
  */
 
 class SensorStatus {
-    var distance: Float = 0.toFloat()
+    var distance: Float? = 0.toFloat()
     /**
      * obstacles : {"obstacle1":false,"obstacle2":false,"obstacle3":true,"obstacle4":false}
      */
 
-    var relay_on: Boolean = false
-    var motion_detected: Boolean = false
+    var relay_on: Boolean?= false
+    var motion_detected: Boolean? = false
 
 
     var obstacles: Obstacles? = null
@@ -24,10 +24,10 @@ class SensorStatus {
          * obstacle4 : false
          */
 
-        var obstacle1: Boolean = false
-        var obstacle2: Boolean = false
-        var obstacle3: Boolean = false
-        var obstacle4: Boolean = false
+        var obstacle1: Boolean? = false
+        var obstacle2: Boolean? = false
+        var obstacle3: Boolean? = false
+        var obstacle4: Boolean? = false
 
         override fun toString(): String {
             return "obstacle1: " + obstacle1 +
