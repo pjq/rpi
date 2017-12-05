@@ -1,7 +1,5 @@
 package me.pjq.rpicar
 
-import android.app.Fragment
-import android.app.FragmentTransaction
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -17,7 +15,6 @@ import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 
 import me.pjq.rpicar.realm.Settings
 
@@ -59,7 +56,7 @@ class MainNavigationActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
     private fun initFirstFragment() {
         val fragmentTransaction = fragmentManager.beginTransaction()
-        val fragment = CameraControllerFragment.newInstance()
+        val fragment = CarControllerMainFragment.newInstance()
         fragmentTransaction.replace(R.id.content, fragment)
         fragmentTransaction.commitAllowingStateLoss()
     }
@@ -98,7 +95,7 @@ class MainNavigationActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
         if (id == R.id.nav_camera) {
             val fragmentTransaction = fragmentManager.beginTransaction()
-            val fragment = CameraControllerFragment.newInstance()
+            val fragment = CarControllerMainFragment.newInstance()
             fragmentTransaction.replace(R.id.content, fragment)
             //            fragmentTransaction.addToBackStack(SettingsFragment.class.getSimpleName());
             fragmentTransaction.commitAllowingStateLoss()

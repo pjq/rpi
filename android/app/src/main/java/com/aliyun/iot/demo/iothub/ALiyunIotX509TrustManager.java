@@ -29,7 +29,7 @@ public class ALiyunIotX509TrustManager extends X509ExtendedTrustManager{
     
      public ALiyunIotX509TrustManager() throws Exception{
          //CA根证书，可以从官网下载
-         InputStream in = BaseApplication.getContext().getAssets().open("root.crt");
+         InputStream in = BaseApplication.context.getAssets().open("root.crt");
 //         InputStream in = SimpleClient4IOT.class.getResourceAsStream("/root.crt");
          CertificateFactory cf = CertificateFactory.getInstance("X.509");
          Certificate ca = null;

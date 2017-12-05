@@ -12,7 +12,6 @@ import android.widget.Toast
 
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.AxisBase
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.components.YAxis.AxisDependency
@@ -20,39 +19,32 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.gson.Gson
 
 import java.io.BufferedReader
 import java.io.IOException
-import java.io.InputStream
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Arrays
 import java.util.Collections
-import java.util.Comparator
 import java.util.Date
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
-import io.realm.Realm
-import me.pjq.rpicar.chart.DemoBase
+import me.pjq.rpicar.chart.ChartDemoBaseActivity
 import me.pjq.rpicar.models.WeatherItem
 import me.pjq.rpicar.realm.Settings
 import me.pjq.rpicar.utils.Logger
 
-class TemperatureChartTimeActivity : DemoBase(), OnSeekBarChangeListener {
-
+class TemperatureChartTimeActivity : ChartDemoBaseActivity(), OnSeekBarChangeListener {
     private var mChart: LineChart? = null
     private var mSeekBarX: SeekBar? = null
     private var tvX: TextView? = null

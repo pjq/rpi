@@ -12,11 +12,9 @@ import android.webkit.HttpAuthHandler
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-
+import kotlinx.android.synthetic.main.fragment_capture_video.*
 
 class CaptureVideoFragment : Fragment(), MainNavigationActivity.OnBackKeyListener {
-    internal lateinit var webView: WebView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -25,15 +23,17 @@ class CaptureVideoFragment : Fragment(), MainNavigationActivity.OnBackKeyListene
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_capture_video, container, false)
-
-        initView(view)
         return view
     }
 
-    private fun initView(view: View) {
-        webView = view.findViewById(R.id.webview) as WebView
-        webView.loadUrl(CarControllerApiService.Config.CAPTURE_VIDEO_URL())
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
+        initView()
+    }
+
+    private fun initView() {
+        webView.loadUrl(CarControllerApiService.Config.CAPTURE_VIDEO_URL())
         webView.settings.javaScriptEnabled = true
         webView.settings.setSupportZoom(true)
         webView.settings.builtInZoomControls = true

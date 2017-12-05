@@ -1,6 +1,5 @@
 package me.pjq.rpicar
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Fragment
 import android.content.Context
@@ -13,10 +12,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.view.inputmethod.InputMethodManager
-import android.webkit.WebView
-import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.TextView
 import com.aliyun.iot.demo.iothub.SimpleClient4IOT
 import com.google.gson.Gson
 import io.reactivex.Observable
@@ -25,6 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_camera_controller.*
 import me.pjq.rpicar.aliyun.IoT
 import me.pjq.rpicar.models.CarAction
 import me.pjq.rpicar.models.SensorStatus
@@ -32,65 +29,51 @@ import me.pjq.rpicar.models.WeatherItem
 import me.pjq.rpicar.realm.Settings
 import me.pjq.rpicar.utils.Log
 import me.pjq.rpicar.utils.Logger
-import me.pjq.rpicar.widget.RadarView
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.runOnUiThread
+import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiThread
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchListener, SimpleClient4IOT.Listener {
-    override fun onUpdate(sensorStatus: SensorStatus) {
-        this.sensorStatus = sensorStatus;
-        if (null == activity || isDetached) {
-            return
-        }
-
-        activity.runOnUiThread { updateStatus() }
-    }
-
-    override fun onUpdate(weatherItem: WeatherItem?) {
-        this.weatherItem = weatherItem;
-        if (null == activity || isDetached) {
-            return
-        }
-        activity.runOnUiThread { updateStatus() }
-    }
-
-    internal var left: ImageView? = null
-    internal var right: ImageView? = null
-    internal var up: ImageView? = null
-    internal var down: ImageView? = null
-    internal var auto: View? = null
-    internal var stop: View? = null
-    internal var webView: WebView? = null
-    internal var cameraOn: TextView? = null
-    internal var angleAdd: TextView? = null
-    internal var angleSub: TextView? = null
-
-    internal var motion_detect: ImageView? = null
-    internal var ultrasound: ImageView? = null
-    internal var obstacles1: ImageView? = null
-    internal var obstacles2: ImageView? = null
-    internal var obstacles3: ImageView? = null
-    internal var obstacles4: ImageView? = null
-    internal var carBody: ImageView? = null
-    internal var radarview: RadarView? = null
-
+/**
+ * The car main controller UI, it can do the actions: up/down/left/right and also the camera angel rotate.
+ */
+class CarControllerMainFragment : Fragment(), View.OnClickListener, View.OnTouchListener, SimpleClient4IOT.Listener {
     var angleValue: Int = 0
-    internal var relayOn: TextView? = null
     var isRelayOn: Boolean = false
 
-    internal var weatherStatus: TextView? = null
-
-    internal lateinit var apiService: CarControllerApiService
-
-    internal var disposable: Disposable? = null
-    internal var disposable2: Disposable? = null
+    lateinit var apiService: CarControllerApiService
+    var disposable: Disposable? = null
+    var disposable2: Disposable? = null
     var sensorStatus: SensorStatus? = null
-    internal var weatherItem: WeatherItem? = null
-    internal var monitor: Monitor? = null
-
+    var weatherItem: WeatherItem? = null
+    lateinit var monitor: Monitor
     val enableIoT: Boolean = true
-    var iot: IoT? = null
+    lateinit var iot: IoT
+
+    fun Fragment.isAlive(): Boolean {
+        return null != activity && isAdded
+    }
+
+    override fun onUpdate(sensorStatus: SensorStatus) {
+        this.sensorStatus = sensorStatus;
+        if (!isAlive()) {
+            return
+        }
+
+        runOnUiThread { updateStatus() }
+    }
+
+    override fun onUpdate(weatherItem: WeatherItem) {
+        this.weatherItem = weatherItem;
+        if (!isAlive()) {
+            return
+        }
+
+        runOnUiThread { updateStatus() }
+    }
 
     private val settings: Settings?
         get() {
@@ -111,10 +94,10 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        iot = IoT.instance;
+        iot = IoT.instance
 
         monitor = Monitor.instance
-        monitor!!.init(this);
+        monitor.init(this)
     }
 
     override fun onAttach(context: Context) {
@@ -123,42 +106,19 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         activity.title = "Camera"
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun initView(view: View) {
-        stop = view.findViewById(R.id.stop)
-        left = view.findViewById(R.id.left) as ImageView
-        right = view.findViewById(R.id.right) as ImageView
-        up = view.findViewById(R.id.up) as ImageView
-        auto = view.findViewById(R.id.auto)
-        down = view.findViewById(R.id.down) as ImageView
-        webView = view.findViewById(R.id.webview) as WebView
-        cameraOn = view.findViewById(R.id.cameraOn) as TextView
-        weatherStatus = view.findViewById(R.id.weatherStatus) as TextView
-        relayOn = view.findViewById(R.id.relayOn) as TextView
-        angleAdd = view.findViewById(R.id.angle_add) as TextView
-        angleSub = view.findViewById(R.id.angle_sub) as TextView
+    private fun initView() {
+        stop.setOnClickListener(this)
+        left.setOnClickListener(this)
+        right.setOnClickListener(this)
+        up.setOnClickListener(this)
+        auto.setOnClickListener(this)
+        down.setOnClickListener(this)
+        cameraOn.setOnClickListener(this)
+        angle_add.setOnClickListener(this)
+        angle_add.setOnClickListener(this)
+        relayOn.setOnClickListener(this)
 
-        motion_detect = view.findViewById(R.id.motion_detect) as ImageView
-        ultrasound = view.findViewById(R.id.ultrasound) as ImageView
-        obstacles1 = view.findViewById(R.id.obstacles1) as ImageView
-        obstacles2 = view.findViewById(R.id.obstacles2) as ImageView
-        obstacles3 = view.findViewById(R.id.obstacles3) as ImageView
-        obstacles4 = view.findViewById(R.id.obstacles4) as ImageView
-        carBody = view.findViewById(R.id.carBody) as ImageView
-        radarview = view.findViewById(R.id.radarview) as RadarView
-
-        stop?.setOnClickListener(this)
-        left?.setOnClickListener(this)
-        right?.setOnClickListener(this)
-        up?.setOnClickListener(this)
-        auto?.setOnClickListener(this)
-        down?.setOnClickListener(this)
-        cameraOn?.setOnClickListener(this)
-        angleAdd?.setOnClickListener(this)
-        angleSub?.setOnClickListener(this)
-        relayOn?.setOnClickListener(this)
-
-        radarview?.start()
+        radarview.start()
 
         //        left.setOnTouchListener(this);
         //        right.setOnTouchListener(this);
@@ -166,11 +126,10 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         //        down.setOnTouchListener(this);
         //        stop.setOnTouchListener(this);
 
-        webView?.settings!!.javaScriptEnabled = true
-        //        webView.getSettings().setSupportZoom(true);
-        webView?.settings!!.builtInZoomControls = true
-        webView?.settings!!.loadWithOverviewMode = true
-        webView?.settings!!.useWideViewPort = true
+        webView.settings.javaScriptEnabled = true
+        webView.settings.builtInZoomControls = true
+        webView.settings.loadWithOverviewMode = true
+        webView.settings.useWideViewPort = true
 
         apiService = CarControllerApiService.instance
         webView?.loadUrl(CarControllerApiService.Config.STREAM_URL())
@@ -184,9 +143,14 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_camera_controller, container, false)
-        initView(view)
 
         return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        initView()
     }
 
     private fun getSensorStatus() {
@@ -195,7 +159,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
                 .flatMap(object : Function<Long, ObservableSource<SensorStatus>> {
                     @Throws(Exception::class)
                     override fun apply(t: Long): ObservableSource<SensorStatus>? {
-                        return apiService?.api!!.getSensorStatus()
+                        return apiService.api.getSensorStatus()
                     }
                 })
                 .doOnError { throwable -> Logger.log(TAG, throwable.toString()) }
@@ -226,48 +190,68 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         updateCarStatus()
     }
 
+    private fun ankoAsync() {
+        doAsync {
+            //后台执行代码
+            uiThread {
+                //UI线程
+                toast("线程${Thread.currentThread().name}")
+            }
+        }
+
+        runOnUiThread {
+            toast("线程${Thread.currentThread().name}")
+        }
+    }
+
     private fun updateCarStatus() {
         if (null == sensorStatus) {
             return
         }
         if (sensorStatus?.relay_on!!) {
-            carBody?.setBackgroundColor(resources.getColor(R.color.power_on));
-            radarview?.visibility = View.VISIBLE
+            carBody.setImageResource(R.color.power_on);
+            if (radarview.visibility == View.GONE) {
+                toast("The car is going be active")
+            }
+            radarview.visibility = View.VISIBLE
         } else {
-            carBody?.setBackgroundColor(resources.getColor(R.color.power_off));
-            radarview?.visibility = View.GONE
+            carBody.setImageResource(R.color.power_off);
+            if (radarview.visibility == View.VISIBLE) {
+                toast("The car is going to sleep status")
+            }
+            radarview.visibility = View.GONE
         }
 
         if (sensorStatus?.motion_detected!!) {
-            motion_detect?.setBackgroundColor(resources.getColor(R.color.motion_detected_on));
-            motion_detect?.visibility = View.VISIBLE
+            motion_detect.setImageResource(R.color.motion_detected_on);
+            motion_detect.visibility = View.VISIBLE
         } else {
-            motion_detect?.setBackgroundColor(resources.getColor(R.color.white));
-            motion_detect?.visibility = View.GONE
+            motion_detect.setImageResource(R.color.white);
+            motion_detect.visibility = View.GONE
         }
 
         if (sensorStatus?.obstacles?.obstacle1!!) {
-            obstacles1?.setBackgroundColor(resources.getColor(R.color.obstacles_on))
+            obstacles1.setImageResource(R.color.obstacles_on);
         } else {
-            obstacles1?.setBackgroundColor(resources.getColor(R.color.obstacles_off))
+            obstacles1.setImageResource(R.color.obstacles_off);
         }
 
         if (sensorStatus?.obstacles?.obstacle2!!) {
-            obstacles2?.setBackgroundColor(resources.getColor(R.color.obstacles_on))
+            obstacles2.setImageResource(R.color.obstacles_on);
         } else {
-            obstacles2?.setBackgroundColor(resources.getColor(R.color.obstacles_off))
+            obstacles2.setImageResource(R.color.obstacles_off);
         }
 
         if (sensorStatus?.obstacles?.obstacle3!!) {
-            obstacles3?.setBackgroundColor(resources.getColor(R.color.obstacles_on))
+            obstacles3.setImageResource(R.color.obstacles_on);
         } else {
-            obstacles3?.setBackgroundColor(resources.getColor(R.color.obstacles_off))
+            obstacles3.setImageResource(R.color.obstacles_off);
         }
 
         if (sensorStatus?.obstacles?.obstacle4!!) {
-            obstacles4?.setBackgroundColor(resources.getColor(R.color.obstacles_on))
+            obstacles4?.setImageResource(R.color.obstacles_on);
         } else {
-            obstacles4?.setBackgroundColor(resources.getColor(R.color.obstacles_off))
+            obstacles4?.setImageResource(R.color.obstacles_off);
         }
 
         var params: RelativeLayout.LayoutParams = ultrasound?.layoutParams as RelativeLayout.LayoutParams;
@@ -276,7 +260,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
 //        ultrasound?.layoutParams = params;
 //        ultrasound?.scaleY = sensorStatus?.distance!!
 
-        scaleView(ultrasound!!, 1.0f, (sensorStatus?.distance!! / 200.0).toFloat())
+        scaleView(ultrasound, 1.0f, (sensorStatus?.distance!! / 200.0).toFloat())
 
     }
 
@@ -302,7 +286,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
         val scheduler = Schedulers.from(Executors.newSingleThreadExecutor())
 
         val settings = settings
-        val weatherJson = settings!!.getWeatherJson()
+        val weatherJson = settings?.getWeatherJson()
 
         if (weatherJson != null) {
             val weatherItems = Arrays.asList(*Gson().fromJson(weatherJson, Array<WeatherItem>::class.java))
@@ -317,7 +301,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
                 .flatMap(object : Function<Long, ObservableSource<List<WeatherItem>>> {
                     @Throws(Exception::class)
                     override fun apply(t: Long): ObservableSource<List<WeatherItem>>? {
-                        return apiService?.api!!.getWeatherItems(0, 2)
+                        return apiService.api.getWeatherItems(0, 2)
                     }
                 })
                 .doOnError { throwable -> Logger.log(TAG, throwable.toString()) }
@@ -355,16 +339,11 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     }
 
     override fun onClick(v: View) {
-        val id = v.id
-
-        //        CarControllerApiService.API_URL = url.getText().toString();
-
         var carAction = CarAction()
         //set the default duration to 1 second.
-        carAction.duration = settings!!.duration.toLong()
-        carAction.speed = settings!!.speed
-
-        when (id) {
+        carAction.duration = settings?.duration!!.toLong()
+        carAction.speed = settings?.speed!!
+        when (v.id) {
             R.id.stop -> carAction.action = "stop"
 
             R.id.left -> carAction.action = "left"
@@ -383,7 +362,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
                 carAction.action = "auto_drive"
             }
 
-            R.id.cameraOn -> webView?.reload()
+            R.id.cameraOn -> webView.reload()
 
             R.id.angle_add -> {
                 carAction.action = "angle"
@@ -392,8 +371,8 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
                     angleValue = 0;
                 }
 
-                angleAdd!!.setText("Angle: " + angleValue);
-                angleSub!!.setText("Angle: " + angleValue);
+                angle_add!!.setText("Angle: " + angleValue);
+                angle_sub!!.setText("Angle: " + angleValue);
                 carAction.angle = angleValue;
             }
 
@@ -404,8 +383,8 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
                     angleValue = 180;
                 }
 
-                angleAdd!!.setText("Angle: " + angleValue);
-                angleSub!!.setText("Angle: " + angleValue);
+                angle_add!!.setText("Angle: " + angleValue);
+                angle_sub!!.setText("Angle: " + angleValue);
                 carAction.angle = angleValue;
             }
 
@@ -432,9 +411,9 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
 
     private fun updateRelayOnStatus(on: Boolean) {
         if (on) {
-            relayOn!!.setText("Power On")
+            relayOn.setText("Power On")
         } else {
-            relayOn!!.setText("Power Off")
+            relayOn.setText("Power Off")
         }
     }
 
@@ -450,7 +429,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
             return
         }
 
-        apiService?.api.sendCommand(carAction)
+        apiService.api.sendCommand(carAction)
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ }) { }
@@ -481,7 +460,7 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
 
         Logger.log(TAG, carAction.action)
 
-        apiService?.api!!.sendCommand(carAction)
+        apiService.api.sendCommand(carAction)
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ }) { }
@@ -492,8 +471,8 @@ class CameraControllerFragment : Fragment(), View.OnClickListener, View.OnTouchL
     companion object {
         private val TAG = "CameraController"
 
-        fun newInstance(): CameraControllerFragment {
-            val fragment = CameraControllerFragment()
+        fun newInstance(): CarControllerMainFragment {
+            val fragment = CarControllerMainFragment()
             val args = Bundle()
             fragment.arguments = args
             return fragment

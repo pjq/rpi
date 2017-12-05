@@ -13,7 +13,7 @@ import android.support.v7.app.AppCompatActivity;
  * 
  * @author Philipp Jahoda
  */
-public abstract class DemoBase extends AppCompatActivity {
+public abstract class ChartDemoBaseActivity extends AppCompatActivity {
 
     protected String[] mMonths = new String[] {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"

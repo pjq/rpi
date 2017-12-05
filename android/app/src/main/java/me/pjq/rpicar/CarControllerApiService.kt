@@ -12,8 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 
 class CarControllerApiService private constructor() {
-
-
     lateinit var api: CarControllerApi
         internal set
     internal lateinit var mOkHttpClient: OkHttpClient
