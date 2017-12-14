@@ -205,6 +205,7 @@ public class SimpleClient4IOT {
         Log.log(TAG, "Connect success---");
 
 //        sendSMS("Connected");
+        sendSMS("Device Online");
 
         String content = "{'content':'msg from :" + clientId + "," + System.currentTimeMillis() + "'}";
         sendMessage(content);
