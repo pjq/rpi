@@ -20,7 +20,6 @@ import me.pjq.Utils.Log;
 import me.pjq.car.CarController;
 import me.pjq.model.CarAction;
 import me.pjq.model.Config;
-import me.pjq.model.RpiWeatherItem;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
@@ -153,6 +152,7 @@ public class SimpleClient4IOT {
             Log.log(TAG, "send sms success");
         } else {
             Log.log(TAG, "send sms failed: " + sendSmsResponse.getMessage());
+            Log.log(TAG, "send sms failed: " + sendSmsResponse.getCode());
         }
     }
 

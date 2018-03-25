@@ -371,8 +371,8 @@ class CarControllerMainFragment : Fragment(), View.OnClickListener, View.OnTouch
                     angleValue = 0;
                 }
 
-                angle_add!!.setText("Angle: " + angleValue);
-                angle_sub!!.setText("Angle: " + angleValue);
+                angle_add!!.setText("" + angleValue + " +");
+                angle_sub!!.setText("" + angleValue + " -");
                 carAction.angle = angleValue;
             }
 
