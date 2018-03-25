@@ -8,7 +8,6 @@ import me.pjq.Utils.Log;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.io.UnsupportedEncodingException;
-import java.util.WeakHashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -121,6 +120,8 @@ public enum Monitor {
                     SensorStatus sensorStatus = CarController.instance.getSensorStatus();
                     try {
                         home4IOT.sendMessage(new Gson().toJson(sensorStatus));
+                        //When in fast mode also, update the weather item status.
+                        sendWeatherItem();
                     } catch (MqttException e) {
                         e.printStackTrace();
                     } catch (UnsupportedEncodingException e) {
