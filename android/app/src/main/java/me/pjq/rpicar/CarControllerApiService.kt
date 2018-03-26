@@ -47,10 +47,10 @@ class CarControllerApiService private constructor() {
         fun CAPTURE_VIDEO_URL(): String {
             var port = ""
             if (isSshRediret) {
-                port = ":18091"
+                port = ":18081"
             }
 
-            return HOST() + port + "/motion"
+            return HOST() + port + "/motion/"
         }
     }
 

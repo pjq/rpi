@@ -13,8 +13,11 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import kotlinx.android.synthetic.main.fragment_capture_video.*
+import me.pjq.rpicar.utils.Logger
 
 class CaptureVideoFragment : Fragment(), MainNavigationActivity.OnBackKeyListener {
+    val TAG : String = "Monitor"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -33,7 +36,9 @@ class CaptureVideoFragment : Fragment(), MainNavigationActivity.OnBackKeyListene
     }
 
     private fun initView() {
-        webView.loadUrl(CarControllerApiService.Config.CAPTURE_VIDEO_URL())
+        var videoUrl = CarControllerApiService.Config.CAPTURE_VIDEO_URL()
+        Logger.log(TAG, videoUrl)
+        webView.loadUrl(videoUrl)
         webView.settings.javaScriptEnabled = true
         webView.settings.setSupportZoom(true)
         webView.settings.builtInZoomControls = true
