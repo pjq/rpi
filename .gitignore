@@ -90,3 +90,5 @@ ENV/
 
 spring-server/target
 spring-server/.idea
+motion
+tools/images
