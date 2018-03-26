@@ -32,19 +32,6 @@ Currently, I am working on the smart car on Raspberry Pi, I build:
 * Record video if any motion detected.
 * Turn off the battery supply if no command received for certain period.
 
-#### Android App
-I have develop one Android App to control my car, it support
-* Left/Right/Up/Down
-* Adjust the speed of the car
-* Adjust the camera angel
-* Support auto driven on my tracks
-* etc.
-
-#### Smart Car Demo
-![Car Main Controller](./demo/Screenshot_car_controller_20180326-175149.png)
-![Car Controller](./demo/Screenshot_menu_20180326-175154.png)
-![Car Weather Status](./demo/Screenshot_pm25_20180326-175049.png)
-
 #### Tools
 I have written some scripts to run/monitor my car.
 They are very import for understanding how it works
@@ -57,6 +44,19 @@ They are very import for understanding how it works
 * monitor.sh // Monitor the port forward
 * ssh_forward.sh // Forward the local port to remote server
 * start_video_stream.sh // Start the video stream, then you can open it with mplayer
+
+#### Android App
+I have develop one Android App to control my car, it support
+* Left/Right/Up/Down
+* Adjust the speed of the car
+* Adjust the camera angel
+* Support auto driven on my tracks
+* etc.
+
+#### Android App Screenshots 
+![Car Main Controller](./demo/Screenshot_car_controller_20180326-175149.png)
+![Car Controller](./demo/Screenshot_menu_20180326-175154.png)
+![Car Weather Status](./demo/Screenshot_pm25_20180326-175049.png)
 
 ### Realtime Weather Station
 I have already built one simple realtime weather station, to provider the PM2.5/Temperature/Himidity, please check

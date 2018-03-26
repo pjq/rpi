@@ -4,15 +4,16 @@ import time
 import RPi.GPIO as GPIO
 import datetime as dt
 import json
+import config as CFG
  
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 
 #obstacle sensors pin
-PIN1=32
-PIN2=36
-PIN3=38
-PIN4=40
+PIN1=CFG.OBSTACLE_PIN1
+PIN2=CFG.OBSTACLE_PIN2
+PIN3=CFG.OBSTACLE_PIN3
+PIN4=CFG.OBSTACLE_PIN4
 GPIO.setup(PIN1, GPIO.IN)
 GPIO.setup(PIN2, GPIO.IN)
 GPIO.setup(PIN3, GPIO.IN)
