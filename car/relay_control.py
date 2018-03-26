@@ -4,15 +4,11 @@ import time
 import signal  
 import atexit  
 import sys
+import config as CFG
   
-#GPIO.setmode(GPIO.BCM)  
-#PIN=24
-#GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)  
-PIN=24
-#GPIO.setup(PIN, GPIO.OUT, initial=False)
+PIN=CFG.RELAY_PIN
 GPIO.setup(PIN, GPIO.OUT)
-#GPIO.setup(PIN, GPIO.IN)
 time.sleep(0.2)  
 
 def relay(on):

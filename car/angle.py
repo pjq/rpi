@@ -4,10 +4,11 @@ import time
 import signal  
 import atexit  
 import sys
+import config as CFG
   
 #atexit.register(GPIO.cleanup)    
   
-SERVO=5
+SERVO=CFG.SERVO_PIN
 GPIO.setmode(GPIO.BCM)  
 GPIO.setup(SERVO, GPIO.OUT, initial=False)  
 p = GPIO.PWM(SERVO,50) #50HZ  

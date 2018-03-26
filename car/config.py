@@ -25,3 +25,12 @@ WHEEL_DUTY=30
 ULTRASOUND_PIN1=33
 #echo
 ULTRASOUND_PIN2=31
+
+#Motion detect
+MOTION_PIN=26
+
+#Servo, rotate the angel for camera
+SERVO_PIN=5
+
+#Relay
+RELAY_PIN=24

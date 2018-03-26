@@ -29,7 +29,7 @@ pa=GPIO.PWM(ENA,FREQ)
 pb=GPIO.PWM(ENB,FREQ)
 
 #Motion detect
-MOTION_PIN=26
+MOTION_PIN=CFG.MOTION_PIN
 GPIO.setup(MOTION_PIN, GPIO.IN)
 
 def pwm_init():
