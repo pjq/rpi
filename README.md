@@ -1,8 +1,8 @@
-###Build your IoT on the Raspberry Pi
+### Build your IoT on the Raspberry Pi
 
-I have bought the Raspberry Pi in the year 2012, almost when the board came to the world.
+I have bought the Raspberry Pi in the year 2012, almost at the time when the mini board came to the world.
 I have used it as media center by installing XMBC/OpenElec, NAS, and also work as one robot to post message to sina weibo and Twitter.
-But somehow I almost retired it, because it's bit slow and I have the new TV box build on Android, and it can meet my requirements. 
+But somehow I almost retired it, because it's bit slow and I have the new TV box based on Android, and it can meet my requirements for play video/TV Show. 
 And I have bought the Xiaomi Router, it works good, and cover my NAS requirements.
 
 But the time is changing, the Google has just release the Android Things for development Internet of Things with more convenient tools, SDK, IDE.
@@ -25,8 +25,15 @@ Currently, I am working on the smart car on Raspberry Pi, I build:
 * I use pwm to controller the speed of the motor engine
 * I use camera, so I can see the real time video stream
 * I build one Android App, so I can use it to control the car without the computer.
-* I use some ssh forward commands, so I can control it or see the video stream even I am at office or at home
+* I use some ssh forward commands, so I can control it or see the video stream even I am at office 
 
+
+##### Smart Car Demo
+![Car Main Controller](./demo/Screenshot_car_controller_20180326-175149.png)
+![Car Controller](./demo/Screenshot_menu_20180326-175154.png)
+![Car Weather Status](./demo/Screenshot_pm25_20180326-175049.png)
+
+SmartCarOnRaspberryPi_JianqingPeng.mp4
 
 #### Realtime Weather Station
 I have already built one simple realtime weather station, to provider the PM2.5/Temperature/Himidity, please check
@@ -39,6 +46,10 @@ I will start to learning followings
 * Step motor
 * USB and serial port communication, USB to TTL
 * Sensors, read data from some sensors, like temperatioin, humidity, and also them air quality, like pm2.5
+
+##### Weather Station Demo
+![RealTime Weather Station](./demo/weather_station.png)
+
 
 #### GPIO Python
 
