@@ -3,14 +3,16 @@
 import time
 import RPi.GPIO as GPIO
 import datetime as dt
+import config as CFG
  
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 
 #send
-PIN1=33
+PIN1=ULTRASOUND_PIN1
 #echo
-PIN2=31
+PIN2=ULTRASOUND_PIN2
+
 GPIO.setup(PIN1, GPIO.OUT)
 GPIO.setup(PIN2, GPIO.IN)
 GPIO.output(PIN1, GPIO.LOW)
