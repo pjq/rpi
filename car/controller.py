@@ -27,6 +27,10 @@ GPIO.setup(ENB,GPIO.OUT)
 pa=GPIO.PWM(ENA,FREQ)
 pb=GPIO.PWM(ENB,FREQ)
 
+#Motion detect
+MOTION_PIN=26
+GPIO.setup(MOTION_PIN, GPIO.IN)
+
 def pwm_init():
     pa.start(DUTY)
     pb.start(DUTY)
@@ -137,6 +141,10 @@ def t_test(sleep_time):
     if sleep_time > 0:
         time.sleep(sleep_time)
         go_stop()
+
+
+def motion_detect():
+    return GPIO.input(MOTION_PIN) == True
 
 if __name__=="__main__":
     pwm(0.1)

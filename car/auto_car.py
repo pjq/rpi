@@ -7,7 +7,7 @@ import controller
 import obstacle as obst
 
 #minimum distance(cm)
-min_distance=50
+min_distance=40
 max_distance=100
 duty=10
 

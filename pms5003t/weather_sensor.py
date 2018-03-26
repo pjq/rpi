@@ -171,6 +171,11 @@ def sendData():
     print pmdata
     send.post(posturl, pmdata)
 
+def readData():
+    air=g3sensor()
+    pmdata=air.read(tty_device)
+    return pmdata
+
 def sendUbidots(pmdata):
 	#ubidots
 	#POST /api/v1.6/variables/58c76d947625424c6def6f0b/values HTTP/1.1 X-Auth-Token: R2Flv8caVaT0cE6cVZivS9Rs3zTiHf Host: things.ubidots.com Connection: close Content-Type: application/json Content-Length: 14
