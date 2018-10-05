@@ -7,7 +7,7 @@ import controller
 import obstacle as obst
 
 #minimum distance(cm)
-min_distance=40
+min_distance=30
 max_distance=100
 duty=10
 
@@ -38,12 +38,14 @@ if __name__=="__main__":
             obstacle=back_obstacle1 or  back_obstacle3 or back_obstacle4 
 
             count+=1
-            print "%s:distance: %s (cm), has back obstacle, left:%s middle_left:%s middle_right:%s right:%s" %(count, distance, left, middle_left, middle_right, right)
-            print "%s left:%s  right:%s" %(count, left, right)
+            print "%08d:distance: %04d.2f (cm), obstacle, left:%s middle_left:%s middle_right:%s right:%s" %(count, distance, left, middle_left, middle_right, right)
+            #print "%s left:%s  right:%s" %(count, left, right)
 
             if distance <  min_distance:
                 print "backward"
                 controller.go_down()
+                time.sleep(back_time)
+                controller.go_up()
 
             #if distance > max_distance:
             #    print "forward"

@@ -18,7 +18,7 @@ forward 8085 18085
 forward 8086 18086
 #motion
 forward 8092 18092
-forward 8093 18093
+#forward 8093 18093
 #cd /home/pi/rpi/tools/ && ./ssh_forward.sh 22 12222 >>/var/log/rpi.log
 #cd /home/pi/rpi/tools/ && ./ssh_forward.sh 8080 18080 >>/var/log/rpi.log
 #cd /home/pi/rpi/tools/ && ./ssh_forward.sh 8081 18081 >>/var/log/rpi.log
