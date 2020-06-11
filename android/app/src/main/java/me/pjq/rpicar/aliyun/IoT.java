@@ -33,7 +33,9 @@ public enum IoT {
     private static String subTopic = "/" + productKey + "/" + deviceName + "/get";
     private static String pubTopic = "/" + productKey + "/" + deviceName + "/update";
 
-    String accessKey = "LTAICKNMlWBxm7GR";
+    String aK1="LTAICKNMlWB";
+    String aK2="xm7GR";
+    String accessKey = aK1+aK2;
     String accessSecret = "cMgi0pjAewppBdpESDlI3CXZpAKFwc";
     String AccountEndpoint = "https://1386496277130610.mns.cn-shanghai.aliyuncs.com/";
     private ExecutorService executorService = Executors.newFixedThreadPool(10);

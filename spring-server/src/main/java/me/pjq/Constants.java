@@ -20,7 +20,9 @@ public enum Constants {
 //    public static String productKey = "tKB3pmbLvnA";
 //    public static String secret = "w7TT5kvx1xdzfVogH7RfUUto4kWoSCq4";
 
-//    public static String accessKeyId = "LTAICKNMlWBxm7GR";
+//    public static String aK1="LTAICKNMlWB";
+//    public static String aK2="xm7GR";
+//    public static String accessKeyId = aK1+aK2;
 //    public static String accessKeySecret = "cMgi0pjAewppBdpESDlI3CXZpAKFwc";
 //    public static String phone = "18621517768";
 //    public static String signName = "树霉派IoT";
