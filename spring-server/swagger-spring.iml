@@ -100,5 +100,7 @@
     <orderEntry type="library" name="Maven: com.pi4j:pi4j-core:1.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.2" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0" level="project" />
+    <orderEntry type="library" name="Maven: jakarta.xml.bind:jakarta.xml.bind-api:2.3.3" level="project" />
+    <orderEntry type="library" name="Maven: jakarta.activation:jakarta.activation-api:1.2.2" level="project" />
   </component>
 </module>
