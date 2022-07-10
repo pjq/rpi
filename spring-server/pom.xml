@@ -99,31 +99,31 @@
             <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
             <version>1.1.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.28</version>
-        </dependency>
-        <dependency>
-            <groupId>com.aliyun.mns</groupId>
-            <artifactId>aliyun-sdk-mns</artifactId>
-            <version>1.1.5</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba</groupId>-->
+<!--            <artifactId>fastjson</artifactId>-->
+<!--            <version>1.2.28</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.aliyun.mns</groupId>-->
+<!--            <artifactId>aliyun-sdk-mns</artifactId>-->
+<!--            <version>1.1.5</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-core</artifactId>
-            <version>3.2.10</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.aliyun</groupId>-->
+<!--            <artifactId>aliyun-java-sdk-core</artifactId>-->
+<!--            <version>3.2.10</version>-->
+<!--        </dependency>-->
 
 
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>dysmsapi</artifactId>
-            <version>1.0.0</version>
-            <!--<scope>system</scope>-->
-            <!--<systemPath>${project.basedir}/libs/aliyun-java-sdk-dysmsapi-1.0.0.jar</systemPath>-->
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.aliyun</groupId>-->
+<!--            <artifactId>dysmsapi</artifactId>-->
+<!--            <version>1.0.0</version>-->
+<!--            &lt;!&ndash;<scope>system</scope>&ndash;&gt;-->
+<!--            &lt;!&ndash;<systemPath>${project.basedir}/libs/aliyun-java-sdk-dysmsapi-1.0.0.jar</systemPath>&ndash;&gt;-->
+<!--        </dependency>-->
 
     </dependencies>
 </project>
