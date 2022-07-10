@@ -3,7 +3,7 @@ import serial
 import time
 import sys
 import send
-import commands
+import subprocess as commands 
 from struct import *
 
 posturl = "http://10.129.41.134:8080/api/rpi/weather"

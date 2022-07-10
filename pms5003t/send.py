@@ -2,7 +2,8 @@
 # coding=utf-8
 
 import urllib
-import urllib2
+import urllib.request as urllib2
+
 import json
 
 
