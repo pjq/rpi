@@ -1,31 +1,33 @@
 #!/usr/bin/env python    
-import RPi.GPIO as GPIO  
-import time  
-import signal  
-import atexit  
+import RPi.GPIO as GPIO
+import time
+import signal
+import atexit
 import sys
 import controller
 import json
-  
+
+
 def detect_loop():
-    count=0
+    count = 0
     while True:
-        detected=controller.motion_detect()
+        detected = controller.motion_detect()
         time.sleep(1)
         if detected:
-            count+=1
-            print "detected", count
-            ontime=0
+            count += 1
+            print("detected", count)
+            ontime = 0
             while detect():
                 time.sleep(1)
-                ontime +=1
-                print "delay ",ontime 
+                ontime += 1
+                print("delay ", ontime)
 
-if __name__=="__main__":
-    #detected=detect()
-    #print "Detected:" , detected
-    #detect_loop()
-    value=controller.motion_detect()
-    value={"motion_detected": value}
-    value=json.dumps(value, ensure_ascii=False)
-    print value
+
+if __name__ == "__main__":
+    # detected=detect()
+    # print( "Detected:" , detected)
+    # detect_loop()
+    value = controller.motion_detect()
+    value = {"motion_detected": value}
+    value = json.dumps(value, ensure_ascii=False)
+    print(value)
