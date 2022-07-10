@@ -1,8 +1,9 @@
 package me.pjq.car;
 
-import com.aliyun.iot.demo.iothub.SimpleClient4IOT;
+//import com.aliyun.iot.demo.iothub.SimpleClient4IOT;
 import com.google.gson.Gson;
 import me.pjq.Constants;
+import me.pjq.SimpleClient4IOT;
 import me.pjq.model.*;
 import me.pjq.Utils.Log;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -129,7 +130,7 @@ public enum Monitor {
                     }
 
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
