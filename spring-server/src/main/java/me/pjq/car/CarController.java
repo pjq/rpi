@@ -87,8 +87,8 @@ public enum CarController {
     }
 
     private void callPython(String pythonFile, long duration, int speed) {
-        String path = "/home/pi/rpi/car";
-        String command = "python " + path + "/" + pythonFile + " " + duration / 1000.0f + " " + speed;
+        String path = "~/rpi/car";
+        String command = "python3 " + path + "/" + pythonFile + " " + duration / 1000.0f + " " + speed;
         log(command);
 
         runCommand(command);
@@ -102,7 +102,7 @@ public enum CarController {
     }
 
     private String callPython(String pythonFile, int value) {
-        String path = "/home/pi/rpi/car";
+        String path = "~/rpi/car";
         String command = "python " + path + "/" + pythonFile + " " + value;
         log(command);
 
@@ -110,7 +110,7 @@ public enum CarController {
     }
 
     private String callPython(String pythonFile, String value) {
-        String path = "/home/pi/rpi/car";
+        String path = "~/rpi/car";
         String command = "python " + path + "/" + pythonFile + " " + value;
         log(command);
 
@@ -139,16 +139,16 @@ public enum CarController {
     }
 
     private void callPythonSpeed(String pythonFile, int speed) {
-        String path = "/home/pi/rpi/car";
+        String path = "~/rpi/car";
         Runtime rt = Runtime.getRuntime();
-        String command = "python " + path + "/" + pythonFile + " " + speed;
+        String command = "python3 " + path + "/" + pythonFile + " " + speed;
         log(command);
         runCommand(command);
     }
 
     public SensorStatus getSensorStatus() {
-        String path = "/home/pi/rpi/car";
-        String command = "python " + path + "/get_sensorstatus.py";
+        String path = "~/rpi/car";
+        String command = "python3 " + path + "/get_sensorstatus.py";
         log(command);
         String value = runCommand(command);
         SensorStatus sensorStatus = new Gson().fromJson(value, SensorStatus.class);
