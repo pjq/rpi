@@ -34,52 +34,52 @@ if  "a22082" in revision:
 else:
     tty_device="/dev/ttyAMA0"
 
-if debug: print tty_device
+if debug: print( tty_device)
 
 class g3sensor():
     def __init__(self):
-        if debug: print "init"
+        if debug: print( "init")
 	self.endian = sys.byteorder
     
     def conn_serial_port(self, device):
-        if debug: print device
+        if debug: print( device)
         self.serial = serial.Serial(device, baudrate=9600)
-        if debug: print "conn ok"
+        if debug: print( "conn ok")
 
     def check_keyword(self):
-        if debug: print "check_keyword"
+        if debug: print( "check_keyword")
         while True:
             token = self.serial.read()
     	    token_hex=token.encode('hex')
-    	    if debug: print token_hex
+    	    if debug: print( token_hex)
     	    if token_hex == '42':
-    	        if debug: print "get 42"
+    	        if debug: print( "get 42")
     	        token2 = self.serial.read()
     	        token2_hex=token2.encode('hex')
-    	        if debug: print token2_hex
+    	        if debug: print( token2_hex)
     	        if token2_hex == '4d':
-    	            if debug: print "get 4d"
+    	            if debug: print( "get 4d")
                     return True
 		elif token2_hex == '00': # fixme
-		    if debug: print "get 00"
+		    if debug: print( "get 00")
 		    token3 = self.serial.read()
 		    token3_hex=token3.encode('hex')
 		    if token3_hex == '4d':
-			if debug: print "get 4d"
+			if debug: print( "get 4d")
 			return True
 		    
     def vertify_data(self, data):
-	if debug: print data
+	if debug: print( data)
         n = 2
 	sum = int('42',16)+int('4d',16)
         for i in range(0, len(data)-4, n):
-            #print data[i:i+n]
+            #print( data[i:i+n])
 	    sum=sum+int(data[i:i+n],16)
 	versum = int(data[40]+data[41]+data[42]+data[43],16)
-	if debug: print sum
-        if debug: print versum
+	if debug: print( sum)
+        if debug: print( versum)
 	if sum == versum:
-	    print "data correct"
+	    print( "data correct")
 	
     def read_data(self):
         data = self.serial.read(30)
@@ -146,12 +146,12 @@ class g3sensor():
         error=int(data_hex[n+2]+data_hex[n+3],16)
         
         if 0:
-	#	print "pm1_cf: "+str(pm1_cf)
-	#	print "pm25_cf: "+str(pm25_cf)
-	#	print "pm10_cf: "+str(pm10_cf)
-	#	print "pm1: "+str(pm1)
-                print time.asctime(time.localtime(time.time()))+ " pm2.5: "+str(pm25)+ " pm2.5(cf): " +str(pm25_cf) +" pm1.0: "+str(pm1) +" pm10: "+str(pm10)   + " temp(c): "+str(temp) + " humi(%): " + str(hum) + " version: " + str(version) + " error: " + str(error)
-	#	print "pm10: "+str(pm10)
+	#	print( "pm1_cf: "+str(pm1_cf))
+	#	print( "pm25_cf: "+str(pm25_cf))
+	#	print( "pm10_cf: "+str(pm10_cf))
+	#	print( "pm1: "+str(pm1))
+                print( time.asctime(time.localtime(time.time()))+ " pm2.5: "+str(pm25)+ " pm2.5(cf): " +str(pm25_cf) +" pm1.0: "+str(pm1) +" pm10: "+str(pm10)   + " temp(c): "+str(temp) + " humi(%): " + str(hum) + " version: " + str(version) + " error: " + str(error))
+	#	print( "pm10: "+str(pm10))
         date=""+time.asctime(time.localtime(time.time()))
 	data={ "pm25": pm25, "pm25_cf": pm25_cf, "pm10": pm10, "pm10_cf": pm10_cf, "temperature": temp, "humidity": hum, "raw_data": "", "location": location, "alt": 0, "lat": 0, "date":date}
     	self.serial.close()
@@ -163,12 +163,12 @@ class g3sensor():
         self.conn_serial_port(tty)
         if self.check_keyword() == True:
             self.data = self.read_data()
-            if debug: print self.data
+            if debug: print( self.data)
             return self.data
 def sendData():
     air=g3sensor()
     pmdata=air.read(tty_device)
-    print pmdata
+    print( pmdata)
     send.post(posturl, pmdata)
 
 def readData():
@@ -227,12 +227,12 @@ def sendDatas():
 	     pmdata=air.read(tty_device)
 	     send.post(posturl, pmdata)
              sendUbidots(pmdata)
-	     if debug: print pmdata
+	     if debug: print( pmdata)
              time.sleep(60)
 	except: 
 	    next
 	if pmdata != 0:
-	    #print pmdata
+	    #print( pmdata)
 	    break
 
 
