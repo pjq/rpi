@@ -74,7 +74,10 @@ I will start to learning followings
 
 
 ### GPIO Python
-
+Now it's simple to install the GPIO Module for Python
+```
+pip install RPi.GPIO
+```
 Refer http://www.cnblogs.com/rainduck/archive/2012/09/22/2694568.html
 
 1. Download Rpi.GPIO http://pypi.python.org/pypi/RPi.GPIO/
