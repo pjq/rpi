@@ -5,7 +5,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.aliyun.iot.demo.iothub.SimpleClient4IOT;
 import me.pjq.rpicar.models.Config;
 import me.pjq.rpicar.utils.Log;
 
@@ -23,13 +22,13 @@ public enum Monitor {
         lastCommandTime = System.currentTimeMillis();
     }
 
-    public void init(final SimpleClient4IOT.Listener listener) {
+    public void init() {
         Log.log(TAG, "init");
         new Thread(new Runnable() {
             @Override
             public void run() {
-                home4IOT = new SimpleClient4IOT(Config.getConfigRpiCarClient());
-                home4IOT.setListener(listener);
+//                home4IOT = new SimpleClient4IOT(Config.getConfigRpiCarClient());
+//                home4IOT.setListener(listener);
             }
         }).start();
     }

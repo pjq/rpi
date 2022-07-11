@@ -87,7 +87,7 @@ public enum CarController {
     }
 
     private void callPython(String pythonFile, long duration, int speed) {
-        String path = "~/rpi/car";
+        String path = "/home/pjq/rpi/car";
         String command = "python3 " + path + "/" + pythonFile + " " + duration / 1000.0f + " " + speed;
         log(command);
 
@@ -102,7 +102,7 @@ public enum CarController {
     }
 
     private String callPython(String pythonFile, int value) {
-        String path = "~/rpi/car";
+        String path = "/home/pjq/rpi/car";
         String command = "python3 " + path + "/" + pythonFile + " " + value;
         log(command);
 
@@ -110,7 +110,7 @@ public enum CarController {
     }
 
     private String callPython(String pythonFile, String value) {
-        String path = "~/rpi/car";
+        String path = "/home/pjq/rpi/car";
         String command = "python3 " + path + "/" + pythonFile + " " + value;
         log(command);
 

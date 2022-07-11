@@ -5,7 +5,7 @@
     android:padding="10dip"
     tools:context="me.pjq.rpicar.AboutFragment">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:hint="Server"
             android:textSize="12sp" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <RelativeLayout
         android:id="@+id/durationLayout"

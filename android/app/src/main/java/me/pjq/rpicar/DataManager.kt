@@ -21,11 +21,12 @@ object DataManager {
     val realm: Realm
         get() {
             val realmConfig = RealmConfiguration.Builder()
-                    .modules(Realm.getDefaultModule())
-                    .schemaVersion(SCHEME_VERSION_2)
-                    .name("Realm")
-                    .deleteRealmIfMigrationNeeded()
-                    .build()
+                .modules(Realm.getDefaultModule())
+                .schemaVersion(SCHEME_VERSION_2)
+                .name("Realm")
+                .deleteRealmIfMigrationNeeded()
+                .allowWritesOnUiThread(true)
+                .build()
 
             return Realm.getInstance(realmConfig)
         }

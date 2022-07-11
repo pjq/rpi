@@ -12,21 +12,36 @@ import android.webkit.HttpAuthHandler
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import kotlinx.android.synthetic.main.fragment_capture_video.*
+import me.pjq.rpicar.databinding.FragmentCaptureVideoBinding
 import me.pjq.rpicar.utils.Logger
 
 class CaptureVideoFragment : Fragment(), MainNavigationActivity.OnBackKeyListener {
-    val TAG : String = "Monitor"
+    val TAG: String = "Monitor"
+    private var _binding: FragmentCaptureVideoBinding? = null
+
+    // This property is only valid between onCreateView and
+// onDestroyView.
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_capture_video, container, false)
+//        val view = inflater.inflate(R.layout.fragment_capture_video, container, false)
+        _binding = FragmentCaptureVideoBinding.inflate(inflater, container, false)
+        val view = binding.root
+
         return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -38,16 +53,19 @@ class CaptureVideoFragment : Fragment(), MainNavigationActivity.OnBackKeyListene
     private fun initView() {
         var videoUrl = CarControllerApiService.Config.CAPTURE_VIDEO_URL()
         Logger.log(TAG, videoUrl)
-        webView.loadUrl(videoUrl)
-        webView.settings.javaScriptEnabled = true
-        webView.settings.setSupportZoom(true)
-        webView.settings.builtInZoomControls = true
-        webView.settings.loadWithOverviewMode = true
-        webView.settings.useWideViewPort = true
+        binding.webView.loadUrl(videoUrl)
+        binding.webView.settings.javaScriptEnabled = true
+        binding.webView.settings.setSupportZoom(true)
+        binding.webView.settings.builtInZoomControls = true
+        binding.webView.settings.loadWithOverviewMode = true
+        binding.webView.settings.useWideViewPort = true
 
-        webView.setWebViewClient(object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                if (request.url.encodedPath.endsWith("avi")) {
+        binding.webView.setWebViewClient(object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView,
+                request: WebResourceRequest
+            ): Boolean {
+                if (request.url.encodedPath!!.endsWith("avi")) {
                     var url = request.url.toString()
                     url = url.replace("http://", "http://$username:$passwd@")
                     val intent = Intent(Intent.ACTION_VIEW)
@@ -55,7 +73,7 @@ class CaptureVideoFragment : Fragment(), MainNavigationActivity.OnBackKeyListene
                     startActivity(intent)
 
                     return true
-                } else if (request.url.encodedPath.endsWith("disablejpg")) {
+                } else if (request.url.encodedPath!!.endsWith("disablejpg")) {
                     var url = request.url.toString()
                     url = url.replace("http://", "http://$username:$passwd@")
                     val intent = Intent(Intent.ACTION_VIEW)
@@ -68,7 +86,12 @@ class CaptureVideoFragment : Fragment(), MainNavigationActivity.OnBackKeyListene
                 }
             }
 
-            override fun onReceivedHttpAuthRequest(view: WebView, handler: HttpAuthHandler, host: String, realm: String) {
+            override fun onReceivedHttpAuthRequest(
+                view: WebView,
+                handler: HttpAuthHandler,
+                host: String,
+                realm: String
+            ) {
                 handler.proceed(username, passwd)
             }
         })
@@ -85,8 +108,8 @@ class CaptureVideoFragment : Fragment(), MainNavigationActivity.OnBackKeyListene
     }
 
     override fun onBackKeyDown(): Boolean {
-        if (webView.canGoBack()) {
-            webView.goBack()
+        if (binding.webView.canGoBack()) {
+            binding.webView.goBack()
             return true
         }
 

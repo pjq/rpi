@@ -17,7 +17,7 @@ class CarControllerApiService private constructor() {
     internal lateinit var mOkHttpClient: OkHttpClient
 
     object Config {
-        var HOST = "http://192.168.31.180"
+        var HOST = "http://192.168.31.154"
 
         private val isSshRediret: Boolean
             get() = HOST.contains("pjq")
@@ -27,7 +27,7 @@ class CarControllerApiService private constructor() {
         }
 
         fun API_URL(): String {
-            var port = ":8080"
+            var port = ":8092"
             if (isSshRediret) {
                 port = ":18080"
             }
@@ -41,7 +41,7 @@ class CarControllerApiService private constructor() {
                 port = ":18092"
             }
 
-            return HOST() + port
+            return HOST() + port + "/api"
         }
 
         fun CAPTURE_VIDEO_URL(): String {

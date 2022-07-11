@@ -115,19 +115,19 @@ class TemperatureChartTimeActivity : ChartDemoBaseActivity(), OnSeekBarChangeLis
         xAxis.textColor = Color.DKGRAY
         xAxis.setCenterAxisLabels(true)
         xAxis.granularity = 1f // one hour
-        xAxis.valueFormatter = object : IAxisValueFormatter {
-
-            private val mFormat = SimpleDateFormat(" MM/dd HH:mm")
-
-            override fun getFormattedValue(value: Float, axis: AxisBase): String {
-                if (value < 0 || value >= weatherItems!!.size) {
-                    return ""
-                }
-
-                val item = weatherItems!![value.toInt()]
-                return mFormat.format(Date(item.timestamp))
-            }
-        }
+//        xAxis.valueFormatter = object : IAxisValueFormatter {
+//
+//            private val mFormat = SimpleDateFormat(" MM/dd HH:mm")
+//
+//            override fun getFormattedValue(value: Float, axis: AxisBase): String {
+//                if (value < 0 || value >= weatherItems!!.size) {
+//                    return ""
+//                }
+//
+//                val item = weatherItems!![value.toInt()]
+//                return mFormat.format(Date(item.timestamp))
+//            }
+//        }
 
         val leftAxis = mChart!!.axisLeft
         leftAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART)

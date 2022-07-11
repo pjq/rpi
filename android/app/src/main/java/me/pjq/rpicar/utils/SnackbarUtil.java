@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.design.widget.Snackbar;
+import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,12 +64,7 @@ public class SnackbarUtil {
     private static Snackbar makeSnackbar(String msg, int duration, View topView) {
 
         Snackbar snackbar = Snackbar.make(topView, msg, duration);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
-            if (tv != null) {
-                tv.setTextColor(Color.WHITE);
-            }
-        }
+
         return snackbar;
     }
 
