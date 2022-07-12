@@ -151,3 +151,23 @@ Mon Feb 27 14:51:26 2017 pm2.5: 38 pm2.5(cf): 44 pm1.0: 27 pm10: 46 temp(c): 22.
 
 ### Android Things
 Android Things on Raspberry Pi 3
+
+### Add auto script to Raspberry Pi
+Reference
+* https://raspberrypi.stackexchange.com/questions/107933/cannot-run-2-apps-with-rc-local-but-it-works-from-command-line
+
+```
+ sudo systemctl --force --full edit car.service
+ sudo systemctl enable --now car.service
+ cat /etc/systemd/system/car.service
+```
+```
+[Unit]
+Description=Start my Smart Car
+After=multi-user.target
+
+[Service]
+ExecStart=/home/pjq/rpi/tools/deploy_server.sh
+
+[Install]
+```

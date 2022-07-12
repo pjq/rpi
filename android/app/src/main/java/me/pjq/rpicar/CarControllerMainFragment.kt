@@ -86,8 +86,8 @@ class CarControllerMainFragment : Fragment(), View.OnClickListener, View.OnTouch
             if (null == settings) {
                 DataManager.realm.executeTransaction {
                     val newSetting = DataManager.realm.createObject(Settings::class.java)
-                    newSetting.setDuration(100)
-                    newSetting.setSpeed(10)
+                    newSetting.setDuration(500)
+                    newSetting.setSpeed(30)
                 }
 
                 return settings
