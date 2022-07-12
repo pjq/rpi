@@ -160,6 +160,7 @@ Reference
  sudo systemctl --force --full edit car.service
  sudo systemctl enable --now car.service
  cat /etc/systemd/system/car.service
+ systemctl status car.service
 ```
 ```
 [Unit]
@@ -167,6 +168,7 @@ Description=Start my Smart Car
 After=multi-user.target
 
 [Service]
+User=pjq
 ExecStart=/home/pjq/rpi/tools/deploy_server.sh
 
 [Install]
