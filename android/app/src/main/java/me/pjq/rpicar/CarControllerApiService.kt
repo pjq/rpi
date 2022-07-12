@@ -36,12 +36,12 @@ class CarControllerApiService private constructor() {
         }
 
         fun STREAM_URL(): String {
-            var port = ":8092"
+            var port = ":8081"
             if (isSshRediret) {
                 port = ":18092"
             }
 
-            return HOST() + port + "/api"
+            return HOST() + port
         }
 
         fun CAPTURE_VIDEO_URL(): String {

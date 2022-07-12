@@ -173,3 +173,66 @@ ExecStart=/home/pjq/rpi/tools/deploy_server.sh
 
 [Install]
 ```
+
+### motion
+- webcontrol http://localhost:8080
+- stream http://localhost:8081
+
+#### commands tips
+```
+sudo apt install motion
+sudo chown motion.root /var/log/motion/
+sudo modprobe bcm2835-v4l2
+sudo vim /etc/motion/motion.conf
+sudo service motion restart
+tail -f  /var/log/motion/motion.log
+```
+
+#### motion config
+```
+grep -v -E "#|^$" /etc/motion/motion.conf
+daemon off
+setup_mode off
+; pid_file value
+log_file /var/log/motion/motion.log
+log_level 6
+target_dir /var/lib/motion
+videodevice /dev/video0
+; vid_control_params value
+; netcam_url value
+; mmalcam_name value
+; mmalcam_control_params value
+width 640
+height 480
+framerate 15
+text_left CAMERA1
+text_right %Y-%m-%d\n%T-%q
+emulate_motion off
+threshold 1500
+; noise_level 32
+despeckle_filter EedDl
+minimum_motion_frames 1
+event_gap 60
+pre_capture 3
+post_capture 0
+; on_event_start value
+; on_event_end value
+; on_movie_end value
+picture_output off
+picture_filename %Y%m%d%H%M%S-%q
+movie_output on
+movie_max_time 60
+movie_quality 45
+movie_codec mkv
+movie_filename %t-%v-%Y%m%d%H%M%S
+webcontrol_port 8080
+webcontrol_localhost off
+webcontrol_parms 0
+stream_port 8081
+stream_localhost off
+; camera /usr/etc/motion/camera1.conf
+; camera /usr/etc/motion/camera2.conf
+; camera /usr/etc/motion/camera3.conf
+; camera /usr/etc/motion/camera4.conf
+; camera_dir /usr/etc/motion/conf.d
+```
