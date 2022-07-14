@@ -20,6 +20,8 @@ public enum Monitor {
 
     private Monitor() {
         lastCommandTime = System.currentTimeMillis();
+
+        init();
     }
 
     public void init() {
@@ -27,7 +29,7 @@ public enum Monitor {
         new Thread(new Runnable() {
             @Override
             public void run() {
-//                home4IOT = new SimpleClient4IOT(Config.getConfigRpiCarClient());
+                home4IOT = new SimpleClient4IOT();
 //                home4IOT.setListener(listener);
             }
         }).start();

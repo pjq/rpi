@@ -259,4 +259,7 @@ public class SimpleClient4IOT {
 //        SSLSocketFactory socketFactory = context.getSocketFactory();
 //        return socketFactory;
 //    }
+
+    public void close() {
+    }
 }

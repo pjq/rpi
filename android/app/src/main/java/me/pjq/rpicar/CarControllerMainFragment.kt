@@ -87,7 +87,7 @@ class CarControllerMainFragment : Fragment(), View.OnClickListener, View.OnTouch
                 DataManager.realm.executeTransaction {
                     val newSetting = DataManager.realm.createObject(Settings::class.java)
                     newSetting.setDuration(500)
-                    newSetting.setSpeed(30)
+                    newSetting.setSpeed(70)
                 }
 
                 return settings
@@ -497,8 +497,4 @@ class CarControllerMainFragment : Fragment(), View.OnClickListener, View.OnTouch
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
-}
-
-private fun SimpleClient4IOT.close() {
-    TODO("Not yet implemented")
 }
