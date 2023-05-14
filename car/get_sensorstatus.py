@@ -8,8 +8,8 @@ import relay_control
 import controller
 import json
 
-sys.path.append("../pms5003t")
-import weather_sensor
+# sys.path.append("../pms5003t")
+# from pms5003t import weather_sensor
 
 if __name__ == "__main__":
     distance = ultrasound.get_distance()

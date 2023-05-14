@@ -9,7 +9,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 2:
         sleep = float(sys.argv[1])
     try:
-        cmd = "sh /home/pi/rpi/car/kill.sh"
+        cmd = "sh /home/pjq/rpi/car/kill.sh"
         print(cmd)
         os.system(cmd)
         controller.pwm_change_duty(0)
